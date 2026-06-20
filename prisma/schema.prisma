@@ -1,0 +1,155 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  passwordHash  String
+  role          String    @default("artist")
+  avatarUrl     String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  artist        Artist?
+  organizer     Organizer?
+  sessions      Session[]
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  userId       String
+  expiresAt    DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Artist {
+  id              String   @id @default(cuid())
+  userId          String   @unique
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  stageName       String?
+  university      String?
+  program         String?
+  bio             String?
+  instruments     String   @default("[]")
+  genres          String   @default("[]")
+  skills          String   @default("[]")
+  canSing         Boolean  @default(false)
+  vocalRange      String?
+  musicTraining   String?
+  hasTransport    Boolean  @default(false)
+  hasLicense      Boolean  @default(false)
+  ownInstruments  String   @default("[]")
+  availability    String   @default("{}")
+  blockedDates    String   @default("[]")
+  status          String   @default("active")
+  ratingAvg       Float    @default(0)
+  ratingCount     Int      @default(0)
+  createdAt       DateTime @default(now())
+  missionSlots    MissionSlot[]
+}
+
+model Organizer {
+  id           String   @id @default(cuid())
+  userId       String   @unique
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  orgName      String
+  orgType      String?
+  contactPhone String?
+  billingAddr  String?
+  events       Event[]
+}
+
+model Event {
+  id            String   @id @default(cuid())
+  organizerId   String
+  organizer     Organizer @relation(fields: [organizerId], references: [id])
+  name          String
+  type          String
+  segment       String
+  dateStart     DateTime
+  dateEnd       DateTime
+  venueName     String
+  venueAddress  String
+  venueType     String?
+  guestCount    Int?
+  description   String?
+  dressCode     String?
+  musicStyles   String   @default("[]")
+  playlistUrl   String?
+  playlistSongs String   @default("[]")
+  musiciansCount Int?
+  instruments   String   @default("[]")
+  duration      Float?
+  hasPower      Boolean  @default(true)
+  hasSound      Boolean  @default(false)
+  hasStage      Boolean  @default(false)
+  hasParking    Boolean  @default(false)
+  transportByOrg Boolean @default(false)
+  budget        Float?
+  paymentMethod String?
+  status        String   @default("new")
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  quote         Quote?
+  mission       Mission?
+}
+
+model Quote {
+  id          String   @id @default(cuid())
+  eventId     String   @unique
+  event       Event    @relation(fields: [eventId], references: [id])
+  amount      Float
+  breakdown   String   @default("{}")
+  terms       String?
+  status      String   @default("draft")
+  signedAt    DateTime?
+  expiresAt   DateTime?
+  createdAt   DateTime @default(now())
+}
+
+model Mission {
+  id           String   @id @default(cuid())
+  eventId      String   @unique
+  event        Event    @relation(fields: [eventId], references: [id])
+  directorId   String?
+  status       String   @default("forming")
+  totalAmount  Float    @default(0)
+  musiciansPct Float    @default(60)
+  logisticsPct Float    @default(20)
+  reservePct   Float    @default(20)
+  notes        String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  slots        MissionSlot[]
+  transactions Transaction[]
+}
+
+model MissionSlot {
+  id          String   @id @default(cuid())
+  missionId   String
+  mission     Mission  @relation(fields: [missionId], references: [id])
+  artistId    String?
+  artist      Artist?  @relation(fields: [artistId], references: [id])
+  instrument  String
+  status      String   @default("pending")
+  payAmount   Float    @default(0)
+  confirmedAt DateTime?
+}
+
+model Transaction {
+  id         String   @id @default(cuid())
+  missionId  String?
+  mission    Mission? @relation(fields: [missionId], references: [id])
+  type       String
+  amount     Float
+  category   String
+  description String?
+  fromTo     String?
+  status     String   @default("pending")
+  date       DateTime @default(now())
+}

@@ -1,0 +1,45 @@
+@import "tailwindcss";
+
+:root {
+  --primary: #6C5CE7;
+  --secondary: #00D2FF;
+  --accent: #FF6B6B;
+  --bg: #0F0F1A;
+  --surface: #1A1A2E;
+  --text: #F0F0F0;
+  --text-muted: #8E8E9A;
+  --success: #00E676;
+  --warning: #FFC107;
+  --error: #FF5252;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Outfit', sans-serif;
+}
+
+.glass {
+  background: rgba(26, 26, 46, 0.7);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(108, 92, 231, 0.2);
+}
+
+.gradient-primary {
+  background: linear-gradient(135deg, #6C5CE7, #00D2FF);
+}
+
+.gradient-accent {
+  background: linear-gradient(135deg, #FF6B6B, #6C5CE7);
+}
+
+.pixel-grid {
+  background-image:
+    linear-gradient(rgba(108, 92, 231, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(108, 92, 231, 0.05) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
