@@ -17,8 +17,12 @@ const navItems = [
   { href: "/profile", label: "Mon Profil", icon: "👤", roles: null },
   { href: "/availability", label: "Disponibilités", icon: "📅", roles: null },
   { href: "/missions", label: "Missions", icon: "📋", roles: null },
+  { href: "/songs", label: "Bibliothèque", icon: "🎵", roles: null },
+  { href: "/jam-sessions", label: "Jam Sessions", icon: "🎸", roles: null },
+  { href: "/equipment", label: "Équipement", icon: "📦", roles: null },
   { href: "/finances", label: "Finances", icon: "💰", roles: null },
   { href: "/events/new", label: "Soumettre un événement", icon: "📝", roles: ["organizer"] },
+  { href: "/incidents", label: "Incidents", icon: "⚠️", roles: ["admin", "operator"] },
   { href: "/admin", label: "Administration", icon: "📊", roles: ["admin", "operator"] },
 ];
 
