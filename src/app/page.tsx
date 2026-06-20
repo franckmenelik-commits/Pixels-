@@ -1,65 +1,86 @@
-import Image from "next/image";
+'use client';
 
-export default function Home() {
+import Link from 'next/link';
+import Button from '@/components/ui/Button';
+
+export default function LandingPage() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <div className="min-h-screen bg-[#0F0F1A] text-[#F0F0F0] pixel-grid">
+      {/* Navbar */}
+      <nav className="flex items-center justify-between px-8 py-6">
+        <span className="text-2xl font-bold bg-gradient-to-r from-[#6C5CE7] to-[#00D2FF] bg-clip-text text-transparent">
+          PIXELS
+        </span>
+        <div className="flex gap-4">
+          <Link href="/login">
+            <Button variant="secondary" size="sm">Connexion</Button>
+          </Link>
+          <Link href="/register">
+            <Button variant="primary" size="sm">S&apos;inscrire</Button>
+          </Link>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+      </nav>
+
+      {/* Hero */}
+      <section className="flex flex-col items-center justify-center text-center px-4 py-32">
+        <h1 className="text-7xl md:text-9xl font-black tracking-tight bg-gradient-to-r from-[#6C5CE7] via-[#00D2FF] to-[#FF6B6B] bg-clip-text text-transparent mb-6">
+          PIXELS
+        </h1>
+        <p className="text-2xl md:text-3xl font-semibold text-[#00D2FF] mb-4">
+          Incubateur Culturel Musical
+        </p>
+        <p className="text-lg text-[#8E8E9A] max-w-2xl mb-12">
+          La plateforme qui connecte les artistes émergents avec les organisateurs d&apos;événements.
+          Trouvez des musiciens talentueux ou décrochez votre prochaine mission musicale.
+        </p>
+        <div className="flex flex-col sm:flex-row gap-4">
+          <Link href="/register?role=artist">
+            <Button variant="primary" size="lg">Rejoindre en tant qu&apos;artiste</Button>
+          </Link>
+          <Link href="/register?role=organizer">
+            <Button variant="secondary" size="lg">Soumettre un événement</Button>
+          </Link>
         </div>
-      </main>
+      </section>
+
+      {/* Stats */}
+      <section className="py-20 px-8">
+        <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
+          {[
+            { value: '80+', label: 'Artistes' },
+            { value: '10 000+', label: 'Personnes rejointes' },
+            { value: '4', label: 'Jam Sessions' },
+          ].map((stat) => (
+            <div key={stat.label} className="glass rounded-2xl p-8 text-center">
+              <div className="text-4xl font-bold bg-gradient-to-r from-[#6C5CE7] to-[#00D2FF] bg-clip-text text-transparent mb-2">
+                {stat.value}
+              </div>
+              <div className="text-[#8E8E9A] text-lg">{stat.label}</div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Features */}
+      <section className="py-20 px-8">
+        <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
+          {[
+            { title: 'Pour les Artistes', desc: 'Créez votre profil, montrez vos compétences et recevez des missions adaptées à votre talent.' },
+            { title: 'Pour les Organisateurs', desc: 'Soumettez vos événements et trouvez les musiciens parfaits pour vos soirées.' },
+            { title: 'Gestion Complète', desc: 'Suivi des missions, paiements transparents et coordination simplifiée.' },
+          ].map((f) => (
+            <div key={f.title} className="glass rounded-2xl p-8">
+              <h3 className="text-xl font-bold text-[#00D2FF] mb-3">{f.title}</h3>
+              <p className="text-[#8E8E9A]">{f.desc}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="border-t border-[#1A1A2E] py-8 px-8 text-center text-[#8E8E9A]">
+        <p>&copy; 2026 Pixels — Incubateur Culturel Musical</p>
+      </footer>
     </div>
   );
 }
