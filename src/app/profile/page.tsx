@@ -1,0 +1,245 @@
+'use client';
+
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import DashboardLayout from '@/components/layout/DashboardLayout';
+import Card from '@/components/ui/Card';
+import Button from '@/components/ui/Button';
+import Input from '@/components/ui/Input';
+import Select from '@/components/ui/Select';
+
+interface User { _id: string; name: string; email: string; role: string; artistProfile?: string; }
+
+const INSTRUMENTS_OPTIONS = ['Piano', 'Guitare', 'Basse', 'Batterie', 'Violon', 'Saxophone', 'Trompette', 'Flûte', 'Voix', 'Contrebasse', 'Ukulélé', 'Percussion', 'Clavier', 'Autre'];
+const GENRES = ['Jazz', 'Pop', 'Rock', 'R&B', 'Soul', 'Classique', 'Afro', 'Latin', 'Funk', 'Blues', 'Hip-Hop', 'Électronique', 'Folk', 'Autre'];
+const LEVELS = ['Débutant', 'Intermédiaire', 'Avancé', 'Professionnel'];
+const SKILLS = ['Arrangement', 'Composition', 'Direction musicale', 'Oreille absolue', 'Lecture de partitions', 'Improvisation'];
+
+interface Instrument { name: string; level: string; }
+interface Profile {
+  stageName: string; university: string; program: string; bio: string;
+  instruments: Instrument[]; genres: string[]; canSing: boolean; vocalRange: string;
+  musicTraining: string; skills: string[];
+  hasTransport: boolean; hasLicense: boolean; ownInstruments: boolean;
+}
+
+export default function ProfilePage() {
+  const router = useRouter();
+  const [user, setUser] = useState<User | null>(null);
+  const [profile, setProfile] = useState<Profile>({
+    stageName: '', university: '', program: '', bio: '',
+    instruments: [], genres: [], canSing: false, vocalRange: '',
+    musicTraining: '', skills: [],
+    hasTransport: false, hasLicense: false, ownInstruments: false,
+  });
+  const [saving, setSaving] = useState(false);
+  const [message, setMessage] = useState('');
+
+  useEffect(() => {
+    fetch('/api/auth/me')
+      .then(r => { if (!r.ok) throw new Error(); return r.json(); })
+      .then(data => {
+        setUser(data.user);
+        if (data.user.role !== 'artist') { router.push('/dashboard'); return; }
+        if (data.user.artistProfile) {
+          fetch(`/api/artists/${data.user.artistProfile}`)
+            .then(r => r.json())
+            .then(d => { if (d.artist) setProfile(prev => ({ ...prev, ...d.artist })); })
+            .catch(() => {});
+        }
+      })
+      .catch(() => router.push('/login'));
+  }, [router]);
+
+  const handleSave = async () => {
+    if (!user?.artistProfile) return;
+    setSaving(true);
+    setMessage('');
+    try {
+      const res = await fetch(`/api/artists/${user.artistProfile}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(profile),
+      });
+      if (!res.ok) throw new Error();
+      setMessage('Profil sauvegardé!');
+    } catch {
+      setMessage('Erreur lors de la sauvegarde');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const addInstrument = () => setProfile({ ...profile, instruments: [...profile.instruments, { name: '', level: 'Débutant' }] });
+  const removeInstrument = (i: number) => setProfile({ ...profile, instruments: profile.instruments.filter((_, idx) => idx !== i) });
+  const updateInstrument = (i: number, field: keyof Instrument, value: string) => {
+    const updated = [...profile.instruments];
+    updated[i] = { ...updated[i], [field]: value };
+    setProfile({ ...profile, instruments: updated });
+  };
+
+  const toggleGenre = (g: string) => {
+    setProfile({
+      ...profile,
+      genres: profile.genres.includes(g) ? profile.genres.filter(x => x !== g) : [...profile.genres, g],
+    });
+  };
+
+  const toggleSkill = (s: string) => {
+    setProfile({
+      ...profile,
+      skills: profile.skills.includes(s) ? profile.skills.filter(x => x !== s) : [...profile.skills, s],
+    });
+  };
+
+  if (!user) return <div className="min-h-screen bg-[#0F0F1A] flex items-center justify-center text-[#8E8E9A]">Chargement...</div>;
+
+  return (
+    <DashboardLayout user={user}>
+      <div className="space-y-8 max-w-3xl">
+        <h1 className="text-3xl font-bold text-[#F0F0F0]">Mon Profil Artiste</h1>
+
+        {message && (
+          <div className={`rounded-lg p-3 text-sm ${message.includes('Erreur') ? 'bg-[#FF6B6B]/10 text-[#FF6B6B]' : 'bg-[#00D2FF]/10 text-[#00D2FF]'}`}>
+            {message}
+          </div>
+        )}
+
+        {/* Identité */}
+        <Card>
+          <h2 className="text-xl font-semibold text-[#00D2FF] mb-4">Identité</h2>
+          <div className="space-y-4">
+            <Input label="Nom de scène" value={profile.stageName} onChange={e => setProfile({ ...profile, stageName: e.target.value })} />
+            <Input label="Université" value={profile.university} onChange={e => setProfile({ ...profile, university: e.target.value })} />
+            <Input label="Programme" value={profile.program} onChange={e => setProfile({ ...profile, program: e.target.value })} />
+            <div>
+              <label className="block text-sm font-medium text-[#F0F0F0] mb-1">Bio</label>
+              <textarea
+                className="w-full rounded-lg bg-[#0F0F1A] border border-[#1A1A2E] text-[#F0F0F0] p-3 focus:border-[#6C5CE7] focus:outline-none"
+                rows={4}
+                value={profile.bio}
+                onChange={e => setProfile({ ...profile, bio: e.target.value })}
+              />
+            </div>
+          </div>
+        </Card>
+
+        {/* Compétences Musicales */}
+        <Card>
+          <h2 className="text-xl font-semibold text-[#00D2FF] mb-4">Compétences Musicales</h2>
+          <div className="space-y-6">
+            {/* Instruments */}
+            <div>
+              <div className="flex justify-between items-center mb-3">
+                <label className="text-sm font-medium text-[#F0F0F0]">Instruments</label>
+                <Button variant="secondary" size="sm" onClick={addInstrument}>+ Ajouter</Button>
+              </div>
+              {profile.instruments.map((inst, i) => (
+                <div key={i} className="flex gap-3 mb-2 items-end">
+                  <div className="flex-1">
+                    <Select
+                      label=""
+                      value={inst.name}
+                      onChange={e => updateInstrument(i, 'name', e.target.value)}
+                      options={[{ value: '', label: 'Instrument...' }, ...INSTRUMENTS_OPTIONS.map(o => ({ value: o, label: o }))]}
+                    />
+                  </div>
+                  <div className="flex-1">
+                    <Select
+                      label=""
+                      value={inst.level}
+                      onChange={e => updateInstrument(i, 'level', e.target.value)}
+                      options={LEVELS.map(l => ({ value: l, label: l }))}
+                    />
+                  </div>
+                  <Button variant="danger" size="sm" onClick={() => removeInstrument(i)}>×</Button>
+                </div>
+              ))}
+            </div>
+
+            {/* Genres */}
+            <div>
+              <label className="block text-sm font-medium text-[#F0F0F0] mb-2">Genres musicaux</label>
+              <div className="flex flex-wrap gap-2">
+                {GENRES.map(g => (
+                  <button
+                    key={g}
+                    type="button"
+                    onClick={() => toggleGenre(g)}
+                    className={`px-3 py-1.5 rounded-full text-sm transition ${
+                      profile.genres.includes(g)
+                        ? 'bg-[#6C5CE7] text-white'
+                        : 'bg-[#0F0F1A] text-[#8E8E9A] border border-[#1A1A2E] hover:border-[#6C5CE7]'
+                    }`}
+                  >
+                    {g}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Vocal */}
+            <div className="flex items-center gap-4">
+              <label className="flex items-center gap-2 text-[#F0F0F0]">
+                <input type="checkbox" checked={profile.canSing} onChange={e => setProfile({ ...profile, canSing: e.target.checked })} className="accent-[#6C5CE7]" />
+                Peut chanter
+              </label>
+              {profile.canSing && (
+                <Input label="Tessiture" value={profile.vocalRange} onChange={e => setProfile({ ...profile, vocalRange: e.target.value })} />
+              )}
+            </div>
+
+            <Input label="Formation musicale" value={profile.musicTraining} onChange={e => setProfile({ ...profile, musicTraining: e.target.value })} />
+
+            {/* Skills */}
+            <div>
+              <label className="block text-sm font-medium text-[#F0F0F0] mb-2">Compétences</label>
+              <div className="flex flex-wrap gap-2">
+                {SKILLS.map(s => (
+                  <button
+                    key={s}
+                    type="button"
+                    onClick={() => toggleSkill(s)}
+                    className={`px-3 py-1.5 rounded-full text-sm transition ${
+                      profile.skills.includes(s)
+                        ? 'bg-[#00D2FF] text-[#0F0F1A]'
+                        : 'bg-[#0F0F1A] text-[#8E8E9A] border border-[#1A1A2E] hover:border-[#00D2FF]'
+                    }`}
+                  >
+                    {s}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        </Card>
+
+        {/* Logistique */}
+        <Card>
+          <h2 className="text-xl font-semibold text-[#00D2FF] mb-4">Logistique</h2>
+          <div className="space-y-3">
+            {[
+              { key: 'hasTransport' as const, label: 'A un moyen de transport' },
+              { key: 'hasLicense' as const, label: 'Possède un permis de conduire' },
+              { key: 'ownInstruments' as const, label: 'Possède ses propres instruments' },
+            ].map(({ key, label }) => (
+              <label key={key} className="flex items-center gap-3 text-[#F0F0F0]">
+                <input
+                  type="checkbox"
+                  checked={profile[key]}
+                  onChange={e => setProfile({ ...profile, [key]: e.target.checked })}
+                  className="accent-[#6C5CE7]"
+                />
+                {label}
+              </label>
+            ))}
+          </div>
+        </Card>
+
+        <Button variant="primary" size="lg" onClick={handleSave} disabled={saving}>
+          {saving ? 'Sauvegarde...' : 'Sauvegarder le profil'}
+        </Button>
+      </div>
+    </DashboardLayout>
+  );
+}
