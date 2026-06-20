@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
-import { destroySession } from "@/lib/auth";
 
 export async function POST() {
-  await destroySession();
+  // Logout is handled client-side with Firebase Auth SDK
   return NextResponse.json({ ok: true });
 }

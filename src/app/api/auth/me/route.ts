@@ -9,10 +9,13 @@ export async function GET() {
 
   const { user } = session;
   return NextResponse.json({
-    id: user.id,
-    name: user.name,
-    email: user.email,
-    role: user.role,
-    avatarUrl: user.avatarUrl,
+    user: {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      avatarUrl: user.avatarUrl,
+      artistProfile: user.artistProfile ? user.id : undefined,
+    },
   });
 }

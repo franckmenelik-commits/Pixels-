@@ -1,65 +1,59 @@
 import { NextResponse } from "next/server";
-import bcrypt from "bcryptjs";
-import { prisma } from "@/lib/db";
-import { createSession } from "@/lib/auth";
+import { adminAuth, adminDb } from "@/lib/firebase-admin";
+import { FieldValue } from "firebase-admin/firestore";
 
 export async function POST(request: Request) {
   try {
-    const { name, email, password, role, orgName } = await request.json();
+    const { name, email, password, role, orgName, university, program, orgType } = await request.json();
 
     if (!email || !password) {
-      return NextResponse.json(
-        { error: "Email and password are required" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Email and password are required" }, { status: 400 });
     }
 
-    const existing = await prisma.user.findUnique({ where: { email } });
-    if (existing) {
-      return NextResponse.json(
-        { error: "Email already registered" },
-        { status: 409 }
-      );
-    }
-
-    const passwordHash = await bcrypt.hash(password, 10);
-
-    const user = await prisma.user.create({
-      data: {
-        name,
-        email,
-        passwordHash,
-        role: role || "artist",
-      },
+    // Create Firebase Auth user
+    const firebaseUser = await adminAuth.createUser({
+      email,
+      password,
+      displayName: name,
     });
 
+    // Create Firestore user document
+    const userData: Record<string, any> = {
+      name,
+      email,
+      role: role || "artist",
+      createdAt: FieldValue.serverTimestamp(),
+    };
+
     if (role === "artist" || !role) {
-      await prisma.artist.create({ data: { userId: user.id } });
+      userData.artistProfile = true;
+      if (university) userData.university = university;
+      if (program) userData.program = program;
     }
 
     if (role === "organizer") {
       if (!orgName) {
-        return NextResponse.json(
-          { error: "Organization name is required for organizers" },
-          { status: 400 }
-        );
+        // Clean up the auth user since we can't complete registration
+        await adminAuth.deleteUser(firebaseUser.uid);
+        return NextResponse.json({ error: "Organization name is required for organizers" }, { status: 400 });
       }
-      await prisma.organizer.create({ data: { userId: user.id, orgName } });
+      userData.orgName = orgName;
+      if (orgType) userData.orgType = orgType;
     }
 
-    await createSession(user.id);
+    await adminDb.collection("users").doc(firebaseUser.uid).set(userData);
 
     return NextResponse.json({
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      role: user.role,
+      id: firebaseUser.uid,
+      name,
+      email,
+      role: userData.role,
     });
-  } catch (error) {
+  } catch (error: any) {
     console.error("Register error:", error);
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 }
-    );
+    if (error.code === "auth/email-already-exists") {
+      return NextResponse.json({ error: "Email already registered" }, { status: 409 });
+    }
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }
