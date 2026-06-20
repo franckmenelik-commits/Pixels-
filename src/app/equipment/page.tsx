@@ -88,7 +88,7 @@ export default function EquipmentPage() {
     fetch("/api/equipment").then(r => r.json()).then(d => { setEquipment(d.equipment || []); setLoans(d.loans || []); }).catch(() => {});
   }, [user]);
 
-  if (!user) return <div className="min-h-screen bg-[#0F0F1A] flex items-center justify-center"><div className="text-[#8E8E9A]">Chargement...</div></div>;
+  if (!user) return <div className="min-h-screen bg-[#040E3A] flex items-center justify-center"><div className="text-[#8E9BC0]">Chargement...</div></div>;
 
   const isAdmin = user.role === "admin" || user.role === "operator";
   const filtered = activeFilter === "Tous" ? equipment : equipment.filter(e => e.type === typeApiValues[activeFilter]);
@@ -130,13 +130,13 @@ export default function EquipmentPage() {
         <div className="flex gap-2 flex-wrap">
           {typeFilters.map(f => (
             <button key={f} onClick={() => setActiveFilter(f)}
-              className={`px-4 py-2 rounded-lg text-sm transition-colors cursor-pointer ${activeFilter === f ? "bg-[#6C5CE7] text-white" : "bg-[#1A1A2E] text-[#8E8E9A] hover:text-[#F0F0F0]"}`}
+              className={`px-4 py-2 rounded-lg text-sm transition-colors cursor-pointer ${activeFilter === f ? "bg-[#FF8C45] text-white" : "bg-[#0A1A4A] text-[#8E9BC0] hover:text-[#F0F0F0]"}`}
             >{f}</button>
           ))}
         </div>
 
         {filtered.length === 0 ? (
-          <Card><p className="text-[#8E8E9A]">Aucun équipement trouvé.</p></Card>
+          <Card><p className="text-[#8E9BC0]">Aucun équipement trouvé.</p></Card>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {filtered.map(eq => {
@@ -152,8 +152,8 @@ export default function EquipmentPage() {
                       <Badge variant={cond.variant}>{cond.label}</Badge>
                       <Badge variant="neutral">{statusLabel(eq.status)}</Badge>
                     </div>
-                    {eq.ownerType && <p className="text-xs text-[#8E8E9A]">Propriétaire: {eq.ownerType}</p>}
-                    {eq.value != null && <p className="text-sm text-[#00D2FF]">{eq.value.toLocaleString("fr-FR")} €</p>}
+                    {eq.ownerType && <p className="text-xs text-[#8E9BC0]">Propriétaire: {eq.ownerType}</p>}
+                    {eq.value != null && <p className="text-sm text-[#061E66]">{eq.value.toLocaleString("fr-FR")} €</p>}
                     {eq.status === "available" && (
                       <Button size="sm" variant="secondary" onClick={() => handleBorrow(eq._id)}>Emprunter</Button>
                     )}
@@ -172,8 +172,8 @@ export default function EquipmentPage() {
                 <Card key={loan._id}>
                   <div className="space-y-2">
                     <h3 className="text-base font-semibold text-[#F0F0F0]">{loan.equipmentName || "Équipement"}</h3>
-                    {loan.borrower && <p className="text-sm text-[#8E8E9A]">Emprunteur: {loan.borrower}</p>}
-                    {loan.borrowDate && <p className="text-xs text-[#8E8E9A]">Depuis: {new Date(loan.borrowDate).toLocaleDateString("fr-FR")}</p>}
+                    {loan.borrower && <p className="text-sm text-[#8E9BC0]">Emprunteur: {loan.borrower}</p>}
+                    {loan.borrowDate && <p className="text-xs text-[#8E9BC0]">Depuis: {new Date(loan.borrowDate).toLocaleDateString("fr-FR")}</p>}
                     <Badge variant="warning">En cours</Badge>
                   </div>
                 </Card>
@@ -190,7 +190,7 @@ export default function EquipmentPage() {
           <Select label="État" options={conditions} value={form.condition} onChange={e => setForm({ ...form, condition: e.target.value })} />
           <Input label="Valeur (€)" type="number" value={form.value} onChange={e => setForm({ ...form, value: e.target.value })} />
           <div className="flex flex-col gap-1.5">
-            <label className="text-sm text-[#8E8E9A]">Description</label>
+            <label className="text-sm text-[#8E9BC0]">Description</label>
             <textarea className="bg-[var(--surface)] border border-[rgba(108,92,231,0.2)] rounded-lg px-4 py-2.5 text-[var(--text)] focus:outline-none focus:border-[var(--primary)] transition-colors min-h-[60px] resize-y" value={form.description} onChange={e => setForm({ ...form, description: e.target.value })} />
           </div>
           <div className="flex justify-end gap-3 pt-2">

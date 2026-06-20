@@ -76,7 +76,7 @@ export default function AvailabilityPage() {
     }
   };
 
-  if (!user) return <div className="min-h-screen bg-[#0F0F1A] flex items-center justify-center text-[#8E8E9A]">Chargement...</div>;
+  if (!user) return <div className="min-h-screen bg-[#040E3A] flex items-center justify-center text-[#8E9BC0]">Chargement...</div>;
 
   return (
     <DashboardLayout user={user}>
@@ -84,18 +84,18 @@ export default function AvailabilityPage() {
         <h1 className="text-3xl font-bold text-[#F0F0F0]">Disponibilités</h1>
 
         {message && (
-          <div className={`rounded-lg p-3 text-sm ${message.includes('Erreur') ? 'bg-[#FF6B6B]/10 text-[#FF6B6B]' : 'bg-[#00D2FF]/10 text-[#00D2FF]'}`}>
+          <div className={`rounded-lg p-3 text-sm ${message.includes('Erreur') ? 'bg-[#FF8C45]/10 text-[#FF8C45]' : 'bg-[#061E66]/10 text-[#061E66]'}`}>
             {message}
           </div>
         )}
 
         <Card>
-          <h2 className="text-xl font-semibold text-[#00D2FF] mb-6">Grille hebdomadaire</h2>
+          <h2 className="text-xl font-semibold text-[#061E66] mb-6">Grille hebdomadaire</h2>
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
                 <tr>
-                  <th className="text-left text-[#8E8E9A] p-2"></th>
+                  <th className="text-left text-[#8E9BC0] p-2"></th>
                   {DAYS.map(day => (
                     <th key={day} className="text-center text-[#F0F0F0] p-2 text-sm font-medium">{day}</th>
                   ))}
@@ -104,7 +104,7 @@ export default function AvailabilityPage() {
               <tbody>
                 {SLOTS.map(slot => (
                   <tr key={slot}>
-                    <td className="text-[#8E8E9A] p-2 text-sm">{slot}</td>
+                    <td className="text-[#8E9BC0] p-2 text-sm">{slot}</td>
                     {DAYS.map(day => (
                       <td key={day} className="p-1 text-center">
                         <button
@@ -112,8 +112,8 @@ export default function AvailabilityPage() {
                           onClick={() => toggle(day, slot)}
                           className={`w-full h-12 rounded-lg transition-all ${
                             grid[day]?.[slot]
-                              ? 'bg-[#6C5CE7] shadow-lg shadow-[#6C5CE7]/30'
-                              : 'bg-[#0F0F1A] border border-[#1A1A2E] hover:border-[#6C5CE7]/50'
+                              ? 'bg-[#FF8C45] shadow-lg shadow-[#FF8C45]/30'
+                              : 'bg-[#040E3A] border border-[#0A1A4A] hover:border-[#FF8C45]/50'
                           }`}
                         />
                       </td>
@@ -123,33 +123,33 @@ export default function AvailabilityPage() {
               </tbody>
             </table>
           </div>
-          <div className="flex gap-4 mt-4 text-sm text-[#8E8E9A]">
+          <div className="flex gap-4 mt-4 text-sm text-[#8E9BC0]">
             <span className="flex items-center gap-2">
-              <span className="w-4 h-4 rounded bg-[#6C5CE7] inline-block"></span> Disponible
+              <span className="w-4 h-4 rounded bg-[#FF8C45] inline-block"></span> Disponible
             </span>
             <span className="flex items-center gap-2">
-              <span className="w-4 h-4 rounded bg-[#0F0F1A] border border-[#1A1A2E] inline-block"></span> Indisponible
+              <span className="w-4 h-4 rounded bg-[#040E3A] border border-[#0A1A4A] inline-block"></span> Indisponible
             </span>
           </div>
         </Card>
 
         <Card>
-          <h2 className="text-xl font-semibold text-[#00D2FF] mb-4">Dates bloquées</h2>
+          <h2 className="text-xl font-semibold text-[#061E66] mb-4">Dates bloquées</h2>
           <div className="flex gap-3 mb-4">
             <input
               type="date"
               value={newBlockedDate}
               onChange={e => setNewBlockedDate(e.target.value)}
-              className="rounded-lg bg-[#0F0F1A] border border-[#1A1A2E] text-[#F0F0F0] px-3 py-2 focus:border-[#6C5CE7] focus:outline-none"
+              className="rounded-lg bg-[#040E3A] border border-[#0A1A4A] text-[#F0F0F0] px-3 py-2 focus:border-[#FF8C45] focus:outline-none"
             />
             <Button variant="secondary" size="sm" onClick={addBlockedDate}>Ajouter</Button>
           </div>
           {blockedDates.length === 0 ? (
-            <p className="text-[#8E8E9A] text-sm">Aucune date bloquée.</p>
+            <p className="text-[#8E9BC0] text-sm">Aucune date bloquée.</p>
           ) : (
             <div className="flex flex-wrap gap-2">
               {blockedDates.map(date => (
-                <span key={date} className="flex items-center gap-2 bg-[#FF6B6B]/10 text-[#FF6B6B] px-3 py-1.5 rounded-full text-sm">
+                <span key={date} className="flex items-center gap-2 bg-[#FF8C45]/10 text-[#FF8C45] px-3 py-1.5 rounded-full text-sm">
                   {new Date(date).toLocaleDateString('fr-CA')}
                   <button onClick={() => removeBlockedDate(date)} className="hover:text-white">×</button>
                 </span>

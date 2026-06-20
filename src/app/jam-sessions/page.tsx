@@ -65,7 +65,7 @@ export default function JamSessionsPage() {
     fetch("/api/jam-sessions").then(r => r.json()).then(d => setSessions(d.sessions || [])).catch(() => {});
   }, [user]);
 
-  if (!user) return <div className="min-h-screen bg-[#0F0F1A] flex items-center justify-center"><div className="text-[#8E8E9A]">Chargement...</div></div>;
+  if (!user) return <div className="min-h-screen bg-[#040E3A] flex items-center justify-center"><div className="text-[#8E9BC0]">Chargement...</div></div>;
 
   const now = new Date();
   const upcoming = sessions.filter(s => new Date(s.date) >= now && s.status !== "completed");
@@ -106,16 +106,16 @@ export default function JamSessionsPage() {
           <h3 className="text-lg font-semibold text-[#F0F0F0]">{session.theme || "Jam Session"}</h3>
           <Badge variant={statusVariant(session.status)}>{statusLabel(session.status)}</Badge>
         </div>
-        <p className="text-sm text-[#6C5CE7]">{formatDate(session.date)}</p>
-        {session.venueName && <p className="text-sm text-[#8E8E9A]">{session.venueName}</p>}
-        <div className="flex items-center gap-2 text-sm text-[#8E8E9A]">
+        <p className="text-sm text-[#FF8C45]">{formatDate(session.date)}</p>
+        {session.venueName && <p className="text-sm text-[#8E9BC0]">{session.venueName}</p>}
+        <div className="flex items-center gap-2 text-sm text-[#8E9BC0]">
           <span>{session.participants?.length || 0}{session.capacity ? `/${session.capacity}` : ""} participants</span>
         </div>
-        {session.description && <p className="text-sm text-[#8E8E9A] line-clamp-2">{session.description}</p>}
+        {session.description && <p className="text-sm text-[#8E9BC0] line-clamp-2">{session.description}</p>}
         {isPast && (
-          <div className="flex gap-4 text-xs text-[#8E8E9A]">
+          <div className="flex gap-4 text-xs text-[#8E9BC0]">
             {session.photos && <span>{session.photos.length} photos</span>}
-            {session.feedbackSummary && <span className="text-[#00D2FF]">Feedback disponible</span>}
+            {session.feedbackSummary && <span className="text-[#061E66]">Feedback disponible</span>}
           </div>
         )}
         {!isPast && (
@@ -139,7 +139,7 @@ export default function JamSessionsPage() {
       <div className="space-y-8">
         <div className="flex items-center justify-between">
           <h1 className="text-3xl font-bold text-[#F0F0F0]">
-            Jam Sessions <span className="text-lg font-normal text-[#8E8E9A]">({upcoming.length} à venir)</span>
+            Jam Sessions <span className="text-lg font-normal text-[#8E9BC0]">({upcoming.length} à venir)</span>
           </h1>
           {isAdmin && <Button onClick={() => setShowCreateModal(true)}>+ Créer une session</Button>}
         </div>
@@ -147,7 +147,7 @@ export default function JamSessionsPage() {
         <div className="space-y-4">
           <h2 className="text-xl font-semibold text-[#F0F0F0]">Prochaines Sessions</h2>
           {upcoming.length === 0 ? (
-            <Card><p className="text-[#8E8E9A]">Aucune session à venir.</p></Card>
+            <Card><p className="text-[#8E9BC0]">Aucune session à venir.</p></Card>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {upcoming.map(s => <SessionCard key={s._id} session={s} />)}
@@ -158,7 +158,7 @@ export default function JamSessionsPage() {
         <div className="space-y-4">
           <h2 className="text-xl font-semibold text-[#F0F0F0]">Sessions Passées</h2>
           {past.length === 0 ? (
-            <Card><p className="text-[#8E8E9A]">Aucune session passée.</p></Card>
+            <Card><p className="text-[#8E9BC0]">Aucune session passée.</p></Card>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {past.map(s => <SessionCard key={s._id} session={s} isPast />)}
@@ -175,7 +175,7 @@ export default function JamSessionsPage() {
           <Input label="Thème" value={form.theme} onChange={e => setForm({ ...form, theme: e.target.value })} />
           <Input label="Capacité" type="number" value={form.capacity} onChange={e => setForm({ ...form, capacity: e.target.value })} />
           <div className="flex flex-col gap-1.5">
-            <label className="text-sm text-[#8E8E9A]">Description</label>
+            <label className="text-sm text-[#8E9BC0]">Description</label>
             <textarea className="bg-[var(--surface)] border border-[rgba(108,92,231,0.2)] rounded-lg px-4 py-2.5 text-[var(--text)] focus:outline-none focus:border-[var(--primary)] transition-colors min-h-[80px] resize-y" value={form.description} onChange={e => setForm({ ...form, description: e.target.value })} />
           </div>
           <div className="flex justify-end gap-3 pt-2">

@@ -92,7 +92,7 @@ export default function ProfilePage() {
     });
   };
 
-  if (!user) return <div className="min-h-screen bg-[#0F0F1A] flex items-center justify-center text-[#8E8E9A]">Chargement...</div>;
+  if (!user) return <div className="min-h-screen bg-[#040E3A] flex items-center justify-center text-[#8E9BC0]">Chargement...</div>;
 
   return (
     <DashboardLayout user={user}>
@@ -100,14 +100,14 @@ export default function ProfilePage() {
         <h1 className="text-3xl font-bold text-[#F0F0F0]">Mon Profil Artiste</h1>
 
         {message && (
-          <div className={`rounded-lg p-3 text-sm ${message.includes('Erreur') ? 'bg-[#FF6B6B]/10 text-[#FF6B6B]' : 'bg-[#00D2FF]/10 text-[#00D2FF]'}`}>
+          <div className={`rounded-lg p-3 text-sm ${message.includes('Erreur') ? 'bg-[#FF8C45]/10 text-[#FF8C45]' : 'bg-[#061E66]/10 text-[#061E66]'}`}>
             {message}
           </div>
         )}
 
         {/* Identité */}
         <Card>
-          <h2 className="text-xl font-semibold text-[#00D2FF] mb-4">Identité</h2>
+          <h2 className="text-xl font-semibold text-[#061E66] mb-4">Identité</h2>
           <div className="space-y-4">
             <Input label="Nom de scène" value={profile.stageName} onChange={e => setProfile({ ...profile, stageName: e.target.value })} />
             <Input label="Université" value={profile.university} onChange={e => setProfile({ ...profile, university: e.target.value })} />
@@ -115,7 +115,7 @@ export default function ProfilePage() {
             <div>
               <label className="block text-sm font-medium text-[#F0F0F0] mb-1">Bio</label>
               <textarea
-                className="w-full rounded-lg bg-[#0F0F1A] border border-[#1A1A2E] text-[#F0F0F0] p-3 focus:border-[#6C5CE7] focus:outline-none"
+                className="w-full rounded-lg bg-[#040E3A] border border-[#0A1A4A] text-[#F0F0F0] p-3 focus:border-[#FF8C45] focus:outline-none"
                 rows={4}
                 value={profile.bio}
                 onChange={e => setProfile({ ...profile, bio: e.target.value })}
@@ -126,7 +126,7 @@ export default function ProfilePage() {
 
         {/* Compétences Musicales */}
         <Card>
-          <h2 className="text-xl font-semibold text-[#00D2FF] mb-4">Compétences Musicales</h2>
+          <h2 className="text-xl font-semibold text-[#061E66] mb-4">Compétences Musicales</h2>
           <div className="space-y-6">
             {/* Instruments */}
             <div>
@@ -168,8 +168,8 @@ export default function ProfilePage() {
                     onClick={() => toggleGenre(g)}
                     className={`px-3 py-1.5 rounded-full text-sm transition ${
                       profile.genres.includes(g)
-                        ? 'bg-[#6C5CE7] text-white'
-                        : 'bg-[#0F0F1A] text-[#8E8E9A] border border-[#1A1A2E] hover:border-[#6C5CE7]'
+                        ? 'bg-[#FF8C45] text-white'
+                        : 'bg-[#040E3A] text-[#8E9BC0] border border-[#0A1A4A] hover:border-[#FF8C45]'
                     }`}
                   >
                     {g}
@@ -181,7 +181,7 @@ export default function ProfilePage() {
             {/* Vocal */}
             <div className="flex items-center gap-4">
               <label className="flex items-center gap-2 text-[#F0F0F0]">
-                <input type="checkbox" checked={profile.canSing} onChange={e => setProfile({ ...profile, canSing: e.target.checked })} className="accent-[#6C5CE7]" />
+                <input type="checkbox" checked={profile.canSing} onChange={e => setProfile({ ...profile, canSing: e.target.checked })} className="accent-[#FF8C45]" />
                 Peut chanter
               </label>
               {profile.canSing && (
@@ -202,8 +202,8 @@ export default function ProfilePage() {
                     onClick={() => toggleSkill(s)}
                     className={`px-3 py-1.5 rounded-full text-sm transition ${
                       profile.skills.includes(s)
-                        ? 'bg-[#00D2FF] text-[#0F0F1A]'
-                        : 'bg-[#0F0F1A] text-[#8E8E9A] border border-[#1A1A2E] hover:border-[#00D2FF]'
+                        ? 'bg-[#061E66] text-[#040E3A]'
+                        : 'bg-[#040E3A] text-[#8E9BC0] border border-[#0A1A4A] hover:border-[#061E66]'
                     }`}
                   >
                     {s}
@@ -216,7 +216,7 @@ export default function ProfilePage() {
 
         {/* Logistique */}
         <Card>
-          <h2 className="text-xl font-semibold text-[#00D2FF] mb-4">Logistique</h2>
+          <h2 className="text-xl font-semibold text-[#061E66] mb-4">Logistique</h2>
           <div className="space-y-3">
             {[
               { key: 'hasTransport' as const, label: 'A un moyen de transport' },
@@ -228,7 +228,7 @@ export default function ProfilePage() {
                   type="checkbox"
                   checked={profile[key]}
                   onChange={e => setProfile({ ...profile, [key]: e.target.checked })}
-                  className="accent-[#6C5CE7]"
+                  className="accent-[#FF8C45]"
                 />
                 {label}
               </label>

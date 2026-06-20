@@ -40,12 +40,12 @@ export default function FinancesPage() {
     })).catch(() => {});
   }, [user]);
 
-  if (!user) return <div className="min-h-screen bg-[#0F0F1A] flex items-center justify-center text-[#8E8E9A]">Chargement...</div>;
+  if (!user) return <div className="min-h-screen bg-[#040E3A] flex items-center justify-center text-[#8E9BC0]">Chargement...</div>;
 
   const cards = [
-    { label: 'Revenus totaux', value: data.totalRevenue, color: '#6C5CE7' },
-    { label: 'Payé aux musiciens', value: data.paidToMusicians, color: '#00D2FF' },
-    { label: 'Logistique', value: data.logistics, color: '#FF6B6B' },
+    { label: 'Revenus totaux', value: data.totalRevenue, color: '#FF8C45' },
+    { label: 'Payé aux musiciens', value: data.paidToMusicians, color: '#061E66' },
+    { label: 'Logistique', value: data.logistics, color: '#FF8C45' },
     { label: 'Fonds de réserve', value: data.reserveFund, color: '#F0F0F0' },
   ];
 
@@ -59,21 +59,21 @@ export default function FinancesPage() {
             <Card key={c.label}>
               <div className="text-center">
                 <div className="text-3xl font-bold" style={{ color: c.color }}>${c.value.toLocaleString('fr-CA')}</div>
-                <div className="text-[#8E8E9A] mt-1 text-sm">{c.label}</div>
+                <div className="text-[#8E9BC0] mt-1 text-sm">{c.label}</div>
               </div>
             </Card>
           ))}
         </div>
 
         <Card>
-          <h2 className="text-xl font-semibold text-[#00D2FF] mb-4">Transactions récentes</h2>
+          <h2 className="text-xl font-semibold text-[#061E66] mb-4">Transactions récentes</h2>
           {data.transactions.length === 0 ? (
-            <p className="text-[#8E8E9A]">Aucune transaction.</p>
+            <p className="text-[#8E9BC0]">Aucune transaction.</p>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="text-[#8E8E9A] border-b border-[#1A1A2E]">
+                  <tr className="text-[#8E9BC0] border-b border-[#0A1A4A]">
                     <th className="text-left py-3 px-2">Date</th>
                     <th className="text-left py-3 px-2">Description</th>
                     <th className="text-left py-3 px-2">Type</th>
@@ -82,15 +82,15 @@ export default function FinancesPage() {
                 </thead>
                 <tbody>
                   {data.transactions.map(t => (
-                    <tr key={t._id} className="border-b border-[#1A1A2E]/50 hover:bg-[#1A1A2E]/30">
-                      <td className="py-3 px-2 text-[#8E8E9A]">{t.date ? new Date(t.date).toLocaleDateString('fr-CA') : '—'}</td>
+                    <tr key={t._id} className="border-b border-[#0A1A4A]/50 hover:bg-[#0A1A4A]/30">
+                      <td className="py-3 px-2 text-[#8E9BC0]">{t.date ? new Date(t.date).toLocaleDateString('fr-CA') : '—'}</td>
                       <td className="py-3 px-2 text-[#F0F0F0]">{t.description || '—'}</td>
                       <td className="py-3 px-2">
-                        <span className={`text-xs px-2 py-1 rounded-full ${t.type === 'income' ? 'bg-[#6C5CE7]/20 text-[#6C5CE7]' : 'bg-[#FF6B6B]/20 text-[#FF6B6B]'}`}>
+                        <span className={`text-xs px-2 py-1 rounded-full ${t.type === 'income' ? 'bg-[#FF8C45]/20 text-[#FF8C45]' : 'bg-[#FF8C45]/20 text-[#FF8C45]'}`}>
                           {t.type === 'income' ? 'Revenu' : 'Dépense'}
                         </span>
                       </td>
-                      <td className={`py-3 px-2 text-right font-medium ${t.type === 'income' ? 'text-[#6C5CE7]' : 'text-[#FF6B6B]'}`}>
+                      <td className={`py-3 px-2 text-right font-medium ${t.type === 'income' ? 'text-[#FF8C45]' : 'text-[#FF8C45]'}`}>
                         {t.type === 'income' ? '+' : '-'}${Math.abs(t.amount || 0).toLocaleString('fr-CA')}
                       </td>
                     </tr>

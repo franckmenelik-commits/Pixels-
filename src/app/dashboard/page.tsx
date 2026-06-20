@@ -69,14 +69,14 @@ export default function DashboardPage() {
     }
   }, [user]);
 
-  if (!user) return <div className="min-h-screen bg-[#0F0F1A] flex items-center justify-center text-[#8E8E9A]">Chargement...</div>;
+  if (!user) return <div className="min-h-screen bg-[#040E3A] flex items-center justify-center text-[#8E9BC0]">Chargement...</div>;
 
   return (
     <DashboardLayout user={user}>
       <div className="space-y-8">
         <div>
           <h1 className="text-3xl font-bold text-[#F0F0F0]">Bienvenue, {user.name}</h1>
-          <p className="text-[#8E8E9A] mt-1">
+          <p className="text-[#8E9BC0] mt-1">
             {user.role === 'artist' && 'Votre espace artiste'}
             {user.role === 'organizer' && 'Votre espace organisateur'}
             {(user.role === 'admin' || user.role === 'operator') && 'Vue d\'ensemble'}
@@ -89,33 +89,33 @@ export default function DashboardPage() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <Card>
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-[#6C5CE7]">{missions.length}</div>
-                  <div className="text-[#8E8E9A] mt-1">Missions</div>
+                  <div className="text-3xl font-bold text-[#FF8C45]">{missions.length}</div>
+                  <div className="text-[#8E9BC0] mt-1">Missions</div>
                 </div>
               </Card>
               <Card>
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-[#00D2FF]">
+                  <div className="text-3xl font-bold text-[#061E66]">
                     {missions.filter(m => m.status === 'completed').length}
                   </div>
-                  <div className="text-[#8E8E9A] mt-1">Complétées</div>
+                  <div className="text-[#8E9BC0] mt-1">Complétées</div>
                 </div>
               </Card>
               <Card>
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-[#FF6B6B]">—</div>
-                  <div className="text-[#8E8E9A] mt-1">Note moyenne</div>
+                  <div className="text-3xl font-bold text-[#FF8C45]">—</div>
+                  <div className="text-[#8E9BC0] mt-1">Note moyenne</div>
                 </div>
               </Card>
             </div>
             <Card>
               <h2 className="text-xl font-semibold text-[#F0F0F0] mb-4">Missions à venir</h2>
               {missions.length === 0 ? (
-                <p className="text-[#8E8E9A]">Aucune mission pour le moment.</p>
+                <p className="text-[#8E9BC0]">Aucune mission pour le moment.</p>
               ) : (
                 <div className="space-y-3">
                   {missions.slice(0, 5).map((m) => (
-                    <Link href={`/missions/${m._id}`} key={m._id} className="block p-3 rounded-lg bg-[#0F0F1A]/50 hover:bg-[#0F0F1A] transition">
+                    <Link href={`/missions/${m._id}`} key={m._id} className="block p-3 rounded-lg bg-[#040E3A]/50 hover:bg-[#040E3A] transition">
                       <div className="flex justify-between items-center">
                         <span className="text-[#F0F0F0]">{m.eventName || 'Mission'}</span>
                         <Badge variant={m.status === 'completed' ? 'success' : 'primary'}>{m.status || 'en cours'}</Badge>
@@ -139,11 +139,11 @@ export default function DashboardPage() {
             <Card>
               <h2 className="text-xl font-semibold text-[#F0F0F0] mb-4">Vos événements</h2>
               {events.length === 0 ? (
-                <p className="text-[#8E8E9A]">Aucun événement soumis.</p>
+                <p className="text-[#8E9BC0]">Aucun événement soumis.</p>
               ) : (
                 <div className="space-y-3">
                   {events.map((e) => (
-                    <div key={e._id} className="p-3 rounded-lg bg-[#0F0F1A]/50 flex justify-between items-center">
+                    <div key={e._id} className="p-3 rounded-lg bg-[#040E3A]/50 flex justify-between items-center">
                       <span className="text-[#F0F0F0]">{e.name || 'Événement'}</span>
                       <Badge variant="neutral">{e.status || 'nouveau'}</Badge>
                     </div>
@@ -159,26 +159,26 @@ export default function DashboardPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <Card>
               <div className="text-center">
-                <div className="text-3xl font-bold text-[#6C5CE7]">{stats.artists}</div>
-                <div className="text-[#8E8E9A] mt-1">Artistes actifs</div>
+                <div className="text-3xl font-bold text-[#FF8C45]">{stats.artists}</div>
+                <div className="text-[#8E9BC0] mt-1">Artistes actifs</div>
               </div>
             </Card>
             <Card>
               <div className="text-center">
-                <div className="text-3xl font-bold text-[#00D2FF]">{stats.missions}</div>
-                <div className="text-[#8E8E9A] mt-1">Missions actives</div>
+                <div className="text-3xl font-bold text-[#061E66]">{stats.missions}</div>
+                <div className="text-[#8E9BC0] mt-1">Missions actives</div>
               </div>
             </Card>
             <Card>
               <div className="text-center">
-                <div className="text-3xl font-bold text-[#FF6B6B]">${stats.revenue}</div>
-                <div className="text-[#8E8E9A] mt-1">Revenus ce mois</div>
+                <div className="text-3xl font-bold text-[#FF8C45]">${stats.revenue}</div>
+                <div className="text-[#8E9BC0] mt-1">Revenus ce mois</div>
               </div>
             </Card>
             <Card>
               <div className="text-center">
                 <div className="text-3xl font-bold text-[#F0F0F0]">{stats.pendingEvents}</div>
-                <div className="text-[#8E8E9A] mt-1">Événements en attente</div>
+                <div className="text-[#8E9BC0] mt-1">Événements en attente</div>
               </div>
             </Card>
           </div>

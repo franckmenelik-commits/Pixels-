@@ -61,7 +61,7 @@ function RegisterForm() {
       </div>
       <form onSubmit={handleSubmit} className="p-8 space-y-5">
         {error && (
-          <div className="bg-[#FF6B6B]/10 border border-[#FF6B6B]/30 text-[#FF6B6B] rounded-lg p-3 text-sm">
+          <div className="bg-[#FF8C45]/10 border border-[#FF8C45]/30 text-[#FF8C45] rounded-lg p-3 text-sm">
             {error}
           </div>
         )}
@@ -106,9 +106,9 @@ function RegisterForm() {
         <Button variant="primary" size="lg" type="submit" disabled={loading}>
           {loading ? 'Inscription...' : "S'inscrire"}
         </Button>
-        <p className="text-center text-[#8E8E9A] text-sm">
+        <p className="text-center text-[#8E9BC0] text-sm">
           Déjà un compte?{' '}
-          <Link href="/login" className="text-[#00D2FF] hover:underline">
+          <Link href="/login" className="text-[#061E66] hover:underline">
             Se connecter
           </Link>
         </p>
@@ -119,9 +119,9 @@ function RegisterForm() {
 
 export default function RegisterPage() {
   return (
-    <div className="min-h-screen bg-[#0F0F1A] pixel-grid flex items-center justify-center px-4">
+    <div className="min-h-screen bg-[#040E3A] pixel-grid flex items-center justify-center px-4">
       <div className="w-full max-w-md">
-        <Suspense fallback={<div className="text-[#8E8E9A] text-center">Chargement...</div>}>
+        <Suspense fallback={<div className="text-[#8E9BC0] text-center">Chargement...</div>}>
           <RegisterForm />
         </Suspense>
       </div>

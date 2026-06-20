@@ -53,7 +53,7 @@ export default function IncidentsPage() {
     fetch("/api/incidents").then(r => r.json()).then(d => setIncidents(d.incidents || [])).catch(() => {});
   }, [user]);
 
-  if (!user) return <div className="min-h-screen bg-[#0F0F1A] flex items-center justify-center"><div className="text-[#8E8E9A]">Chargement...</div></div>;
+  if (!user) return <div className="min-h-screen bg-[#040E3A] flex items-center justify-center"><div className="text-[#8E9BC0]">Chargement...</div></div>;
 
   const filtered = statusFilter ? incidents.filter(i => i.status === statusFilter) : incidents;
 
@@ -85,13 +85,13 @@ export default function IncidentsPage() {
         <div className="flex gap-2">
           {statusFilters.map(f => (
             <button key={f.value} onClick={() => setStatusFilter(f.value)}
-              className={`px-4 py-2 rounded-lg text-sm transition-colors cursor-pointer ${statusFilter === f.value ? "bg-[#6C5CE7] text-white" : "bg-[#1A1A2E] text-[#8E8E9A] hover:text-[#F0F0F0]"}`}
+              className={`px-4 py-2 rounded-lg text-sm transition-colors cursor-pointer ${statusFilter === f.value ? "bg-[#FF8C45] text-white" : "bg-[#0A1A4A] text-[#8E9BC0] hover:text-[#F0F0F0]"}`}
             >{f.label}</button>
           ))}
         </div>
 
         {filtered.length === 0 ? (
-          <Card><p className="text-[#8E8E9A]">Aucun incident trouvé.</p></Card>
+          <Card><p className="text-[#8E9BC0]">Aucun incident trouvé.</p></Card>
         ) : (
           <div className="space-y-4">
             {filtered.map(incident => {
@@ -104,17 +104,17 @@ export default function IncidentsPage() {
                       <div className="flex justify-between items-start">
                         <div className="flex-1">
                           <div className="flex items-center gap-3 mb-1">
-                            <p className="text-sm text-[#6C5CE7]">
+                            <p className="text-sm text-[#FF8C45]">
                               {new Date(incident.date).toLocaleDateString("fr-FR", { year: "numeric", month: "long", day: "numeric" })}
                             </p>
-                            {incident.location && <span className="text-sm text-[#8E8E9A]">{incident.location}</span>}
+                            {incident.location && <span className="text-sm text-[#8E9BC0]">{incident.location}</span>}
                           </div>
                           <p className={`text-[#F0F0F0] ${isExpanded ? "" : "line-clamp-2"}`}>{incident.description}</p>
                         </div>
                         <div className="flex flex-col items-end gap-2 ml-4">
                           <Badge variant={config.variant}>{config.label}</Badge>
                           {incident.damagesEstimate != null && (
-                            <span className="text-sm text-[#FF6B6B]">{incident.damagesEstimate.toLocaleString("fr-FR")} €</span>
+                            <span className="text-sm text-[#FF8C45]">{incident.damagesEstimate.toLocaleString("fr-FR")} €</span>
                           )}
                         </div>
                       </div>
@@ -123,7 +123,7 @@ export default function IncidentsPage() {
                         <div className="border-t border-[rgba(108,92,231,0.2)] pt-4 space-y-3">
                           {incident.partiesInvolved && incident.partiesInvolved.length > 0 && (
                             <div>
-                              <p className="text-xs text-[#8E8E9A] mb-1">Parties impliquées</p>
+                              <p className="text-xs text-[#8E9BC0] mb-1">Parties impliquées</p>
                               <div className="flex gap-2 flex-wrap">
                                 {incident.partiesInvolved.map((p, i) => <Badge key={i} variant="neutral">{p}</Badge>)}
                               </div>
@@ -131,18 +131,18 @@ export default function IncidentsPage() {
                           )}
                           {incident.resolution && (
                             <div>
-                              <p className="text-xs text-[#8E8E9A] mb-1">Résolution</p>
+                              <p className="text-xs text-[#8E9BC0] mb-1">Résolution</p>
                               <p className="text-sm text-[#F0F0F0]">{incident.resolution}</p>
                             </div>
                           )}
                           {incident.lessonsLearned && (
-                            <div className="bg-[#6C5CE7]/10 border border-[#6C5CE7]/30 rounded-lg p-3">
-                              <p className="text-xs text-[#6C5CE7] font-semibold mb-1">Leçons apprises</p>
+                            <div className="bg-[#FF8C45]/10 border border-[#FF8C45]/30 rounded-lg p-3">
+                              <p className="text-xs text-[#FF8C45] font-semibold mb-1">Leçons apprises</p>
                               <p className="text-sm text-[#F0F0F0]">{incident.lessonsLearned}</p>
                             </div>
                           )}
                           {incident.insuranceRef && (
-                            <p className="text-xs text-[#8E8E9A]">Réf. assurance: {incident.insuranceRef}</p>
+                            <p className="text-xs text-[#8E9BC0]">Réf. assurance: {incident.insuranceRef}</p>
                           )}
                         </div>
                       )}
@@ -160,7 +160,7 @@ export default function IncidentsPage() {
           <Input label="Date" type="date" value={form.date} onChange={e => setForm({ ...form, date: e.target.value })} required />
           <Input label="Lieu" value={form.location} onChange={e => setForm({ ...form, location: e.target.value })} />
           <div className="flex flex-col gap-1.5">
-            <label className="text-sm text-[#8E8E9A]">Description</label>
+            <label className="text-sm text-[#8E9BC0]">Description</label>
             <textarea className="bg-[var(--surface)] border border-[rgba(108,92,231,0.2)] rounded-lg px-4 py-2.5 text-[var(--text)] focus:outline-none focus:border-[var(--primary)] transition-colors min-h-[100px] resize-y" value={form.description} onChange={e => setForm({ ...form, description: e.target.value })} required />
           </div>
           <Input label="Parties impliquées (séparées par des virgules)" value={form.partiesInvolved} onChange={e => setForm({ ...form, partiesInvolved: e.target.value })} />

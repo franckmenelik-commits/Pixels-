@@ -60,7 +60,7 @@ export default function EventsPipelinePage() {
     } catch { /* ignore */ }
   };
 
-  if (!user) return <div className="min-h-screen bg-[#0F0F1A] flex items-center justify-center text-[#8E8E9A]">Chargement...</div>;
+  if (!user) return <div className="min-h-screen bg-[#040E3A] flex items-center justify-center text-[#8E9BC0]">Chargement...</div>;
 
   return (
     <DashboardLayout user={user}>
@@ -74,7 +74,7 @@ export default function EventsPipelinePage() {
                 <div className="flex items-center gap-2 mb-3 px-1">
                   <span>{col.icon}</span>
                   <h3 className="text-sm font-semibold text-[#F0F0F0]">{col.label}</h3>
-                  <span className="text-xs text-[#8E8E9A] bg-[#1A1A2E] px-2 py-0.5 rounded-full">{colEvents.length}</span>
+                  <span className="text-xs text-[#8E9BC0] bg-[#0A1A4A] px-2 py-0.5 rounded-full">{colEvents.length}</span>
                 </div>
                 <div className="space-y-3">
                   {colEvents.map(evt => {
@@ -85,9 +85,9 @@ export default function EventsPipelinePage() {
                         <div className="space-y-2">
                           <h4 className="text-sm font-semibold text-[#F0F0F0]">{evt.name || 'Événement'}</h4>
                           {(evt.dateStart || evt.date) && (
-                            <p className="text-xs text-[#8E8E9A]">{new Date(evt.dateStart || evt.date!).toLocaleDateString('fr-CA')}</p>
+                            <p className="text-xs text-[#8E9BC0]">{new Date(evt.dateStart || evt.date!).toLocaleDateString('fr-CA')}</p>
                           )}
-                          {evt.organizerName && <p className="text-xs text-[#8E8E9A]">{evt.organizerName}</p>}
+                          {evt.organizerName && <p className="text-xs text-[#8E9BC0]">{evt.organizerName}</p>}
                           {evt.type && <Badge variant={segmentVariant(evt.type)}>{evt.type}</Badge>}
                           <div className="flex gap-2 pt-1">
                             {prevCol && (
@@ -102,7 +102,7 @@ export default function EventsPipelinePage() {
                     );
                   })}
                   {colEvents.length === 0 && (
-                    <div className="text-center py-8 text-[#8E8E9A] text-xs border border-dashed border-[#1A1A2E] rounded-lg">Vide</div>
+                    <div className="text-center py-8 text-[#8E9BC0] text-xs border border-dashed border-[#0A1A4A] rounded-lg">Vide</div>
                   )}
                 </div>
               </div>

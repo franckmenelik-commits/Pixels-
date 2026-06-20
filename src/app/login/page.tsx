@@ -35,7 +35,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0F0F1A] pixel-grid flex items-center justify-center px-4">
+    <div className="min-h-screen bg-[#040E3A] pixel-grid flex items-center justify-center px-4">
       <div className="w-full max-w-md">
         <div className="glass rounded-2xl overflow-hidden">
           <div className="gradient-primary p-6 text-center">
@@ -44,7 +44,7 @@ export default function LoginPage() {
           </div>
           <form onSubmit={handleSubmit} className="p-8 space-y-6">
             {error && (
-              <div className="bg-[#FF6B6B]/10 border border-[#FF6B6B]/30 text-[#FF6B6B] rounded-lg p-3 text-sm">
+              <div className="bg-[#FF8C45]/10 border border-[#FF8C45]/30 text-[#FF8C45] rounded-lg p-3 text-sm">
                 {error}
               </div>
             )}
@@ -65,9 +65,9 @@ export default function LoginPage() {
             <Button variant="primary" size="lg" type="submit" disabled={loading}>
               {loading ? 'Connexion...' : 'Se connecter'}
             </Button>
-            <p className="text-center text-[#8E8E9A] text-sm">
+            <p className="text-center text-[#8E9BC0] text-sm">
               Pas encore de compte?{' '}
-              <Link href="/register" className="text-[#00D2FF] hover:underline">
+              <Link href="/register" className="text-[#061E66] hover:underline">
                 S&apos;inscrire
               </Link>
             </p>

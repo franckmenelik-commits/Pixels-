@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Outfit, Inter } from "next/font/google";
+import { Outfit, Open_Sans } from "next/font/google";
 import "./globals.css";
 
 const outfit = Outfit({
@@ -8,8 +8,8 @@ const outfit = Outfit({
   display: "swap",
 });
 
-const inter = Inter({
-  variable: "--font-inter",
+const openSans = Open_Sans({
+  variable: "--font-open-sans",
   subsets: ["latin"],
   display: "swap",
 });
@@ -25,7 +25,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="fr" className={`${outfit.variable} ${inter.variable} h-full antialiased`}>
+    <html lang="fr" className={`${outfit.variable} ${openSans.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col pixel-grid">{children}</body>
     </html>
   );

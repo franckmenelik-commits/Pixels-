@@ -1,13 +1,13 @@
 @import "tailwindcss";
 
 :root {
-  --primary: #6C5CE7;
-  --secondary: #00D2FF;
-  --accent: #FF6B6B;
-  --bg: #0F0F1A;
-  --surface: #1A1A2E;
-  --text: #F0F0F0;
-  --text-muted: #8E8E9A;
+  --primary: #FF8C45;
+  --secondary: #061E66;
+  --accent: #FF8C45;
+  --bg: #040E3A;
+  --surface: #0A1A4A;
+  --text: #FFFFFF;
+  --text-muted: #8E9BC0;
   --success: #00E676;
   --warning: #FFC107;
   --error: #FF5252;
@@ -16,7 +16,7 @@
 body {
   background: var(--bg);
   color: var(--text);
-  font-family: 'Inter', sans-serif;
+  font-family: 'Open Sans', sans-serif;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -24,22 +24,22 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .glass {
-  background: rgba(26, 26, 46, 0.7);
+  background: rgba(10, 26, 74, 0.7);
   backdrop-filter: blur(12px);
-  border: 1px solid rgba(108, 92, 231, 0.2);
+  border: 1px solid rgba(255, 140, 69, 0.2);
 }
 
 .gradient-primary {
-  background: linear-gradient(135deg, #6C5CE7, #00D2FF);
+  background: linear-gradient(135deg, #FF8C45, #061E66);
 }
 
 .gradient-accent {
-  background: linear-gradient(135deg, #FF6B6B, #6C5CE7);
+  background: linear-gradient(135deg, #FF8C45, #061E66);
 }
 
 .pixel-grid {
   background-image:
-    linear-gradient(rgba(108, 92, 231, 0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(108, 92, 231, 0.05) 1px, transparent 1px);
+    linear-gradient(rgba(255, 140, 69, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 140, 69, 0.05) 1px, transparent 1px);
   background-size: 20px 20px;
 }
