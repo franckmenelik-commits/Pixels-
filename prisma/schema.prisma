@@ -153,3 +153,86 @@ model Transaction {
   status     String   @default("pending")
   date       DateTime @default(now())
 }
+
+model Song {
+  id          String   @id @default(cuid())
+  title       String
+  artistOrig  String
+  key         String?
+  tempoBpm    Int?
+  genre       String?
+  difficulty  String?
+  duration    String?
+  chordSheets String   @default("{}")
+  notes       String?
+  tags        String   @default("[]")
+  referenceUrl String?
+  timesPlayed  Int     @default(0)
+  createdBy   String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model JamSession {
+  id           String   @id @default(cuid())
+  date         DateTime
+  endTime      DateTime?
+  venueName    String
+  venueAddress String?
+  theme        String?
+  capacity     Int      @default(20)
+  description  String?
+  status       String   @default("upcoming")
+  participants String   @default("[]")
+  photos       String   @default("[]")
+  feedback     String   @default("[]")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Equipment {
+  id          String   @id @default(cuid())
+  name        String
+  type        String
+  ownerType   String
+  ownerId     String?
+  condition   String   @default("good")
+  valueEst    Float?
+  status      String   @default("available")
+  location    String?
+  photoUrl    String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  loans       EquipmentLoan[]
+}
+
+model EquipmentLoan {
+  id           String    @id @default(cuid())
+  equipmentId  String
+  equipment    Equipment @relation(fields: [equipmentId], references: [id])
+  borrowerId   String
+  loanDate     DateTime  @default(now())
+  dueDate      DateTime
+  returnDate   DateTime?
+  conditionOut String?
+  conditionIn  String?
+  status       String    @default("active")
+  notes        String?
+}
+
+model Incident {
+  id           String   @id @default(cuid())
+  missionId    String?
+  date         DateTime @default(now())
+  location     String?
+  description  String
+  partiesInvolved String @default("[]")
+  photos       String   @default("[]")
+  damagesEst   Float?
+  status       String   @default("open")
+  insuranceRef String?
+  resolution   String?
+  lessons      String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
