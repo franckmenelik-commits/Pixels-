@@ -2,11 +2,10 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useAuth } from '@/lib/auth-context';
 import DashboardLayout from '@/components/layout/DashboardLayout';
 import Card from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
-
-interface User { _id: string; name: string; email: string; role: string; artistProfile?: string; }
 
 const DAYS = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'];
 const SLOTS = ['Matin', 'Après-midi', 'Soir'];
@@ -15,30 +14,27 @@ type AvailabilityGrid = Record<string, Record<string, boolean>>;
 
 export default function AvailabilityPage() {
   const router = useRouter();
-  const [user, setUser] = useState<User | null>(null);
+  const { user, token, loading } = useAuth();
   const [grid, setGrid] = useState<AvailabilityGrid>({});
   const [blockedDates, setBlockedDates] = useState<string[]>([]);
   const [newBlockedDate, setNewBlockedDate] = useState('');
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState('');
 
+  useEffect(() => { if (!loading && !user) router.push("/login"); }, [loading, user, router]);
+
   useEffect(() => {
-    fetch('/api/auth/me')
-      .then(r => { if (!r.ok) throw new Error(); return r.json(); })
-      .then(data => {
-        setUser(data.user);
-        if (data.user.artistProfile) {
-          fetch(`/api/artists/${data.user.artistProfile}`)
-            .then(r => r.json())
-            .then(d => {
-              if (d.artist?.availability) setGrid(d.artist.availability);
-              if (d.artist?.blockedDates) setBlockedDates(d.artist.blockedDates);
-            })
-            .catch(() => {});
-        }
+    if (!user?.artistProfile) return;
+    fetch(`/api/artists/${user.artistProfile}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then(r => r.json())
+      .then(d => {
+        if (d.artist?.availability) setGrid(d.artist.availability);
+        if (d.artist?.blockedDates) setBlockedDates(d.artist.blockedDates);
       })
-      .catch(() => router.push('/login'));
-  }, [router]);
+      .catch(() => {});
+  }, [user, token]);
 
   const toggle = (day: string, slot: string) => {
     setGrid(prev => ({
@@ -64,7 +60,7 @@ export default function AvailabilityPage() {
     try {
       const res = await fetch(`/api/artists/${user.artistProfile}`, {
         method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
         body: JSON.stringify({ availability: grid, blockedDates }),
       });
       if (!res.ok) throw new Error();
@@ -76,7 +72,7 @@ export default function AvailabilityPage() {
     }
   };
 
-  if (!user) return <div className="min-h-screen bg-[#040E3A] flex items-center justify-center text-[#8E9BC0]">Chargement...</div>;
+  if (loading || !user) return <div className="min-h-screen bg-[#040E3A] flex items-center justify-center"><div className="text-[#8E9BC0]">Chargement...</div></div>;
 
   return (
     <DashboardLayout user={user}>
