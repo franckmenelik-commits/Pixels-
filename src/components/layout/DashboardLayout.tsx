@@ -9,7 +9,7 @@ interface DashboardLayoutProps {
 
 export default function DashboardLayout({ children, user }: DashboardLayoutProps) {
   return (
-    <div className="flex min-h-screen bg-[var(--surface)]">
+    <div className="flex min-h-screen bg-[var(--cream)]">
       <Sidebar user={user} />
       <main className="flex-1 p-8">{children}</main>
     </div>

@@ -33,7 +33,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[var(--surface)] flex items-center justify-center px-4">
+    <div className="min-h-screen bg-[var(--cream)] flex items-center justify-center px-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
           <span className="pixels-logo text-3xl">pixels&trade;</span>

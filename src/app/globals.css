@@ -5,10 +5,11 @@
   --secondary: #061E66;
   --accent: #FF8C45;
   --bg: #FFFFFF;
-  --surface: #F7F8FA;
+  --surface: #F7F5F0;
+  --cream: #FBF9F4;
   --text: #1A1A2E;
   --text-muted: #6B7280;
-  --border: #E5E7EB;
+  --border: #E5E2DA;
   --success: #10B981;
   --warning: #F59E0B;
   --error: #EF4444;
@@ -43,4 +44,29 @@ h1, h2, h3, h4, h5, h6 {
   font-style: italic;
   font-weight: 700;
   color: var(--secondary);
+}
+
+.editorial-heading {
+  font-family: 'Outfit', serif;
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.section-cream {
+  background: var(--cream);
+}
+
+.section-dark {
+  background: var(--secondary);
+  color: white;
+}
+
+.tag-label {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--primary);
+  font-weight: 600;
 }
