@@ -16,13 +16,13 @@ export default function Select({ label, options, error, className = "", id, ...r
   return (
     <div className="flex flex-col gap-1.5">
       {label && (
-        <label htmlFor={selectId} className="text-sm text-[var(--text-muted)]">
+        <label htmlFor={selectId} className="text-sm font-medium text-[var(--text)]">
           {label}
         </label>
       )}
       <select
         id={selectId}
-        className={`bg-[var(--surface)] border border-[rgba(108,92,231,0.2)] rounded-lg px-4 py-2.5 text-[var(--text)] focus:outline-none focus:border-[var(--primary)] transition-colors appearance-none ${error ? "border-[var(--error)]" : ""} ${className}`}
+        className={`bg-[var(--surface)] border border-[var(--border)] rounded-lg px-4 py-2.5 text-[var(--text)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/30 focus:border-[var(--primary)] transition-colors appearance-none ${error ? "border-[var(--error)]" : ""} ${className}`}
         {...rest}
       >
         {options.map((opt) => (

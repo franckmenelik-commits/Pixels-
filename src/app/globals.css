@@ -4,13 +4,14 @@
   --primary: #FF8C45;
   --secondary: #061E66;
   --accent: #FF8C45;
-  --bg: #040E3A;
-  --surface: #0A1A4A;
-  --text: #FFFFFF;
-  --text-muted: #8E9BC0;
-  --success: #00E676;
-  --warning: #FFC107;
-  --error: #FF5252;
+  --bg: #FFFFFF;
+  --surface: #F7F8FA;
+  --text: #1A1A2E;
+  --text-muted: #6B7280;
+  --border: #E5E7EB;
+  --success: #10B981;
+  --warning: #F59E0B;
+  --error: #EF4444;
 }
 
 body {
@@ -24,22 +25,22 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .glass {
-  background: rgba(10, 26, 74, 0.7);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 140, 69, 0.2);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
 }
 
 .gradient-primary {
-  background: linear-gradient(135deg, #FF8C45, #061E66);
+  background: linear-gradient(135deg, #FF8C45, #FF6B1A);
 }
 
 .gradient-accent {
-  background: linear-gradient(135deg, #FF8C45, #061E66);
+  background: linear-gradient(135deg, #061E66, #0A2D8A);
 }
 
-.pixel-grid {
-  background-image:
-    linear-gradient(rgba(255, 140, 69, 0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 140, 69, 0.05) 1px, transparent 1px);
-  background-size: 20px 20px;
+.pixels-logo {
+  font-family: 'Outfit', cursive;
+  font-style: italic;
+  font-weight: 700;
+  color: var(--secondary);
 }

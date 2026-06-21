@@ -56,17 +56,17 @@ export default function NewEventPage() {
     }
   };
 
-  if (authLoading || !user) return <div className="min-h-screen bg-[#040E3A] flex items-center justify-center"><div className="text-[#8E9BC0]">Chargement...</div></div>;
+  if (authLoading || !user) return <div className="min-h-screen bg-[var(--surface)] flex items-center justify-center"><div className="text-[var(--text-muted)]">Chargement...</div></div>;
 
   return (
     <DashboardLayout user={user}>
       <form onSubmit={handleSubmit} className="space-y-8 max-w-3xl">
-        <h1 className="text-3xl font-bold text-[#F0F0F0]">Soumettre un événement</h1>
+        <h1 className="text-3xl font-bold text-[var(--text)]">Soumettre un événement</h1>
 
-        {error && <div className="bg-[#FF8C45]/10 border border-[#FF8C45]/30 text-[#FF8C45] rounded-lg p-3 text-sm">{error}</div>}
+        {error && <div className="bg-[var(--primary)]/10 border border-[var(--primary)]/30 text-[var(--primary)] rounded-lg p-3 text-sm">{error}</div>}
 
         <Card>
-          <h2 className="text-xl font-semibold text-[#061E66] mb-4">Informations générales</h2>
+          <h2 className="text-xl font-semibold text-[var(--secondary)] mb-4">Informations générales</h2>
           <div className="space-y-4">
             <Select
               label="Type d'événement"
@@ -98,9 +98,9 @@ export default function NewEventPage() {
             />
             <Input label="Nombre d'invités" type="number" value={form.guestCount} onChange={e => update('guestCount', e.target.value)} />
             <div>
-              <label className="block text-sm font-medium text-[#F0F0F0] mb-1">Description</label>
+              <label className="block text-sm font-medium text-[var(--text)] mb-1">Description</label>
               <textarea
-                className="w-full rounded-lg bg-[#040E3A] border border-[#0A1A4A] text-[#F0F0F0] p-3 focus:border-[#FF8C45] focus:outline-none"
+                className="w-full rounded-lg bg-[var(--surface)] border border-[var(--border)] text-[var(--text)] p-3 focus:border-[var(--primary)] focus:outline-none"
                 rows={3}
                 value={form.description}
                 onChange={e => update('description', e.target.value)}
@@ -111,14 +111,14 @@ export default function NewEventPage() {
         </Card>
 
         <Card>
-          <h2 className="text-xl font-semibold text-[#061E66] mb-4">Musique</h2>
+          <h2 className="text-xl font-semibold text-[var(--secondary)] mb-4">Musique</h2>
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-[#F0F0F0] mb-2">Styles musicaux</label>
+              <label className="block text-sm font-medium text-[var(--text)] mb-2">Styles musicaux</label>
               <div className="flex flex-wrap gap-2">
                 {MUSIC_STYLES.map(s => (
                   <button key={s} type="button" onClick={() => toggleArray('musicStyles', s)}
-                    className={`px-3 py-1.5 rounded-full text-sm transition ${form.musicStyles.includes(s) ? 'bg-[#FF8C45] text-white' : 'bg-[#040E3A] text-[#8E9BC0] border border-[#0A1A4A] hover:border-[#FF8C45]'}`}>
+                    className={`px-3 py-1.5 rounded-full text-sm transition ${form.musicStyles.includes(s) ? 'bg-[var(--primary)] text-white' : 'bg-[var(--surface)] text-[var(--text-muted)] border border-[var(--border)] hover:border-[var(--primary)]'}`}>
                     {s}
                   </button>
                 ))}
@@ -127,11 +127,11 @@ export default function NewEventPage() {
             <Input label="URL Playlist" value={form.playlistUrl} onChange={e => update('playlistUrl', e.target.value)} />
             <Input label="Nombre de musiciens souhaités" type="number" value={form.musiciansCount} onChange={e => update('musiciansCount', e.target.value)} />
             <div>
-              <label className="block text-sm font-medium text-[#F0F0F0] mb-2">Instruments souhaités</label>
+              <label className="block text-sm font-medium text-[var(--text)] mb-2">Instruments souhaités</label>
               <div className="flex flex-wrap gap-2">
                 {INSTRUMENTS.map(inst => (
                   <button key={inst} type="button" onClick={() => toggleArray('instruments', inst)}
-                    className={`px-3 py-1.5 rounded-full text-sm transition ${form.instruments.includes(inst) ? 'bg-[#061E66] text-[#040E3A]' : 'bg-[#040E3A] text-[#8E9BC0] border border-[#0A1A4A] hover:border-[#061E66]'}`}>
+                    className={`px-3 py-1.5 rounded-full text-sm transition ${form.instruments.includes(inst) ? 'bg-[var(--secondary)] text-white' : 'bg-[var(--surface)] text-[var(--text-muted)] border border-[var(--border)] hover:border-[var(--secondary)]'}`}>
                     {inst}
                   </button>
                 ))}
@@ -142,7 +142,7 @@ export default function NewEventPage() {
         </Card>
 
         <Card>
-          <h2 className="text-xl font-semibold text-[#061E66] mb-4">Logistique</h2>
+          <h2 className="text-xl font-semibold text-[var(--secondary)] mb-4">Logistique</h2>
           <div className="space-y-3">
             {[
               { key: 'hasPower', label: 'Alimentation électrique disponible' },
@@ -151,8 +151,8 @@ export default function NewEventPage() {
               { key: 'hasParking', label: 'Stationnement disponible' },
               { key: 'transportByOrg', label: "Transport fourni par l'organisateur" },
             ].map(({ key, label }) => (
-              <label key={key} className="flex items-center gap-3 text-[#F0F0F0]">
-                <input type="checkbox" checked={form[key as keyof typeof form] as boolean} onChange={e => update(key, e.target.checked)} className="accent-[#FF8C45]" />
+              <label key={key} className="flex items-center gap-3 text-[var(--text)]">
+                <input type="checkbox" checked={form[key as keyof typeof form] as boolean} onChange={e => update(key, e.target.checked)} className="accent-[var(--primary)]" />
                 {label}
               </label>
             ))}
@@ -160,7 +160,7 @@ export default function NewEventPage() {
         </Card>
 
         <Card>
-          <h2 className="text-xl font-semibold text-[#061E66] mb-4">Budget</h2>
+          <h2 className="text-xl font-semibold text-[var(--secondary)] mb-4">Budget</h2>
           <div className="space-y-4">
             <Input label="Budget ($CAD)" type="number" value={form.budget} onChange={e => update('budget', e.target.value)} />
             <Select

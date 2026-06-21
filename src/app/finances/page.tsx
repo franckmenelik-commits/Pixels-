@@ -34,40 +34,40 @@ export default function FinancesPage() {
     })).catch(() => {});
   }, [user, token]);
 
-  if (loading || !user) return <div className="min-h-screen bg-[#040E3A] flex items-center justify-center"><div className="text-[#8E9BC0]">Chargement...</div></div>;
+  if (loading || !user) return <div className="min-h-screen bg-[var(--surface)] flex items-center justify-center"><div className="text-[var(--text-muted)]">Chargement...</div></div>;
 
   const cards = [
-    { label: 'Revenus totaux', value: data.totalRevenue, color: '#FF8C45' },
-    { label: 'Payé aux musiciens', value: data.paidToMusicians, color: '#061E66' },
-    { label: 'Logistique', value: data.logistics, color: '#FF8C45' },
-    { label: 'Fonds de réserve', value: data.reserveFund, color: '#F0F0F0' },
+    { label: 'Revenus totaux', value: data.totalRevenue, color: 'var(--primary)' },
+    { label: 'Payé aux musiciens', value: data.paidToMusicians, color: 'var(--secondary)' },
+    { label: 'Logistique', value: data.logistics, color: 'var(--primary)' },
+    { label: 'Fonds de réserve', value: data.reserveFund, color: 'var(--text)' },
   ];
 
   return (
     <DashboardLayout user={user}>
       <div className="space-y-8">
-        <h1 className="text-3xl font-bold text-[#F0F0F0]">Finances</h1>
+        <h1 className="text-3xl font-bold text-[var(--text)]">Finances</h1>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {cards.map(c => (
             <Card key={c.label}>
               <div className="text-center">
                 <div className="text-3xl font-bold" style={{ color: c.color }}>${c.value.toLocaleString('fr-CA')}</div>
-                <div className="text-[#8E9BC0] mt-1 text-sm">{c.label}</div>
+                <div className="text-[var(--text-muted)] mt-1 text-sm">{c.label}</div>
               </div>
             </Card>
           ))}
         </div>
 
         <Card>
-          <h2 className="text-xl font-semibold text-[#061E66] mb-4">Transactions récentes</h2>
+          <h2 className="text-xl font-semibold text-[var(--secondary)] mb-4">Transactions récentes</h2>
           {data.transactions.length === 0 ? (
-            <p className="text-[#8E9BC0]">Aucune transaction.</p>
+            <p className="text-[var(--text-muted)]">Aucune transaction.</p>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="text-[#8E9BC0] border-b border-[#0A1A4A]">
+                  <tr className="text-[var(--text-muted)] border-b border-[var(--border)]">
                     <th className="text-left py-3 px-2">Date</th>
                     <th className="text-left py-3 px-2">Description</th>
                     <th className="text-left py-3 px-2">Type</th>
@@ -76,15 +76,15 @@ export default function FinancesPage() {
                 </thead>
                 <tbody>
                   {data.transactions.map(t => (
-                    <tr key={t._id} className="border-b border-[#0A1A4A]/50 hover:bg-[#0A1A4A]/30">
-                      <td className="py-3 px-2 text-[#8E9BC0]">{t.date ? new Date(t.date).toLocaleDateString('fr-CA') : '—'}</td>
-                      <td className="py-3 px-2 text-[#F0F0F0]">{t.description || '—'}</td>
+                    <tr key={t._id} className="border-b border-[var(--border)] hover:bg-[var(--surface)]">
+                      <td className="py-3 px-2 text-[var(--text-muted)]">{t.date ? new Date(t.date).toLocaleDateString('fr-CA') : '—'}</td>
+                      <td className="py-3 px-2 text-[var(--text)]">{t.description || '—'}</td>
                       <td className="py-3 px-2">
-                        <span className={`text-xs px-2 py-1 rounded-full ${t.type === 'income' ? 'bg-[#FF8C45]/20 text-[#FF8C45]' : 'bg-[#FF8C45]/20 text-[#FF8C45]'}`}>
+                        <span className={`text-xs px-2 py-1 rounded-full ${t.type === 'income' ? 'bg-[var(--primary)]/10 text-[var(--primary)]' : 'bg-[var(--primary)]/10 text-[var(--primary)]'}`}>
                           {t.type === 'income' ? 'Revenu' : 'Dépense'}
                         </span>
                       </td>
-                      <td className={`py-3 px-2 text-right font-medium ${t.type === 'income' ? 'text-[#FF8C45]' : 'text-[#FF8C45]'}`}>
+                      <td className={`py-3 px-2 text-right font-medium ${t.type === 'income' ? 'text-[var(--primary)]' : 'text-[var(--primary)]'}`}>
                         {t.type === 'income' ? '+' : '-'}${Math.abs(t.amount || 0).toLocaleString('fr-CA')}
                       </td>
                     </tr>

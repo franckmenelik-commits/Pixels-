@@ -107,7 +107,7 @@ export default function SongsPage() {
       .catch(() => {});
   }, [user, token]);
 
-  if (authLoading || !user) return <div className="min-h-screen bg-[#040E3A] flex items-center justify-center"><div className="text-[#8E9BC0]">Chargement...</div></div>;
+  if (authLoading || !user) return <div className="min-h-screen bg-[var(--surface)] flex items-center justify-center"><div className="text-[var(--text-muted)]">Chargement...</div></div>;
 
   const filtered = songs.filter(s => {
     const matchSearch = !search || s.title.toLowerCase().includes(search.toLowerCase()) || s.artistOriginal?.toLowerCase().includes(search.toLowerCase());
@@ -139,8 +139,8 @@ export default function SongsPage() {
     <DashboardLayout user={user}>
       <div className="space-y-6">
         <div className="flex items-center justify-between">
-          <h1 className="text-3xl font-bold text-[#F0F0F0]">
-            Bibliothèque Musicale <span className="text-lg font-normal text-[#8E9BC0]">({filtered.length})</span>
+          <h1 className="text-3xl font-bold text-[var(--text)]">
+            Bibliothèque Musicale <span className="text-lg font-normal text-[var(--text-muted)]">({filtered.length})</span>
           </h1>
           {isAdmin && <Button onClick={() => setShowAddModal(true)}>+ Ajouter un morceau</Button>}
         </div>
@@ -154,7 +154,7 @@ export default function SongsPage() {
         </div>
 
         {filtered.length === 0 ? (
-          <Card><p className="text-[#8E9BC0]">Aucun morceau trouvé.</p></Card>
+          <Card><p className="text-[var(--text-muted)]">Aucun morceau trouvé.</p></Card>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {filtered.map(song => (
@@ -162,13 +162,13 @@ export default function SongsPage() {
                 <Card>
                   <div className="space-y-3">
                     <div className="flex justify-between items-start">
-                      <h3 className="text-lg font-semibold text-[#F0F0F0]">{song.title}</h3>
+                      <h3 className="text-lg font-semibold text-[var(--text)]">{song.title}</h3>
                       {song.genre && <Badge variant="primary">{song.genre}</Badge>}
                     </div>
-                    {song.artistOriginal && <p className="text-sm text-[#8E9BC0]">{song.artistOriginal}</p>}
-                    <div className="flex gap-3 text-sm text-[#8E9BC0]">
-                      {song.key && <span>Tonalité: <span className="text-[#F0F0F0]">{song.key}</span></span>}
-                      {song.tempoBpm && <span>Tempo: <span className="text-[#F0F0F0]">{song.tempoBpm} BPM</span></span>}
+                    {song.artistOriginal && <p className="text-sm text-[var(--text-muted)]">{song.artistOriginal}</p>}
+                    <div className="flex gap-3 text-sm text-[var(--text-muted)]">
+                      {song.key && <span>Tonalité: <span className="text-[var(--text)]">{song.key}</span></span>}
+                      {song.tempoBpm && <span>Tempo: <span className="text-[var(--text)]">{song.tempoBpm} BPM</span></span>}
                     </div>
                     <div className="flex gap-2 flex-wrap">
                       {song.difficulty && <Badge variant={difficultyVariant(song.difficulty)}>{song.difficulty}</Badge>}
@@ -186,7 +186,7 @@ export default function SongsPage() {
       <Modal isOpen={!!selectedSong} onClose={() => setSelectedSong(null)} title={selectedSong?.title}>
         {selectedSong && (
           <div className="space-y-4">
-            <div className="flex gap-4 text-sm text-[#8E9BC0]">
+            <div className="flex gap-4 text-sm text-[var(--text-muted)]">
               {selectedSong.artistOriginal && <span>{selectedSong.artistOriginal}</span>}
               {selectedSong.key && <span>Tonalité: {selectedSong.key}</span>}
               {selectedSong.tempoBpm && <span>{selectedSong.tempoBpm} BPM</span>}
@@ -197,17 +197,17 @@ export default function SongsPage() {
               {selectedSong.tags?.map(tag => <Badge key={tag} variant="neutral">{tag}</Badge>)}
             </div>
             {selectedSong.referenceUrl && (
-              <a href={selectedSong.referenceUrl} target="_blank" rel="noopener noreferrer" className="text-[#061E66] text-sm hover:underline">Référence</a>
+              <a href={selectedSong.referenceUrl} target="_blank" rel="noopener noreferrer" className="text-[var(--secondary)] text-sm hover:underline">Référence</a>
             )}
-            <div className="flex gap-1 border-b border-[rgba(108,92,231,0.2)]">
+            <div className="flex gap-1 border-b border-[var(--border)]">
               {instruments.map(inst => (
                 <button key={inst} onClick={() => setActiveTab(inst)}
-                  className={`px-3 py-2 text-sm transition-colors cursor-pointer ${activeTab === inst ? "text-[#FF8C45] border-b-2 border-[#FF8C45]" : "text-[#8E9BC0] hover:text-[#F0F0F0]"}`}
+                  className={`px-3 py-2 text-sm transition-colors cursor-pointer ${activeTab === inst ? "text-[var(--primary)] border-b-2 border-[var(--primary)]" : "text-[var(--text-muted)] hover:text-[var(--text)]"}`}
                 >{instrumentLabels[inst]}</button>
               ))}
             </div>
-            <div className="bg-[#040E3A] rounded-lg p-4 min-h-[200px] max-h-[400px] overflow-auto">
-              <pre className="font-mono text-sm text-[#F0F0F0] whitespace-pre-wrap">
+            <div className="bg-[var(--surface)] rounded-lg p-4 min-h-[200px] max-h-[400px] overflow-auto">
+              <pre className="font-mono text-sm text-[var(--text)] whitespace-pre-wrap">
                 {selectedSong.chordSheets?.[activeTab as keyof ChordSheets] || "Aucune partition disponible pour cet instrument."}
               </pre>
             </div>
@@ -231,12 +231,12 @@ export default function SongsPage() {
           <Input label="Tags (séparés par des virgules)" value={form.tags} onChange={e => setForm({ ...form, tags: e.target.value })} />
           <Input label="URL de référence" value={form.referenceUrl} onChange={e => setForm({ ...form, referenceUrl: e.target.value })} />
           <div className="space-y-3">
-            <p className="text-sm text-[#8E9BC0]">Partitions par instrument</p>
+            <p className="text-sm text-[var(--text-muted)]">Partitions par instrument</p>
             {instruments.map(inst => (
               <div key={inst} className="flex flex-col gap-1.5">
-                <label className="text-sm text-[#8E9BC0]">{instrumentLabels[inst]}</label>
+                <label className="text-sm text-[var(--text-muted)]">{instrumentLabels[inst]}</label>
                 <textarea
-                  className="bg-[var(--surface)] border border-[rgba(108,92,231,0.2)] rounded-lg px-4 py-2.5 text-[var(--text)] font-mono text-sm focus:outline-none focus:border-[var(--primary)] transition-colors min-h-[80px] resize-y"
+                  className="bg-[var(--surface)] border border-[var(--border)] rounded-lg px-4 py-2.5 text-[var(--text)] font-mono text-sm focus:outline-none focus:border-[var(--primary)] transition-colors min-h-[80px] resize-y"
                   value={form.chordSheets[inst]}
                   onChange={e => setForm({ ...form, chordSheets: { ...form.chordSheets, [inst]: e.target.value } })}
                 />

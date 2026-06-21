@@ -33,39 +33,44 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#040E3A] pixel-grid flex items-center justify-center px-4">
+    <div className="min-h-screen bg-[var(--surface)] flex items-center justify-center px-4">
       <div className="w-full max-w-md">
-        <div className="glass rounded-2xl overflow-hidden">
-          <div className="gradient-primary p-6 text-center">
-            <h1 className="text-2xl font-bold text-white">Connexion</h1>
-            <p className="text-white/70 text-sm mt-1">Acc&eacute;dez &agrave; votre espace Pixels</p>
-          </div>
-          <form onSubmit={handleSubmit} className="p-8 space-y-6">
+        <div className="text-center mb-8">
+          <span className="pixels-logo text-3xl">pixels&trade;</span>
+        </div>
+        <div className="bg-white border border-[var(--border)] rounded-2xl shadow-sm overflow-hidden">
+          <div className="p-8 space-y-6">
+            <div className="text-center">
+              <h1 className="text-2xl font-bold text-[var(--text)]">Connexion</h1>
+              <p className="text-[var(--text-muted)] text-sm mt-1">Accedez a votre espace Pixels</p>
+            </div>
             {error && (
-              <div className="bg-[#FF8C45]/10 border border-[#FF8C45]/30 text-[#FF8C45] rounded-lg p-3 text-sm">
+              <div className="bg-[var(--error)]/5 border border-[var(--error)]/20 text-[var(--error)] rounded-lg p-3 text-sm">
                 {error}
               </div>
             )}
-            <Input
-              label="Email"
-              type="email"
-              value={form.email}
-              onChange={(e) => setForm({ ...form, email: e.target.value })}
-              required
-            />
-            <Input
-              label="Mot de passe"
-              type="password"
-              value={form.password}
-              onChange={(e) => setForm({ ...form, password: e.target.value })}
-              required
-            />
-            <Button variant="primary" size="lg" type="submit" disabled={loading}>
-              {loading ? 'Connexion...' : 'Se connecter'}
-            </Button>
+            <form onSubmit={handleSubmit} className="space-y-5">
+              <Input
+                label="Email"
+                type="email"
+                value={form.email}
+                onChange={(e) => setForm({ ...form, email: e.target.value })}
+                required
+              />
+              <Input
+                label="Mot de passe"
+                type="password"
+                value={form.password}
+                onChange={(e) => setForm({ ...form, password: e.target.value })}
+                required
+              />
+              <Button variant="primary" size="lg" type="submit" disabled={loading}>
+                {loading ? 'Connexion...' : 'Se connecter'}
+              </Button>
+            </form>
             <div className="relative flex items-center justify-center">
-              <div className="border-t border-[#8E9BC0]/30 w-full"></div>
-              <span className="bg-[#0A1A4A] px-3 text-[#8E9BC0] text-sm absolute">ou</span>
+              <div className="border-t border-[var(--border)] w-full"></div>
+              <span className="bg-white px-3 text-[var(--text-muted)] text-sm absolute">ou</span>
             </div>
             <button
               type="button"
@@ -90,7 +95,7 @@ export default function LoginPage() {
                   setError('Erreur de connexion Google');
                 }
               }}
-              className="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-lg border border-[#8E9BC0]/30 hover:bg-[#0A1A4A] transition-colors text-[#F0F0F0]"
+              className="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-lg border border-[var(--border)] hover:bg-[var(--surface)] transition-colors text-[var(--text)]"
             >
               <svg className="w-5 h-5" viewBox="0 0 24 24">
                 <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/>
@@ -100,13 +105,13 @@ export default function LoginPage() {
               </svg>
               Continuer avec Google
             </button>
-            <p className="text-center text-[#8E9BC0] text-sm">
+            <p className="text-center text-[var(--text-muted)] text-sm">
               Pas encore de compte?{' '}
-              <Link href="/register" className="text-[#FF8C45] hover:underline">
+              <Link href="/register" className="text-[var(--primary)] hover:underline font-medium">
                 S&apos;inscrire
               </Link>
             </p>
-          </form>
+          </div>
         </div>
       </div>
     </div>

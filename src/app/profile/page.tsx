@@ -88,30 +88,30 @@ export default function ProfilePage() {
     });
   };
 
-  if (authLoading || !user) return <div className="min-h-screen bg-[#040E3A] flex items-center justify-center text-[#8E9BC0]">Chargement...</div>;
+  if (authLoading || !user) return <div className="min-h-screen bg-[var(--surface)] flex items-center justify-center text-[var(--text-muted)]">Chargement...</div>;
 
   return (
     <DashboardLayout user={user}>
       <div className="space-y-8 max-w-3xl">
-        <h1 className="text-3xl font-bold text-[#F0F0F0]">Mon Profil Artiste</h1>
+        <h1 className="text-3xl font-bold text-[var(--text)]">Mon Profil Artiste</h1>
 
         {message && (
-          <div className={`rounded-lg p-3 text-sm ${message.includes('Erreur') ? 'bg-[#FF8C45]/10 text-[#FF8C45]' : 'bg-[#061E66]/10 text-[#061E66]'}`}>
+          <div className={`rounded-lg p-3 text-sm ${message.includes('Erreur') ? 'bg-[var(--primary)]/10 text-[var(--primary)]' : 'bg-[var(--secondary)]/10 text-[var(--secondary)]'}`}>
             {message}
           </div>
         )}
 
         {/* Identité */}
         <Card>
-          <h2 className="text-xl font-semibold text-[#061E66] mb-4">Identit&eacute;</h2>
+          <h2 className="text-xl font-semibold text-[var(--secondary)] mb-4">Identit&eacute;</h2>
           <div className="space-y-4">
             <Input label="Nom de scène" value={profile.stageName} onChange={e => setProfile({ ...profile, stageName: e.target.value })} />
             <Input label="Université" value={profile.university} onChange={e => setProfile({ ...profile, university: e.target.value })} />
             <Input label="Programme" value={profile.program} onChange={e => setProfile({ ...profile, program: e.target.value })} />
             <div>
-              <label className="block text-sm font-medium text-[#F0F0F0] mb-1">Bio</label>
+              <label className="block text-sm font-medium text-[var(--text)] mb-1">Bio</label>
               <textarea
-                className="w-full rounded-lg bg-[#040E3A] border border-[#0A1A4A] text-[#F0F0F0] p-3 focus:border-[#FF8C45] focus:outline-none"
+                className="w-full rounded-lg bg-[var(--surface)] border border-[var(--border)] text-[var(--text)] p-3 focus:border-[var(--primary)] focus:outline-none"
                 rows={4}
                 value={profile.bio}
                 onChange={e => setProfile({ ...profile, bio: e.target.value })}
@@ -122,11 +122,11 @@ export default function ProfilePage() {
 
         {/* Compétences Musicales */}
         <Card>
-          <h2 className="text-xl font-semibold text-[#061E66] mb-4">Comp&eacute;tences Musicales</h2>
+          <h2 className="text-xl font-semibold text-[var(--secondary)] mb-4">Comp&eacute;tences Musicales</h2>
           <div className="space-y-6">
             <div>
               <div className="flex justify-between items-center mb-3">
-                <label className="text-sm font-medium text-[#F0F0F0]">Instruments</label>
+                <label className="text-sm font-medium text-[var(--text)]">Instruments</label>
                 <Button variant="secondary" size="sm" onClick={addInstrument}>+ Ajouter</Button>
               </div>
               {profile.instruments.map((inst, i) => (
@@ -153,7 +153,7 @@ export default function ProfilePage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-[#F0F0F0] mb-2">Genres musicaux</label>
+              <label className="block text-sm font-medium text-[var(--text)] mb-2">Genres musicaux</label>
               <div className="flex flex-wrap gap-2">
                 {GENRES.map(g => (
                   <button
@@ -162,8 +162,8 @@ export default function ProfilePage() {
                     onClick={() => toggleGenre(g)}
                     className={`px-3 py-1.5 rounded-full text-sm transition ${
                       profile.genres.includes(g)
-                        ? 'bg-[#FF8C45] text-white'
-                        : 'bg-[#040E3A] text-[#8E9BC0] border border-[#0A1A4A] hover:border-[#FF8C45]'
+                        ? 'bg-[var(--primary)] text-white'
+                        : 'bg-[var(--surface)] text-[var(--text-muted)] border border-[var(--border)] hover:border-[var(--primary)]'
                     }`}
                   >
                     {g}
@@ -173,8 +173,8 @@ export default function ProfilePage() {
             </div>
 
             <div className="flex items-center gap-4">
-              <label className="flex items-center gap-2 text-[#F0F0F0]">
-                <input type="checkbox" checked={profile.canSing} onChange={e => setProfile({ ...profile, canSing: e.target.checked })} className="accent-[#FF8C45]" />
+              <label className="flex items-center gap-2 text-[var(--text)]">
+                <input type="checkbox" checked={profile.canSing} onChange={e => setProfile({ ...profile, canSing: e.target.checked })} className="accent-[var(--primary)]" />
                 Peut chanter
               </label>
               {profile.canSing && (
@@ -185,7 +185,7 @@ export default function ProfilePage() {
             <Input label="Formation musicale" value={profile.musicTraining} onChange={e => setProfile({ ...profile, musicTraining: e.target.value })} />
 
             <div>
-              <label className="block text-sm font-medium text-[#F0F0F0] mb-2">Comp&eacute;tences</label>
+              <label className="block text-sm font-medium text-[var(--text)] mb-2">Comp&eacute;tences</label>
               <div className="flex flex-wrap gap-2">
                 {SKILLS.map(s => (
                   <button
@@ -194,8 +194,8 @@ export default function ProfilePage() {
                     onClick={() => toggleSkill(s)}
                     className={`px-3 py-1.5 rounded-full text-sm transition ${
                       profile.skills.includes(s)
-                        ? 'bg-[#061E66] text-[#040E3A]'
-                        : 'bg-[#040E3A] text-[#8E9BC0] border border-[#0A1A4A] hover:border-[#061E66]'
+                        ? 'bg-[var(--secondary)] text-white'
+                        : 'bg-[var(--surface)] text-[var(--text-muted)] border border-[var(--border)] hover:border-[var(--secondary)]'
                     }`}
                   >
                     {s}
@@ -208,19 +208,19 @@ export default function ProfilePage() {
 
         {/* Logistique */}
         <Card>
-          <h2 className="text-xl font-semibold text-[#061E66] mb-4">Logistique</h2>
+          <h2 className="text-xl font-semibold text-[var(--secondary)] mb-4">Logistique</h2>
           <div className="space-y-3">
             {[
               { key: 'hasTransport' as const, label: 'A un moyen de transport' },
               { key: 'hasLicense' as const, label: 'Possède un permis de conduire' },
               { key: 'ownInstruments' as const, label: 'Possède ses propres instruments' },
             ].map(({ key, label }) => (
-              <label key={key} className="flex items-center gap-3 text-[#F0F0F0]">
+              <label key={key} className="flex items-center gap-3 text-[var(--text)]">
                 <input
                   type="checkbox"
                   checked={profile[key]}
                   onChange={e => setProfile({ ...profile, [key]: e.target.checked })}
-                  className="accent-[#FF8C45]"
+                  className="accent-[var(--primary)]"
                 />
                 {label}
               </label>

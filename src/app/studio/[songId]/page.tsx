@@ -284,7 +284,7 @@ export default function SongDetailPage() {
   if (loading || fetching) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <p className="text-[#8E9BC0]">Chargement...</p>
+        <p className="text-[var(--text-muted)]">Chargement...</p>
       </div>
     );
   }
@@ -292,7 +292,7 @@ export default function SongDetailPage() {
   if (!user || !song) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <p className="text-[#8E9BC0]">Chanson introuvable.</p>
+        <p className="text-[var(--text-muted)]">Chanson introuvable.</p>
       </div>
     );
   }
@@ -307,8 +307,8 @@ export default function SongDetailPage() {
         <Card>
           <div className="flex items-start justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-[#F0F0F0]">{song.title}</h1>
-              <p className="text-lg text-[#8E9BC0] mt-1">{song.artist}</p>
+              <h1 className="text-3xl font-bold text-[var(--text)]">{song.title}</h1>
+              <p className="text-lg text-[var(--text-muted)] mt-1">{song.artist}</p>
             </div>
             <Button size="sm" variant="secondary" onClick={openEditModal}>
               Modifier
@@ -330,7 +330,7 @@ export default function SongDetailPage() {
               href={song.sourceUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-sm text-[#FF8C45] hover:underline mt-3 inline-block"
+              className="text-sm text-[var(--primary)] hover:underline mt-3 inline-block"
             >
               Voir la source
             </a>
@@ -339,11 +339,11 @@ export default function SongDetailPage() {
 
         {/* Section B: Chord Charts */}
         <Card>
-          <h2 className="text-xl font-semibold text-[#F0F0F0] mb-4">Grille d&apos;accords</h2>
+          <h2 className="text-xl font-semibold text-[var(--text)] mb-4">Grille d&apos;accords</h2>
 
           {!editingChart && !chart && (
             <div className="text-center py-8">
-              <p className="text-[#8E9BC0] mb-4">Aucune grille d&apos;accords</p>
+              <p className="text-[var(--text-muted)] mb-4">Aucune grille d&apos;accords</p>
               <Button onClick={startNewChart}>Créer une grille</Button>
             </div>
           )}
@@ -355,10 +355,10 @@ export default function SongDetailPage() {
               </div>
               {chart.sections.map((section, sIdx) => (
                 <div key={sIdx} className="mb-6">
-                  <h3 className="text-sm font-semibold text-[#FF8C45] uppercase tracking-wider mb-2">
+                  <h3 className="text-sm font-semibold text-[var(--primary)] uppercase tracking-wider mb-2">
                     {section.name}
                   </h3>
-                  <div className="font-mono text-[#F0F0F0] bg-[#040E3A] rounded-lg p-3">
+                  <div className="font-mono text-[var(--text)] bg-[var(--surface)] rounded-lg p-3">
                     {(() => {
                       const rows: ChordBar[][] = [];
                       for (let i = 0; i < section.bars.length; i += 4) {
@@ -366,11 +366,11 @@ export default function SongDetailPage() {
                       }
                       return rows.map((row, rIdx) => (
                         <div key={rIdx} className="flex">
-                          <span className="text-[#8E9BC0]">|</span>
+                          <span className="text-[var(--text-muted)]">|</span>
                           {row.map((bar, bIdx) => (
                             <span key={bIdx} className="inline-block w-36 text-center">
                               {bar.chord || "—"}
-                              <span className="text-[#8E9BC0] ml-1">|</span>
+                              <span className="text-[var(--text-muted)] ml-1">|</span>
                             </span>
                           ))}
                         </div>
@@ -397,7 +397,7 @@ export default function SongDetailPage() {
               </div>
 
               {chartSections.map((section, sIdx) => (
-                <div key={sIdx} className="border border-[rgba(108,92,231,0.2)] rounded-lg p-4">
+                <div key={sIdx} className="border border-[var(--border)] rounded-lg p-4">
                   <div className="flex items-center gap-3 mb-3">
                     <Input
                       placeholder="Nom de section"
@@ -411,7 +411,7 @@ export default function SongDetailPage() {
                           key={s}
                           type="button"
                           onClick={() => updateSectionName(sIdx, s)}
-                          className="text-xs px-2 py-1 rounded bg-[#0A1A4A] text-[#8E9BC0] hover:text-[#F0F0F0] cursor-pointer"
+                          className="text-xs px-2 py-1 rounded bg-[var(--surface)] text-[var(--text-muted)] hover:text-[var(--text)] cursor-pointer"
                         >
                           {s}
                         </button>
@@ -420,7 +420,7 @@ export default function SongDetailPage() {
                     <button
                       type="button"
                       onClick={() => removeSection(sIdx)}
-                      className="text-[#8E9BC0] hover:text-red-400 cursor-pointer text-lg"
+                      className="text-[var(--text-muted)] hover:text-red-400 cursor-pointer text-lg"
                     >
                       ✕
                     </button>
@@ -434,12 +434,12 @@ export default function SongDetailPage() {
                           placeholder="Cmaj7"
                           value={bar.chord}
                           onChange={(e) => updateBar(sIdx, bIdx, "chord", e.target.value)}
-                          className="bg-[#040E3A] border border-[rgba(108,92,231,0.2)] rounded px-2 py-1 text-sm text-[#F0F0F0] font-mono w-full focus:outline-none focus:border-[#FF8C45]"
+                          className="bg-[var(--surface)] border border-[var(--border)] rounded px-2 py-1 text-sm text-[var(--text)] font-mono w-full focus:outline-none focus:border-[var(--primary)]"
                         />
                         <select
                           value={bar.beats}
                           onChange={(e) => updateBar(sIdx, bIdx, "beats", Number(e.target.value))}
-                          className="bg-[#040E3A] border border-[rgba(108,92,231,0.2)] rounded px-1 py-1 text-xs text-[#8E9BC0] w-12 focus:outline-none appearance-none"
+                          className="bg-[var(--surface)] border border-[var(--border)] rounded px-1 py-1 text-xs text-[var(--text-muted)] w-12 focus:outline-none appearance-none"
                         >
                           {[2, 3, 4, 5, 6].map((b) => (
                             <option key={b} value={b}>{b}</option>
@@ -448,7 +448,7 @@ export default function SongDetailPage() {
                         <button
                           type="button"
                           onClick={() => removeBar(sIdx, bIdx)}
-                          className="text-[#8E9BC0] hover:text-red-400 text-sm cursor-pointer"
+                          className="text-[var(--text-muted)] hover:text-red-400 text-sm cursor-pointer"
                         >
                           ✕
                         </button>
@@ -483,11 +483,11 @@ export default function SongDetailPage() {
         {/* Section C: Instrument Parts */}
         {chart && (
           <Card>
-            <h2 className="text-xl font-semibold text-[#F0F0F0] mb-4">Parties instrumentales</h2>
+            <h2 className="text-xl font-semibold text-[var(--text)] mb-4">Parties instrumentales</h2>
 
             {/* Generate parts */}
             <div className="mb-6">
-              <p className="text-sm text-[#8E9BC0] mb-3">
+              <p className="text-sm text-[var(--text-muted)] mb-3">
                 Sélectionnez les instruments pour générer les grilles transposées :
               </p>
               <div className="flex flex-wrap gap-2 mb-4">
@@ -496,8 +496,8 @@ export default function SongDetailPage() {
                     key={inst}
                     className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm cursor-pointer border transition-colors ${
                       selectedInstruments.includes(inst)
-                        ? "border-[#FF8C45] bg-[#FF8C45]/10 text-[#FF8C45]"
-                        : "border-[rgba(108,92,231,0.2)] text-[#8E9BC0] hover:text-[#F0F0F0]"
+                        ? "border-[var(--primary)] bg-[var(--primary)]/10 text-[var(--primary)]"
+                        : "border-[var(--border)] text-[var(--text-muted)] hover:text-[var(--text)]"
                     }`}
                   >
                     <input
@@ -524,11 +524,11 @@ export default function SongDetailPage() {
               <div className="space-y-3">
                 {instrumentParts.map((part) => (
                   <div key={part.id}>
-                    <div className="flex items-center justify-between p-3 bg-[#040E3A] rounded-lg">
+                    <div className="flex items-center justify-between p-3 bg-[var(--surface)] rounded-lg">
                       <div className="flex items-center gap-3">
                         <Badge variant="primary">{INSTRUMENT_LABELS[part.instrument]}</Badge>
                         {part.transposedSections && (
-                          <span className="text-xs text-[#8E9BC0]">
+                          <span className="text-xs text-[var(--text-muted)]">
                             Tonalité transposée
                           </span>
                         )}
@@ -555,37 +555,37 @@ export default function SongDetailPage() {
 
                     {/* Section D: Rehearsal Notes */}
                     {activePartId === part.id && (
-                      <div className="mt-2 p-4 bg-[#0A1A4A] rounded-lg space-y-4">
-                        <h3 className="text-sm font-semibold text-[#F0F0F0]">
+                      <div className="mt-2 p-4 bg-[var(--surface)] rounded-lg space-y-4">
+                        <h3 className="text-sm font-semibold text-[var(--text)]">
                           Notes de répétition — {INSTRUMENT_LABELS[part.instrument]}
                         </h3>
 
                         {rehearsalNotes.length === 0 ? (
-                          <p className="text-sm text-[#8E9BC0]">Aucune note pour le moment.</p>
+                          <p className="text-sm text-[var(--text-muted)]">Aucune note pour le moment.</p>
                         ) : (
                           <div className="space-y-2">
                             {rehearsalNotes.map((rn) => (
                               <div
                                 key={rn.id}
-                                className="flex items-start gap-3 p-3 bg-[#040E3A] rounded-lg"
+                                className="flex items-start gap-3 p-3 bg-[var(--surface)] rounded-lg"
                               >
                                 <label className="flex items-center gap-2 cursor-pointer mt-0.5">
                                   <input
                                     type="checkbox"
                                     checked={rn.appliedToChart}
                                     onChange={(e) => toggleNoteApplied(rn.id, e.target.checked)}
-                                    className="rounded border-[rgba(108,92,231,0.2)] accent-[#FF8C45]"
+                                    className="rounded border-[var(--border)] accent-[var(--primary)]"
                                   />
-                                  <span className="text-xs text-[#8E9BC0]">Intégré</span>
+                                  <span className="text-xs text-[var(--text-muted)]">Intégré</span>
                                 </label>
                                 <div className="flex-1 min-w-0">
                                   <div className="flex items-center gap-2 mb-1">
                                     <Badge variant="neutral">Mesures {rn.barRange}</Badge>
-                                    <span className="text-xs text-[#8E9BC0]">
+                                    <span className="text-xs text-[var(--text-muted)]">
                                       {rn.authorName}
                                     </span>
                                   </div>
-                                  <p className="text-sm text-[#F0F0F0]">{rn.note}</p>
+                                  <p className="text-sm text-[var(--text)]">{rn.note}</p>
                                 </div>
                               </div>
                             ))}
@@ -593,7 +593,7 @@ export default function SongDetailPage() {
                         )}
 
                         {/* Add note form */}
-                        <form onSubmit={submitNote} className="space-y-3 pt-2 border-t border-[rgba(108,92,231,0.2)]">
+                        <form onSubmit={submitNote} className="space-y-3 pt-2 border-t border-[var(--border)]">
                           <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
                             <Input
                               placeholder="ex: 12-16"
@@ -605,7 +605,7 @@ export default function SongDetailPage() {
                               placeholder="Attention au changement de tempo..."
                               value={noteForm.note}
                               onChange={(e) => setNoteForm({ ...noteForm, note: e.target.value })}
-                              className="sm:col-span-3 bg-[#040E3A] border border-[rgba(108,92,231,0.2)] rounded-lg px-4 py-2.5 text-sm text-[#F0F0F0] placeholder:text-[#8E9BC0] focus:outline-none focus:border-[#FF8C45] resize-none"
+                              className="sm:col-span-3 bg-[var(--surface)] border border-[var(--border)] rounded-lg px-4 py-2.5 text-sm text-[var(--text)] placeholder:text-[var(--text-muted)] focus:outline-none focus:border-[var(--primary)] resize-none"
                               rows={2}
                             />
                           </div>

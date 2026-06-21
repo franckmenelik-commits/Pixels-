@@ -131,7 +131,7 @@ export default function StudioPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <p className="text-[#8E9BC0]">Chargement...</p>
+        <p className="text-[var(--text-muted)]">Chargement...</p>
       </div>
     );
   }
@@ -139,7 +139,7 @@ export default function StudioPage() {
   if (!user) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <p className="text-[#8E9BC0]">Veuillez vous connecter.</p>
+        <p className="text-[var(--text-muted)]">Veuillez vous connecter.</p>
       </div>
     );
   }
@@ -150,8 +150,8 @@ export default function StudioPage() {
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-[#F0F0F0]">Studio Musical</h1>
-            <p className="text-[#8E9BC0] mt-1">
+            <h1 className="text-3xl font-bold text-[var(--text)]">Studio Musical</h1>
+            <p className="text-[var(--text-muted)] mt-1">
               {songs.length} chanson{songs.length !== 1 ? "s" : ""}
             </p>
           </div>
@@ -185,10 +185,10 @@ export default function StudioPage() {
 
         {/* Songs grid */}
         {fetching ? (
-          <p className="text-[#8E9BC0] text-center py-12">Chargement des chansons...</p>
+          <p className="text-[var(--text-muted)] text-center py-12">Chargement des chansons...</p>
         ) : songs.length === 0 ? (
           <Card className="text-center py-12">
-            <p className="text-[#8E9BC0]">Aucune chanson trouvée.</p>
+            <p className="text-[var(--text-muted)]">Aucune chanson trouvée.</p>
             <Button className="mt-4" onClick={() => setShowModal(true)}>
               Ajouter une chanson
             </Button>
@@ -200,12 +200,12 @@ export default function StudioPage() {
               return (
                 <Card
                   key={song.id}
-                  className="cursor-pointer hover:border-[#FF8C45]/40 transition-colors border border-transparent"
+                  className="cursor-pointer hover:border-[var(--primary)]/40 transition-colors border border-transparent"
                 >
                   <div onClick={() => router.push(`/studio/${song.id}`)} className="space-y-3">
                     <div>
-                      <h3 className="text-lg font-bold text-[#F0F0F0]">{song.title}</h3>
-                      <p className="text-[#8E9BC0] text-sm">{song.artist}</p>
+                      <h3 className="text-lg font-bold text-[var(--text)]">{song.title}</h3>
+                      <p className="text-[var(--text-muted)] text-sm">{song.artist}</p>
                     </div>
                     <div className="flex flex-wrap gap-2">
                       {song.originalKey && (
@@ -225,7 +225,7 @@ export default function StudioPage() {
                         target="_blank"
                         rel="noopener noreferrer"
                         onClick={(e) => e.stopPropagation()}
-                        className="text-sm text-[#FF8C45] hover:underline block truncate"
+                        className="text-sm text-[var(--primary)] hover:underline block truncate"
                       >
                         Source
                       </a>

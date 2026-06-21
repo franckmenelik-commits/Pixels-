@@ -57,74 +57,79 @@ function RegisterForm() {
   const update = (field: string, value: string) => setForm({ ...form, [field]: value });
 
   return (
-    <div className="glass rounded-2xl overflow-hidden">
-      <div className="gradient-primary p-6 text-center">
-        <h1 className="text-2xl font-bold text-white">Inscription</h1>
-        <p className="text-white/70 text-sm mt-1">Rejoignez la communaut&eacute; Pixels</p>
-      </div>
-      <form onSubmit={handleSubmit} className="p-8 space-y-5">
+    <div className="bg-white border border-[var(--border)] rounded-2xl shadow-sm overflow-hidden">
+      <div className="p-8 space-y-5">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-[var(--text)]">Inscription</h1>
+          <p className="text-[var(--text-muted)] text-sm mt-1">Rejoignez la communaute Pixels</p>
+        </div>
         {error && (
-          <div className="bg-[#FF8C45]/10 border border-[#FF8C45]/30 text-[#FF8C45] rounded-lg p-3 text-sm">
+          <div className="bg-[var(--error)]/5 border border-[var(--error)]/20 text-[var(--error)] rounded-lg p-3 text-sm">
             {error}
           </div>
         )}
-        <Input label="Nom complet" value={form.name} onChange={(e) => update('name', e.target.value)} required />
-        <Input label="Email" type="email" value={form.email} onChange={(e) => update('email', e.target.value)} required />
-        <Input label="Mot de passe" type="password" value={form.password} onChange={(e) => update('password', e.target.value)} required />
-        <Select
-          label="R&ocirc;le"
-          value={form.role}
-          onChange={(e) => update('role', e.target.value)}
-          options={[
-            { value: 'artist', label: 'Artiste' },
-            { value: 'organizer', label: 'Organisateur' },
-          ]}
-        />
+        <form onSubmit={handleSubmit} className="space-y-5">
+          <Input label="Nom complet" value={form.name} onChange={(e) => update('name', e.target.value)} required />
+          <Input label="Email" type="email" value={form.email} onChange={(e) => update('email', e.target.value)} required />
+          <Input label="Mot de passe" type="password" value={form.password} onChange={(e) => update('password', e.target.value)} required />
+          <Select
+            label="Role"
+            value={form.role}
+            onChange={(e) => update('role', e.target.value)}
+            options={[
+              { value: 'artist', label: 'Artiste' },
+              { value: 'organizer', label: 'Organisateur' },
+            ]}
+          />
 
-        {form.role === 'artist' && (
-          <>
-            <Input label="Universit&eacute;" value={form.university} onChange={(e) => update('university', e.target.value)} />
-            <Input label="Programme" value={form.program} onChange={(e) => update('program', e.target.value)} />
-          </>
-        )}
+          {form.role === 'artist' && (
+            <>
+              <Input label="Universite" value={form.university} onChange={(e) => update('university', e.target.value)} />
+              <Input label="Programme" value={form.program} onChange={(e) => update('program', e.target.value)} />
+            </>
+          )}
 
-        {form.role === 'organizer' && (
-          <>
-            <Input label="Nom de l'organisation" value={form.orgName} onChange={(e) => update('orgName', e.target.value)} />
-            <Select
-              label="Type d'organisation"
-              value={form.orgType}
-              onChange={(e) => update('orgType', e.target.value)}
-              options={[
-                { value: '', label: 'S&eacute;lectionner...' },
-                { value: 'company', label: 'Entreprise' },
-                { value: 'association', label: 'Association' },
-                { value: 'individual', label: 'Particulier' },
-                { value: 'school', label: '&Eacute;cole / Universit&eacute;' },
-              ]}
-            />
-          </>
-        )}
+          {form.role === 'organizer' && (
+            <>
+              <Input label="Nom de l'organisation" value={form.orgName} onChange={(e) => update('orgName', e.target.value)} />
+              <Select
+                label="Type d'organisation"
+                value={form.orgType}
+                onChange={(e) => update('orgType', e.target.value)}
+                options={[
+                  { value: '', label: 'Selectionner...' },
+                  { value: 'company', label: 'Entreprise' },
+                  { value: 'association', label: 'Association' },
+                  { value: 'individual', label: 'Particulier' },
+                  { value: 'school', label: 'Ecole / Universite' },
+                ]}
+              />
+            </>
+          )}
 
-        <Button variant="primary" size="lg" type="submit" disabled={loading}>
-          {loading ? 'Inscription...' : "S'inscrire"}
-        </Button>
-        <p className="text-center text-[#8E9BC0] text-sm">
-          D&eacute;j&agrave; un compte?{' '}
-          <Link href="/login" className="text-[#061E66] hover:underline">
+          <Button variant="primary" size="lg" type="submit" disabled={loading}>
+            {loading ? 'Inscription...' : "S'inscrire"}
+          </Button>
+        </form>
+        <p className="text-center text-[var(--text-muted)] text-sm">
+          Deja un compte?{' '}
+          <Link href="/login" className="text-[var(--primary)] hover:underline font-medium">
             Se connecter
           </Link>
         </p>
-      </form>
+      </div>
     </div>
   );
 }
 
 export default function RegisterPage() {
   return (
-    <div className="min-h-screen bg-[#040E3A] pixel-grid flex items-center justify-center px-4">
+    <div className="min-h-screen bg-[var(--surface)] flex items-center justify-center px-4">
       <div className="w-full max-w-md">
-        <Suspense fallback={<div className="text-[#8E9BC0] text-center">Chargement...</div>}>
+        <div className="text-center mb-8">
+          <span className="pixels-logo text-3xl">pixels&trade;</span>
+        </div>
+        <Suspense fallback={<div className="text-[var(--text-muted)] text-center">Chargement...</div>}>
           <RegisterForm />
         </Suspense>
       </div>

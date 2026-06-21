@@ -27,7 +27,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="fr" className={`${outfit.variable} ${openSans.variable} h-full antialiased`}>
-      <body className="min-h-full flex flex-col pixel-grid">
+      <body className="min-h-full flex flex-col">
         <AuthProvider>{children}</AuthProvider>
       </body>
     </html>

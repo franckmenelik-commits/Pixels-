@@ -70,7 +70,7 @@ export default function JamSessionsPage() {
       .catch(() => {});
   }, [user, token]);
 
-  if (authLoading || !user) return <div className="min-h-screen bg-[#040E3A] flex items-center justify-center"><div className="text-[#8E9BC0]">Chargement...</div></div>;
+  if (authLoading || !user) return <div className="min-h-screen bg-[var(--surface)] flex items-center justify-center"><div className="text-[var(--text-muted)]">Chargement...</div></div>;
 
   const now = new Date();
   const upcoming = sessions.filter(s => new Date(s.date) >= now && s.status !== "completed");
@@ -108,19 +108,19 @@ export default function JamSessionsPage() {
     <Card>
       <div className="space-y-3">
         <div className="flex justify-between items-start">
-          <h3 className="text-lg font-semibold text-[#F0F0F0]">{session.theme || "Jam Session"}</h3>
+          <h3 className="text-lg font-semibold text-[var(--text)]">{session.theme || "Jam Session"}</h3>
           <Badge variant={statusVariant(session.status)}>{statusLabel(session.status)}</Badge>
         </div>
-        <p className="text-sm text-[#FF8C45]">{formatDate(session.date)}</p>
-        {session.venueName && <p className="text-sm text-[#8E9BC0]">{session.venueName}</p>}
-        <div className="flex items-center gap-2 text-sm text-[#8E9BC0]">
+        <p className="text-sm text-[var(--primary)]">{formatDate(session.date)}</p>
+        {session.venueName && <p className="text-sm text-[var(--text-muted)]">{session.venueName}</p>}
+        <div className="flex items-center gap-2 text-sm text-[var(--text-muted)]">
           <span>{session.participants?.length || 0}{session.capacity ? `/${session.capacity}` : ""} participants</span>
         </div>
-        {session.description && <p className="text-sm text-[#8E9BC0] line-clamp-2">{session.description}</p>}
+        {session.description && <p className="text-sm text-[var(--text-muted)] line-clamp-2">{session.description}</p>}
         {isPast && (
-          <div className="flex gap-4 text-xs text-[#8E9BC0]">
+          <div className="flex gap-4 text-xs text-[var(--text-muted)]">
             {session.photos && <span>{session.photos.length} photos</span>}
-            {session.feedbackSummary && <span className="text-[#061E66]">Feedback disponible</span>}
+            {session.feedbackSummary && <span className="text-[var(--secondary)]">Feedback disponible</span>}
           </div>
         )}
         {!isPast && (
@@ -143,16 +143,16 @@ export default function JamSessionsPage() {
     <DashboardLayout user={user}>
       <div className="space-y-8">
         <div className="flex items-center justify-between">
-          <h1 className="text-3xl font-bold text-[#F0F0F0]">
-            Jam Sessions <span className="text-lg font-normal text-[#8E9BC0]">({upcoming.length} à venir)</span>
+          <h1 className="text-3xl font-bold text-[var(--text)]">
+            Jam Sessions <span className="text-lg font-normal text-[var(--text-muted)]">({upcoming.length} à venir)</span>
           </h1>
           {isAdmin && <Button onClick={() => setShowCreateModal(true)}>+ Créer une session</Button>}
         </div>
 
         <div className="space-y-4">
-          <h2 className="text-xl font-semibold text-[#F0F0F0]">Prochaines Sessions</h2>
+          <h2 className="text-xl font-semibold text-[var(--text)]">Prochaines Sessions</h2>
           {upcoming.length === 0 ? (
-            <Card><p className="text-[#8E9BC0]">Aucune session à venir.</p></Card>
+            <Card><p className="text-[var(--text-muted)]">Aucune session à venir.</p></Card>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {upcoming.map(s => <SessionCard key={s.id || s._id} session={s} />)}
@@ -161,9 +161,9 @@ export default function JamSessionsPage() {
         </div>
 
         <div className="space-y-4">
-          <h2 className="text-xl font-semibold text-[#F0F0F0]">Sessions Passées</h2>
+          <h2 className="text-xl font-semibold text-[var(--text)]">Sessions Passées</h2>
           {past.length === 0 ? (
-            <Card><p className="text-[#8E9BC0]">Aucune session passée.</p></Card>
+            <Card><p className="text-[var(--text-muted)]">Aucune session passée.</p></Card>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {past.map(s => <SessionCard key={s.id || s._id} session={s} isPast />)}
@@ -180,8 +180,8 @@ export default function JamSessionsPage() {
           <Input label="Thème" value={form.theme} onChange={e => setForm({ ...form, theme: e.target.value })} />
           <Input label="Capacité" type="number" value={form.capacity} onChange={e => setForm({ ...form, capacity: e.target.value })} />
           <div className="flex flex-col gap-1.5">
-            <label className="text-sm text-[#8E9BC0]">Description</label>
-            <textarea className="bg-[var(--surface)] border border-[rgba(108,92,231,0.2)] rounded-lg px-4 py-2.5 text-[var(--text)] focus:outline-none focus:border-[var(--primary)] transition-colors min-h-[80px] resize-y" value={form.description} onChange={e => setForm({ ...form, description: e.target.value })} />
+            <label className="text-sm text-[var(--text-muted)]">Description</label>
+            <textarea className="bg-[var(--surface)] border border-[var(--border)] rounded-lg px-4 py-2.5 text-[var(--text)] focus:outline-none focus:border-[var(--primary)] transition-colors min-h-[80px] resize-y" value={form.description} onChange={e => setForm({ ...form, description: e.target.value })} />
           </div>
           <div className="flex justify-end gap-3 pt-2">
             <Button variant="secondary" onClick={() => setShowCreateModal(false)}>Annuler</Button>

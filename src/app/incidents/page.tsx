@@ -58,7 +58,7 @@ export default function IncidentsPage() {
       .catch(() => {});
   }, [user, token]);
 
-  if (authLoading || !user) return <div className="min-h-screen bg-[#040E3A] flex items-center justify-center"><div className="text-[#8E9BC0]">Chargement...</div></div>;
+  if (authLoading || !user) return <div className="min-h-screen bg-[var(--surface)] flex items-center justify-center"><div className="text-[var(--text-muted)]">Chargement...</div></div>;
 
   const filtered = statusFilter ? incidents.filter(i => i.status === statusFilter) : incidents;
 
@@ -83,20 +83,20 @@ export default function IncidentsPage() {
     <DashboardLayout user={user}>
       <div className="space-y-6">
         <div className="flex items-center justify-between">
-          <h1 className="text-3xl font-bold text-[#F0F0F0]">Gestion des Incidents</h1>
+          <h1 className="text-3xl font-bold text-[var(--text)]">Gestion des Incidents</h1>
           <Button onClick={() => setShowCreateModal(true)}>+ Signaler un incident</Button>
         </div>
 
         <div className="flex gap-2">
           {statusFilters.map(f => (
             <button key={f.value} onClick={() => setStatusFilter(f.value)}
-              className={`px-4 py-2 rounded-lg text-sm transition-colors cursor-pointer ${statusFilter === f.value ? "bg-[#FF8C45] text-white" : "bg-[#0A1A4A] text-[#8E9BC0] hover:text-[#F0F0F0]"}`}
+              className={`px-4 py-2 rounded-lg text-sm transition-colors cursor-pointer ${statusFilter === f.value ? "bg-[var(--primary)] text-white" : "bg-[var(--surface)] text-[var(--text-muted)] hover:text-[var(--text)]"}`}
             >{f.label}</button>
           ))}
         </div>
 
         {filtered.length === 0 ? (
-          <Card><p className="text-[#8E9BC0]">Aucun incident trouvé.</p></Card>
+          <Card><p className="text-[var(--text-muted)]">Aucun incident trouvé.</p></Card>
         ) : (
           <div className="space-y-4">
             {filtered.map(incident => {
@@ -110,26 +110,26 @@ export default function IncidentsPage() {
                       <div className="flex justify-between items-start">
                         <div className="flex-1">
                           <div className="flex items-center gap-3 mb-1">
-                            <p className="text-sm text-[#FF8C45]">
+                            <p className="text-sm text-[var(--primary)]">
                               {new Date(incident.date).toLocaleDateString("fr-FR", { year: "numeric", month: "long", day: "numeric" })}
                             </p>
-                            {incident.location && <span className="text-sm text-[#8E9BC0]">{incident.location}</span>}
+                            {incident.location && <span className="text-sm text-[var(--text-muted)]">{incident.location}</span>}
                           </div>
-                          <p className={`text-[#F0F0F0] ${isExpanded ? "" : "line-clamp-2"}`}>{incident.description}</p>
+                          <p className={`text-[var(--text)] ${isExpanded ? "" : "line-clamp-2"}`}>{incident.description}</p>
                         </div>
                         <div className="flex flex-col items-end gap-2 ml-4">
                           <Badge variant={config.variant}>{config.label}</Badge>
                           {incident.damagesEstimate != null && (
-                            <span className="text-sm text-[#FF8C45]">{incident.damagesEstimate.toLocaleString("fr-FR")} €</span>
+                            <span className="text-sm text-[var(--primary)]">{incident.damagesEstimate.toLocaleString("fr-FR")} €</span>
                           )}
                         </div>
                       </div>
 
                       {isExpanded && (
-                        <div className="border-t border-[rgba(108,92,231,0.2)] pt-4 space-y-3">
+                        <div className="border-t border-[var(--border)] pt-4 space-y-3">
                           {incident.partiesInvolved && incident.partiesInvolved.length > 0 && (
                             <div>
-                              <p className="text-xs text-[#8E9BC0] mb-1">Parties impliquées</p>
+                              <p className="text-xs text-[var(--text-muted)] mb-1">Parties impliquées</p>
                               <div className="flex gap-2 flex-wrap">
                                 {incident.partiesInvolved.map((p, i) => <Badge key={i} variant="neutral">{p}</Badge>)}
                               </div>
@@ -137,18 +137,18 @@ export default function IncidentsPage() {
                           )}
                           {incident.resolution && (
                             <div>
-                              <p className="text-xs text-[#8E9BC0] mb-1">Résolution</p>
-                              <p className="text-sm text-[#F0F0F0]">{incident.resolution}</p>
+                              <p className="text-xs text-[var(--text-muted)] mb-1">Résolution</p>
+                              <p className="text-sm text-[var(--text)]">{incident.resolution}</p>
                             </div>
                           )}
                           {incident.lessonsLearned && (
-                            <div className="bg-[#FF8C45]/10 border border-[#FF8C45]/30 rounded-lg p-3">
-                              <p className="text-xs text-[#FF8C45] font-semibold mb-1">Leçons apprises</p>
-                              <p className="text-sm text-[#F0F0F0]">{incident.lessonsLearned}</p>
+                            <div className="bg-[var(--primary)]/10 border border-[var(--primary)]/30 rounded-lg p-3">
+                              <p className="text-xs text-[var(--primary)] font-semibold mb-1">Leçons apprises</p>
+                              <p className="text-sm text-[var(--text)]">{incident.lessonsLearned}</p>
                             </div>
                           )}
                           {incident.insuranceRef && (
-                            <p className="text-xs text-[#8E9BC0]">Réf. assurance: {incident.insuranceRef}</p>
+                            <p className="text-xs text-[var(--text-muted)]">Réf. assurance: {incident.insuranceRef}</p>
                           )}
                         </div>
                       )}
@@ -166,8 +166,8 @@ export default function IncidentsPage() {
           <Input label="Date" type="date" value={form.date} onChange={e => setForm({ ...form, date: e.target.value })} required />
           <Input label="Lieu" value={form.location} onChange={e => setForm({ ...form, location: e.target.value })} />
           <div className="flex flex-col gap-1.5">
-            <label className="text-sm text-[#8E9BC0]">Description</label>
-            <textarea className="bg-[var(--surface)] border border-[rgba(108,92,231,0.2)] rounded-lg px-4 py-2.5 text-[var(--text)] focus:outline-none focus:border-[var(--primary)] transition-colors min-h-[100px] resize-y" value={form.description} onChange={e => setForm({ ...form, description: e.target.value })} required />
+            <label className="text-sm text-[var(--text-muted)]">Description</label>
+            <textarea className="bg-[var(--surface)] border border-[var(--border)] rounded-lg px-4 py-2.5 text-[var(--text)] focus:outline-none focus:border-[var(--primary)] transition-colors min-h-[100px] resize-y" value={form.description} onChange={e => setForm({ ...form, description: e.target.value })} required />
           </div>
           <Input label="Parties impliquées (séparées par des virgules)" value={form.partiesInvolved} onChange={e => setForm({ ...form, partiesInvolved: e.target.value })} />
           <Input label="Estimation des dommages (€)" type="number" value={form.damagesEstimate} onChange={e => setForm({ ...form, damagesEstimate: e.target.value })} />

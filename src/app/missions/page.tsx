@@ -38,14 +38,14 @@ export default function MissionsPage() {
     fetch('/api/missions', { headers: { Authorization: `Bearer ${token}` } }).then(r => r.json()).then(d => setMissions(d.missions || [])).catch(() => {});
   }, [user, token]);
 
-  if (loading || !user) return <div className="min-h-screen bg-[#040E3A] flex items-center justify-center"><div className="text-[#8E9BC0]">Chargement...</div></div>;
+  if (loading || !user) return <div className="min-h-screen bg-[var(--surface)] flex items-center justify-center"><div className="text-[var(--text-muted)]">Chargement...</div></div>;
 
   return (
     <DashboardLayout user={user}>
       <div className="space-y-6">
-        <h1 className="text-3xl font-bold text-[#F0F0F0]">Missions</h1>
+        <h1 className="text-3xl font-bold text-[var(--text)]">Missions</h1>
         {missions.length === 0 ? (
-          <Card><p className="text-[#8E9BC0]">Aucune mission trouvée.</p></Card>
+          <Card><p className="text-[var(--text-muted)]">Aucune mission trouvée.</p></Card>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {missions.map(m => (
@@ -53,13 +53,13 @@ export default function MissionsPage() {
                 <Card>
                   <div className="space-y-3">
                     <div className="flex justify-between items-start">
-                      <h3 className="text-lg font-semibold text-[#F0F0F0]">{m.eventName || 'Mission'}</h3>
+                      <h3 className="text-lg font-semibold text-[var(--text)]">{m.eventName || 'Mission'}</h3>
                       <Badge variant={statusVariant(m.status)}>{m.status || 'nouveau'}</Badge>
                     </div>
-                    {m.date && <p className="text-sm text-[#8E9BC0]">{new Date(m.date).toLocaleDateString('fr-CA')}</p>}
-                    {m.venue && <p className="text-sm text-[#8E9BC0]">{m.venue}</p>}
+                    {m.date && <p className="text-sm text-[var(--text-muted)]">{new Date(m.date).toLocaleDateString('fr-CA')}</p>}
+                    {m.venue && <p className="text-sm text-[var(--text-muted)]">{m.venue}</p>}
                     {m.musiciansCount !== undefined && (
-                      <p className="text-sm text-[#FF8C45]">{m.musiciansCount} musicien(s)</p>
+                      <p className="text-sm text-[var(--primary)]">{m.musiciansCount} musicien(s)</p>
                     )}
                   </div>
                 </Card>

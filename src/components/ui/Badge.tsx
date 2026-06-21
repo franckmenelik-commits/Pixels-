@@ -6,11 +6,11 @@ interface BadgeProps {
 }
 
 const variantStyles: Record<BadgeVariant, string> = {
-  primary: "bg-[var(--primary)]/20 text-[var(--primary)]",
-  success: "bg-[var(--success)]/20 text-[var(--success)]",
-  warning: "bg-[var(--warning)]/20 text-[var(--warning)]",
-  error: "bg-[var(--error)]/20 text-[var(--error)]",
-  neutral: "bg-[var(--text-muted)]/20 text-[var(--text-muted)]",
+  primary: "bg-[#FF8C45]/10 text-[#FF8C45]",
+  success: "bg-[#10B981]/10 text-[#10B981]",
+  warning: "bg-[#F59E0B]/10 text-[#92400E]",
+  error: "bg-[#EF4444]/10 text-[#EF4444]",
+  neutral: "bg-[#6B7280]/10 text-[#6B7280]",
 };
 
 export default function Badge({ variant = "primary", children }: BadgeProps) {

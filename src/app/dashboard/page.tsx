@@ -20,6 +20,14 @@ interface Event {
   name?: string; date?: string; status?: string;
 }
 
+function StatIcon({ d }: { d: string }) {
+  return (
+    <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+      <path strokeLinecap="round" strokeLinejoin="round" d={d} />
+    </svg>
+  );
+}
+
 export default function DashboardPage() {
   const router = useRouter();
   const { user, token, loading: authLoading } = useAuth();
@@ -60,55 +68,51 @@ export default function DashboardPage() {
     }
   }, [user, token]);
 
-  if (authLoading || !user) return <div className="min-h-screen bg-[#040E3A] flex items-center justify-center text-[#8E9BC0]">Chargement...</div>;
+  if (authLoading || !user) return <div className="min-h-screen bg-[var(--surface)] flex items-center justify-center text-[var(--text-muted)]">Chargement...</div>;
 
   return (
     <DashboardLayout user={user}>
       <div className="space-y-8">
         <div>
-          <h1 className="text-3xl font-bold text-[#F0F0F0]">Bienvenue, {user.name}</h1>
-          <p className="text-[#8E9BC0] mt-1">
+          <h1 className="text-3xl font-bold text-[var(--text)]">Bienvenue, {user.name}</h1>
+          <p className="text-[var(--text-muted)] mt-1">
             {user.role === 'artist' && 'Votre espace artiste'}
             {user.role === 'organizer' && 'Votre espace organisateur'}
             {(user.role === 'admin' || user.role === 'operator') && 'Vue d\'ensemble'}
           </p>
         </div>
 
-        {/* Artist Dashboard */}
         {user.role === 'artist' && (
           <div className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <Card>
-                <div className="text-center">
-                  <div className="text-3xl font-bold text-[#FF8C45]">{missions.length}</div>
-                  <div className="text-[#8E9BC0] mt-1">Missions</div>
-                </div>
-              </Card>
-              <Card>
-                <div className="text-center">
-                  <div className="text-3xl font-bold text-[#061E66]">
-                    {missions.filter(m => m.status === 'completed').length}
+              {[
+                { value: missions.length, label: 'Missions', icon: 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2', color: 'text-[var(--primary)]' },
+                { value: missions.filter(m => m.status === 'completed').length, label: 'Completees', icon: 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z', color: 'text-[var(--success)]' },
+                { value: '—', label: 'Note moyenne', icon: 'M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z', color: 'text-[var(--primary)]' },
+              ].map((s) => (
+                <Card key={s.label}>
+                  <div className="flex items-center gap-4">
+                    <div className={`${s.color} bg-[var(--surface)] p-3 rounded-xl`}>
+                      <StatIcon d={s.icon} />
+                    </div>
+                    <div>
+                      <div className={`text-2xl font-bold ${s.color}`}>{s.value}</div>
+                      <div className="text-[var(--text-muted)] text-sm">{s.label}</div>
+                    </div>
                   </div>
-                  <div className="text-[#8E9BC0] mt-1">Compl&eacute;t&eacute;es</div>
-                </div>
-              </Card>
-              <Card>
-                <div className="text-center">
-                  <div className="text-3xl font-bold text-[#FF8C45]">&mdash;</div>
-                  <div className="text-[#8E9BC0] mt-1">Note moyenne</div>
-                </div>
-              </Card>
+                </Card>
+              ))}
             </div>
             <Card>
-              <h2 className="text-xl font-semibold text-[#F0F0F0] mb-4">Missions &agrave; venir</h2>
+              <h2 className="text-xl font-semibold text-[var(--text)] mb-4">Missions a venir</h2>
               {missions.length === 0 ? (
-                <p className="text-[#8E9BC0]">Aucune mission pour le moment.</p>
+                <p className="text-[var(--text-muted)]">Aucune mission pour le moment.</p>
               ) : (
                 <div className="space-y-3">
                   {missions.slice(0, 5).map((m) => (
-                    <Link href={`/missions/${m.id || m._id}`} key={m.id || m._id} className="block p-3 rounded-lg bg-[#040E3A]/50 hover:bg-[#040E3A] transition">
+                    <Link href={`/missions/${m.id || m._id}`} key={m.id || m._id} className="block p-3 rounded-lg bg-[var(--surface)] hover:bg-[var(--border)] transition">
                       <div className="flex justify-between items-center">
-                        <span className="text-[#F0F0F0]">{m.event?.name || m.eventName || 'Mission'}</span>
+                        <span className="text-[var(--text)]">{m.event?.name || m.eventName || 'Mission'}</span>
                         <Badge variant={m.status === 'completed' ? 'success' : 'primary'}>{m.status || 'en cours'}</Badge>
                       </div>
                     </Link>
@@ -119,23 +123,22 @@ export default function DashboardPage() {
           </div>
         )}
 
-        {/* Organizer Dashboard */}
         {user.role === 'organizer' && (
           <div className="space-y-6">
             <div className="flex gap-4">
               <Link href="/events/new">
-                <Button variant="primary">Soumettre un &eacute;v&eacute;nement</Button>
+                <Button variant="primary">Soumettre un evenement</Button>
               </Link>
             </div>
             <Card>
-              <h2 className="text-xl font-semibold text-[#F0F0F0] mb-4">Vos &eacute;v&eacute;nements</h2>
+              <h2 className="text-xl font-semibold text-[var(--text)] mb-4">Vos evenements</h2>
               {events.length === 0 ? (
-                <p className="text-[#8E9BC0]">Aucun &eacute;v&eacute;nement soumis.</p>
+                <p className="text-[var(--text-muted)]">Aucun evenement soumis.</p>
               ) : (
                 <div className="space-y-3">
                   {events.map((e) => (
-                    <div key={e.id || e._id} className="p-3 rounded-lg bg-[#040E3A]/50 flex justify-between items-center">
-                      <span className="text-[#F0F0F0]">{e.name || '&Eacute;v&eacute;nement'}</span>
+                    <div key={e.id || e._id} className="p-3 rounded-lg bg-[var(--surface)] flex justify-between items-center">
+                      <span className="text-[var(--text)]">{e.name || 'Evenement'}</span>
                       <Badge variant="neutral">{e.status || 'nouveau'}</Badge>
                     </div>
                   ))}
@@ -145,33 +148,26 @@ export default function DashboardPage() {
           </div>
         )}
 
-        {/* Admin/Operator Dashboard */}
         {(user.role === 'admin' || user.role === 'operator') && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <Card>
-              <div className="text-center">
-                <div className="text-3xl font-bold text-[#FF8C45]">{stats.artists}</div>
-                <div className="text-[#8E9BC0] mt-1">Artistes actifs</div>
-              </div>
-            </Card>
-            <Card>
-              <div className="text-center">
-                <div className="text-3xl font-bold text-[#061E66]">{stats.missions}</div>
-                <div className="text-[#8E9BC0] mt-1">Missions actives</div>
-              </div>
-            </Card>
-            <Card>
-              <div className="text-center">
-                <div className="text-3xl font-bold text-[#FF8C45]">${stats.revenue}</div>
-                <div className="text-[#8E9BC0] mt-1">Revenus ce mois</div>
-              </div>
-            </Card>
-            <Card>
-              <div className="text-center">
-                <div className="text-3xl font-bold text-[#F0F0F0]">{stats.pendingEvents}</div>
-                <div className="text-[#8E9BC0] mt-1">&Eacute;v&eacute;nements en attente</div>
-              </div>
-            </Card>
+            {[
+              { value: stats.artists, label: 'Artistes actifs', icon: 'M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z', color: 'text-[var(--primary)]' },
+              { value: stats.missions, label: 'Missions actives', icon: 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2', color: 'text-[var(--secondary)]' },
+              { value: `$${stats.revenue}`, label: 'Revenus ce mois', icon: 'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z', color: 'text-[var(--success)]' },
+              { value: stats.pendingEvents, label: 'Evenements en attente', icon: 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z', color: 'text-[var(--warning)]' },
+            ].map((s) => (
+              <Card key={s.label}>
+                <div className="flex items-center gap-4">
+                  <div className={`${s.color} bg-[var(--surface)] p-3 rounded-xl`}>
+                    <StatIcon d={s.icon} />
+                  </div>
+                  <div>
+                    <div className={`text-2xl font-bold ${s.color}`}>{s.value}</div>
+                    <div className="text-[var(--text-muted)] text-sm">{s.label}</div>
+                  </div>
+                </div>
+              </Card>
+            ))}
           </div>
         )}
       </div>
