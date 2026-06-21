@@ -10,20 +10,22 @@ export async function GET(request: NextRequest) {
 
     const { searchParams } = new URL(request.url);
     const genre = searchParams.get("genre");
-    const difficulty = searchParams.get("difficulty");
+    const status = searchParams.get("status");
     const search = searchParams.get("search");
 
     let query = adminDb.collection("songs") as any;
     if (genre) query = query.where("genre", "==", genre);
-    if (difficulty) query = query.where("difficulty", "==", difficulty);
+    if (status) query = query.where("status", "==", status);
 
     const snapshot = await query.orderBy("createdAt", "desc").get();
     let songs = snapshot.docs.map((doc: any) => ({ id: doc.id, ...doc.data() }));
 
     if (search) {
       const s = search.toLowerCase();
-      songs = songs.filter((song: any) =>
-        song.title?.toLowerCase().includes(s) || song.artistOrig?.toLowerCase().includes(s)
+      songs = songs.filter(
+        (song: any) =>
+          song.title?.toLowerCase().includes(s) ||
+          song.artist?.toLowerCase().includes(s)
       );
     }
 
@@ -38,15 +40,26 @@ export async function POST(request: NextRequest) {
   try {
     const session = await getSession();
     if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    if (!["admin", "operator", "director"].includes(session.user.role)) {
-      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-    }
 
     const body = await request.json();
+    const { title, artist, originalKey, bpm, genre, durationSeconds, sourceUrl } = body;
+
+    if (!title || !artist || !originalKey) {
+      return NextResponse.json({ error: "title, artist, and originalKey are required" }, { status: 400 });
+    }
+
     const ref = await adminDb.collection("songs").add({
-      ...body,
+      title,
+      artist,
+      originalKey,
+      bpm: bpm ?? null,
+      genre: genre ?? null,
+      durationSeconds: durationSeconds ?? null,
+      sourceUrl: sourceUrl ?? null,
+      status: "draft",
       createdBy: session.user.id,
       createdAt: FieldValue.serverTimestamp(),
+      updatedAt: FieldValue.serverTimestamp(),
     });
 
     const doc = await ref.get();
