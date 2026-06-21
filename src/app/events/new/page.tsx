@@ -2,22 +2,21 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useAuth } from '@/lib/auth-context';
 import DashboardLayout from '@/components/layout/DashboardLayout';
 import Card from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
 import Select from '@/components/ui/Select';
 
-interface User { _id: string; name: string; email: string; role: string; }
-
 const MUSIC_STYLES = ['Jazz', 'Pop', 'Rock', 'R&B', 'Soul', 'Classique', 'Afro', 'Latin', 'Funk', 'Blues', 'Hip-Hop', 'Électronique', 'Folk', 'Autre'];
 const INSTRUMENTS = ['Piano', 'Guitare', 'Basse', 'Batterie', 'Violon', 'Saxophone', 'Trompette', 'Flûte', 'Voix', 'Contrebasse', 'Ukulélé', 'Percussion', 'Clavier', 'Autre'];
 
 export default function NewEventPage() {
   const router = useRouter();
-  const [user, setUser] = useState<User | null>(null);
+  const { user, token, loading: authLoading } = useAuth();
   const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
   const [form, setForm] = useState({
     type: 'standard',
     name: '', dateStart: '', dateEnd: '', venue: '', address: '', venueType: '',
@@ -27,12 +26,7 @@ export default function NewEventPage() {
     budget: '', paymentMethod: '',
   });
 
-  useEffect(() => {
-    fetch('/api/auth/me')
-      .then(r => { if (!r.ok) throw new Error(); return r.json(); })
-      .then(data => setUser(data.user))
-      .catch(() => router.push('/login'));
-  }, [router]);
+  useEffect(() => { if (!authLoading && !user) router.push("/login"); }, [authLoading, user, router]);
 
   const update = (field: string, value: string | boolean) => setForm(f => ({ ...f, [field]: value }));
 
@@ -46,11 +40,11 @@ export default function NewEventPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
-    setLoading(true);
+    setSubmitting(true);
     try {
       const res = await fetch('/api/events', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
         body: JSON.stringify(form),
       });
       if (!res.ok) { const d = await res.json(); throw new Error(d.error || 'Erreur'); }
@@ -58,11 +52,11 @@ export default function NewEventPage() {
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'Erreur');
     } finally {
-      setLoading(false);
+      setSubmitting(false);
     }
   };
 
-  if (!user) return <div className="min-h-screen bg-[#040E3A] flex items-center justify-center text-[#8E9BC0]">Chargement...</div>;
+  if (authLoading || !user) return <div className="min-h-screen bg-[#040E3A] flex items-center justify-center"><div className="text-[#8E9BC0]">Chargement...</div></div>;
 
   return (
     <DashboardLayout user={user}>
@@ -184,8 +178,8 @@ export default function NewEventPage() {
           </div>
         </Card>
 
-        <Button variant="primary" size="lg" type="submit" disabled={loading}>
-          {loading ? 'Envoi...' : "Soumettre l'événement"}
+        <Button variant="primary" size="lg" type="submit" disabled={submitting}>
+          {submitting ? 'Envoi...' : "Soumettre l'événement"}
         </Button>
       </form>
     </DashboardLayout>

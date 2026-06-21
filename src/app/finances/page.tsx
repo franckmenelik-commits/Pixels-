@@ -2,10 +2,9 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useAuth } from '@/lib/auth-context';
 import DashboardLayout from '@/components/layout/DashboardLayout';
 import Card from '@/components/ui/Card';
-
-interface User { _id: string; name: string; email: string; role: string; }
 interface Transaction { _id: string; date?: string; description?: string; amount?: number; type?: string; }
 interface FinanceData {
   totalRevenue: number;
@@ -17,30 +16,25 @@ interface FinanceData {
 
 export default function FinancesPage() {
   const router = useRouter();
-  const [user, setUser] = useState<User | null>(null);
+  const { user, token, loading } = useAuth();
   const [data, setData] = useState<FinanceData>({
     totalRevenue: 0, paidToMusicians: 0, logistics: 0, reserveFund: 0, transactions: [],
   });
 
-  useEffect(() => {
-    fetch('/api/auth/me')
-      .then(r => { if (!r.ok) throw new Error(); return r.json(); })
-      .then(d => setUser(d.user))
-      .catch(() => router.push('/login'));
-  }, [router]);
+  useEffect(() => { if (!loading && !user) router.push("/login"); }, [loading, user, router]);
 
   useEffect(() => {
     if (!user) return;
-    fetch('/api/finances').then(r => r.json()).then(d => setData({
+    fetch('/api/finances', { headers: { Authorization: `Bearer ${token}` } }).then(r => r.json()).then(d => setData({
       totalRevenue: d.totalRevenue || 0,
       paidToMusicians: d.paidToMusicians || 0,
       logistics: d.logistics || 0,
       reserveFund: d.reserveFund || 0,
       transactions: d.transactions || [],
     })).catch(() => {});
-  }, [user]);
+  }, [user, token]);
 
-  if (!user) return <div className="min-h-screen bg-[#040E3A] flex items-center justify-center text-[#8E9BC0]">Chargement...</div>;
+  if (loading || !user) return <div className="min-h-screen bg-[#040E3A] flex items-center justify-center"><div className="text-[#8E9BC0]">Chargement...</div></div>;
 
   const cards = [
     { label: 'Revenus totaux', value: data.totalRevenue, color: '#FF8C45' },

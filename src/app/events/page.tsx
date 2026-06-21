@@ -2,12 +2,11 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useAuth } from '@/lib/auth-context';
 import DashboardLayout from '@/components/layout/DashboardLayout';
 import Card from '@/components/ui/Card';
 import Badge from '@/components/ui/Badge';
 import Button from '@/components/ui/Button';
-
-interface User { _id: string; name: string; email: string; role: string; }
 interface Event {
   _id: string;
   name?: string;
@@ -34,33 +33,28 @@ const segmentVariant = (t?: string) => {
 
 export default function EventsPipelinePage() {
   const router = useRouter();
-  const [user, setUser] = useState<User | null>(null);
+  const { user, token, loading } = useAuth();
   const [events, setEvents] = useState<Event[]>([]);
 
-  useEffect(() => {
-    fetch('/api/auth/me')
-      .then(r => { if (!r.ok) throw new Error(); return r.json(); })
-      .then(data => setUser(data.user))
-      .catch(() => router.push('/login'));
-  }, [router]);
+  useEffect(() => { if (!loading && !user) router.push("/login"); }, [loading, user, router]);
 
   useEffect(() => {
     if (!user) return;
-    fetch('/api/events').then(r => r.json()).then(d => setEvents(d.events || [])).catch(() => {});
-  }, [user]);
+    fetch('/api/events', { headers: { Authorization: `Bearer ${token}` } }).then(r => r.json()).then(d => setEvents(d.events || [])).catch(() => {});
+  }, [user, token]);
 
   const moveEvent = async (eventId: string, newStatus: string) => {
     try {
       await fetch(`/api/events/${eventId}`, {
         method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
         body: JSON.stringify({ status: newStatus }),
       });
       setEvents(prev => prev.map(e => e._id === eventId ? { ...e, status: newStatus } : e));
     } catch { /* ignore */ }
   };
 
-  if (!user) return <div className="min-h-screen bg-[#040E3A] flex items-center justify-center text-[#8E9BC0]">Chargement...</div>;
+  if (loading || !user) return <div className="min-h-screen bg-[#040E3A] flex items-center justify-center"><div className="text-[#8E9BC0]">Chargement...</div></div>;
 
   return (
     <DashboardLayout user={user}>

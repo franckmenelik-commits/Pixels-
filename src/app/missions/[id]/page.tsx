@@ -2,12 +2,11 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
+import { useAuth } from '@/lib/auth-context';
 import DashboardLayout from '@/components/layout/DashboardLayout';
 import Card from '@/components/ui/Card';
 import Badge from '@/components/ui/Badge';
 import Button from '@/components/ui/Button';
-
-interface User { _id: string; name: string; email: string; role: string; }
 interface Slot { artistName?: string; instrument?: string; status?: string; }
 interface Mission {
   _id: string;
@@ -27,32 +26,27 @@ const statusVariant = (s?: string) => {
 export default function MissionDetailPage() {
   const router = useRouter();
   const params = useParams();
-  const [user, setUser] = useState<User | null>(null);
+  const { user, token, loading } = useAuth();
   const [mission, setMission] = useState<Mission | null>(null);
 
-  useEffect(() => {
-    fetch('/api/auth/me')
-      .then(r => { if (!r.ok) throw new Error(); return r.json(); })
-      .then(data => setUser(data.user))
-      .catch(() => router.push('/login'));
-  }, [router]);
+  useEffect(() => { if (!loading && !user) router.push("/login"); }, [loading, user, router]);
 
   useEffect(() => {
     if (!user || !params.id) return;
-    fetch(`/api/missions/${params.id}`).then(r => r.json()).then(d => setMission(d.mission || d)).catch(() => {});
-  }, [user, params.id]);
+    fetch(`/api/missions/${params.id}`, { headers: { Authorization: `Bearer ${token}` } }).then(r => r.json()).then(d => setMission(d.mission || d)).catch(() => {});
+  }, [user, token, params.id]);
 
   const updateStatus = async (newStatus: string) => {
     if (!params.id) return;
     await fetch(`/api/missions/${params.id}`, {
       method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
       body: JSON.stringify({ status: newStatus }),
     });
     setMission(prev => prev ? { ...prev, status: newStatus } : prev);
   };
 
-  if (!user) return <div className="min-h-screen bg-[#040E3A] flex items-center justify-center text-[#8E9BC0]">Chargement...</div>;
+  if (loading || !user) return <div className="min-h-screen bg-[#040E3A] flex items-center justify-center"><div className="text-[#8E9BC0]">Chargement...</div></div>;
 
   return (
     <DashboardLayout user={user}>
