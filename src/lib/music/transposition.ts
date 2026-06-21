@@ -24,7 +24,7 @@ function normalizeNote(note: string): { index: number; useFlats: boolean } {
   return { index: 0, useFlats: false };
 }
 
-function transposeChord(chord: string, semitones: number): string {
+export function transposeChord(chord: string, semitones: number): string {
   if (!chord || chord === 'N.C.' || chord === '%') return chord;
   const match = chord.match(/^([A-G][#b]?)(.*)/);
   if (!match) return chord;
@@ -37,6 +37,16 @@ function transposeChord(chord: string, semitones: number): string {
 
 function transposeKey(key: string, semitones: number): string {
   return transposeChord(key, semitones);
+}
+
+export function transposeSections(sections: ChordSection[], semitones: number): ChordSection[] {
+  return sections.map((section) => ({
+    name: section.name,
+    bars: section.bars.map((bar) => ({
+      chord: transposeChord(bar.chord, semitones),
+      beats: bar.beats,
+    })),
+  }));
 }
 
 export function transposeForInstrument(
