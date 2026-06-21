@@ -17,7 +17,7 @@ const navItems = [
   { href: "/profile", label: "Mon Profil", icon: "👤", roles: null },
   { href: "/availability", label: "Disponibilités", icon: "📅", roles: null },
   { href: "/missions", label: "Missions", icon: "📋", roles: null },
-  { href: "/songs", label: "Bibliothèque", icon: "🎵", roles: null },
+  { href: "/studio", label: "Studio Musical", icon: "🎵", roles: null },
   { href: "/jam-sessions", label: "Jam Sessions", icon: "🎸", roles: null },
   { href: "/equipment", label: "Équipement", icon: "📦", roles: null },
   { href: "/finances", label: "Finances", icon: "💰", roles: null },
