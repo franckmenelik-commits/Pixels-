@@ -4,18 +4,33 @@ import { FieldValue } from "firebase-admin/firestore";
 
 export async function POST(request: Request) {
   try {
-    const { name, email, password, role, orgName, university, program, orgType } = await request.json();
+    const { name, email, password, role, orgName, university, program, orgType, googleAuth } = await request.json();
 
-    if (!email || !password) {
-      return NextResponse.json({ error: "Email and password are required" }, { status: 400 });
+    let uid: string;
+
+    if (googleAuth) {
+      const authHeader = request.headers.get("authorization");
+      if (!authHeader?.startsWith("Bearer ")) {
+        return NextResponse.json({ error: "Token required for Google auth" }, { status: 400 });
+      }
+      const token = authHeader.split("Bearer ")[1];
+      const decoded = await adminAuth.verifyIdToken(token);
+      uid = decoded.uid;
+      const existingDoc = await adminDb.collection("users").doc(uid).get();
+      if (existingDoc.exists) {
+        return NextResponse.json({ id: uid, ...existingDoc.data() });
+      }
+    } else {
+      if (!email || !password) {
+        return NextResponse.json({ error: "Email and password are required" }, { status: 400 });
+      }
+      const firebaseUser = await adminAuth.createUser({
+        email,
+        password,
+        displayName: name,
+      });
+      uid = firebaseUser.uid;
     }
-
-    // Create Firebase Auth user
-    const firebaseUser = await adminAuth.createUser({
-      email,
-      password,
-      displayName: name,
-    });
 
     // Create Firestore user document
     const userData: Record<string, any> = {
@@ -34,17 +49,17 @@ export async function POST(request: Request) {
     if (role === "organizer") {
       if (!orgName) {
         // Clean up the auth user since we can't complete registration
-        await adminAuth.deleteUser(firebaseUser.uid);
+        await adminAuth.deleteUser(uid);
         return NextResponse.json({ error: "Organization name is required for organizers" }, { status: 400 });
       }
       userData.orgName = orgName;
       if (orgType) userData.orgType = orgType;
     }
 
-    await adminDb.collection("users").doc(firebaseUser.uid).set(userData);
+    await adminDb.collection("users").doc(uid).set(userData);
 
     return NextResponse.json({
-      id: firebaseUser.uid,
+      id: uid,
       name,
       email,
       role: userData.role,
