@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/db";
+import { adminDb } from "@/lib/firebase-admin";
 import { getSession } from "@/lib/auth";
+import { FieldValue } from "firebase-admin/firestore";
 
 export async function GET(request: NextRequest) {
   try {
@@ -11,15 +12,17 @@ export async function GET(request: NextRequest) {
     const type = searchParams.get("type");
     const status = searchParams.get("status");
 
-    const where: Record<string, unknown> = {};
-    if (type) where.type = type;
-    if (status) where.status = status;
+    let query = adminDb.collection("equipment") as any;
+    if (type) query = query.where("type", "==", type);
+    if (status) query = query.where("status", "==", status);
 
-    const equipment = await prisma.equipment.findMany({
-      where,
-      include: { loans: true },
-      orderBy: { createdAt: "desc" },
-    });
+    const snapshot = await query.orderBy("createdAt", "desc").get();
+    const equipment = [];
+    for (const doc of snapshot.docs) {
+      const loansSnap = await adminDb.collection("equipmentLoans").where("equipmentId", "==", doc.id).get();
+      const loans = loansSnap.docs.map((l: any) => ({ id: l.id, ...l.data() }));
+      equipment.push({ id: doc.id, ...doc.data(), loans });
+    }
 
     return NextResponse.json(equipment);
   } catch (error) {
@@ -37,9 +40,13 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const equipment = await prisma.equipment.create({ data: body });
+    const ref = await adminDb.collection("equipment").add({
+      ...body,
+      createdAt: FieldValue.serverTimestamp(),
+    });
 
-    return NextResponse.json(equipment, { status: 201 });
+    const doc = await ref.get();
+    return NextResponse.json({ id: ref.id, ...doc.data() }, { status: 201 });
   } catch (error) {
     console.error(error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });

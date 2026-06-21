@@ -8,9 +8,11 @@ import Badge from "@/components/ui/Badge";
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
 import Modal from "@/components/ui/Modal";
+import { useAuth } from "@/lib/auth-context";
 
 interface Incident {
-  _id: string;
+  _id?: string;
+  id?: string;
   date: string;
   location?: string;
   description: string;
@@ -37,7 +39,7 @@ const statusFilters = [
 
 export default function IncidentsPage() {
   const router = useRouter();
-  const [user, setUser] = useState<any>(null);
+  const { user, token, loading: authLoading } = useAuth();
   const [incidents, setIncidents] = useState<Incident[]>([]);
   const [statusFilter, setStatusFilter] = useState("");
   const [expandedId, setExpandedId] = useState<string | null>(null);
@@ -45,15 +47,18 @@ export default function IncidentsPage() {
   const [form, setForm] = useState({ date: "", location: "", description: "", partiesInvolved: "", damagesEstimate: "" });
 
   useEffect(() => {
-    fetch("/api/auth/me").then(r => { if (!r.ok) throw new Error(); return r.json(); }).then(d => setUser(d.user)).catch(() => router.push("/login"));
-  }, [router]);
+    if (!authLoading && !user) router.push("/login");
+  }, [authLoading, user, router]);
 
   useEffect(() => {
-    if (!user) return;
-    fetch("/api/incidents").then(r => r.json()).then(d => setIncidents(d.incidents || [])).catch(() => {});
-  }, [user]);
+    if (!user || !token) return;
+    fetch("/api/incidents", { headers: { Authorization: `Bearer ${token}` } })
+      .then(r => r.json())
+      .then(d => setIncidents(d.incidents || []))
+      .catch(() => {});
+  }, [user, token]);
 
-  if (!user) return <div className="min-h-screen bg-[#040E3A] flex items-center justify-center"><div className="text-[#8E9BC0]">Chargement...</div></div>;
+  if (authLoading || !user) return <div className="min-h-screen bg-[#040E3A] flex items-center justify-center"><div className="text-[#8E9BC0]">Chargement...</div></div>;
 
   const filtered = statusFilter ? incidents.filter(i => i.status === statusFilter) : incidents;
 
@@ -64,7 +69,7 @@ export default function IncidentsPage() {
         partiesInvolved: form.partiesInvolved ? form.partiesInvolved.split(",").map(p => p.trim()) : [],
         damagesEstimate: form.damagesEstimate ? Number(form.damagesEstimate) : undefined,
       };
-      const res = await fetch("/api/incidents", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+      const res = await fetch("/api/incidents", { method: "POST", headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` }, body: JSON.stringify(body) });
       if (res.ok) {
         const data = await res.json();
         setIncidents(prev => [...prev, data.incident]);
@@ -95,10 +100,11 @@ export default function IncidentsPage() {
         ) : (
           <div className="space-y-4">
             {filtered.map(incident => {
+              const incidentId = incident.id || incident._id!;
               const config = statusConfig[incident.status || "open"] || statusConfig.open;
-              const isExpanded = expandedId === incident._id;
+              const isExpanded = expandedId === incidentId;
               return (
-                <div key={incident._id} onClick={() => setExpandedId(isExpanded ? null : incident._id)} className="cursor-pointer">
+                <div key={incidentId} onClick={() => setExpandedId(isExpanded ? null : incidentId)} className="cursor-pointer">
                   <Card>
                     <div className="space-y-3">
                       <div className="flex justify-between items-start">

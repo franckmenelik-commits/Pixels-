@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/db";
+import { adminDb } from "@/lib/firebase-admin";
 import { getSession } from "@/lib/auth";
 
 export async function GET(
@@ -11,17 +11,34 @@ export async function GET(
     if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
     const { id } = await params;
-    const mission = await prisma.mission.findUnique({
-      where: { id },
-      include: {
-        event: true,
-        slots: { include: { artist: { include: { user: true } } } },
-        transactions: true,
-      },
-    });
+    const doc = await adminDb.collection("missions").doc(id).get();
+    if (!doc.exists) return NextResponse.json({ error: "Mission not found" }, { status: 404 });
 
-    if (!mission) return NextResponse.json({ error: "Mission not found" }, { status: 404 });
-    return NextResponse.json(mission);
+    const data = doc.data()!;
+    const eventDoc = data.eventId ? await adminDb.collection("events").doc(data.eventId).get() : null;
+    const slotsSnap = await adminDb.collection("missions").doc(id).collection("missionSlots").get();
+
+    const slots = [];
+    for (const slotDoc of slotsSnap.docs) {
+      const slotData = slotDoc.data();
+      let artist = null;
+      if (slotData.artistId) {
+        const userDoc = await adminDb.collection("users").doc(slotData.artistId).get();
+        if (userDoc.exists) artist = { id: userDoc.id, ...userDoc.data() };
+      }
+      slots.push({ id: slotDoc.id, ...slotData, artist });
+    }
+
+    const transSnap = await adminDb.collection("transactions").where("missionId", "==", id).get();
+    const transactions = transSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+
+    return NextResponse.json({
+      id: doc.id,
+      ...data,
+      event: eventDoc?.exists ? { id: eventDoc.id, ...eventDoc.data() } : null,
+      slots,
+      transactions,
+    });
   } catch (error) {
     console.error(error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
@@ -42,13 +59,10 @@ export async function PATCH(
     const { id } = await params;
     const body = await request.json();
 
-    const mission = await prisma.mission.update({
-      where: { id },
-      data: body,
-      include: { event: true, slots: true },
-    });
+    await adminDb.collection("missions").doc(id).update(body);
+    const updated = await adminDb.collection("missions").doc(id).get();
 
-    return NextResponse.json(mission);
+    return NextResponse.json({ id: updated.id, ...updated.data() });
   } catch (error) {
     console.error(error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });

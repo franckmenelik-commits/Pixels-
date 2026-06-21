@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/db";
+import { adminDb } from "@/lib/firebase-admin";
 import { getSession } from "@/lib/auth";
 
 export async function GET(
@@ -11,10 +11,10 @@ export async function GET(
     if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
     const { id } = await params;
-    const song = await prisma.song.findUnique({ where: { id } });
-    if (!song) return NextResponse.json({ error: "Song not found" }, { status: 404 });
+    const doc = await adminDb.collection("songs").doc(id).get();
+    if (!doc.exists) return NextResponse.json({ error: "Song not found" }, { status: 404 });
 
-    return NextResponse.json(song);
+    return NextResponse.json({ id: doc.id, ...doc.data() });
   } catch (error) {
     console.error(error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
@@ -31,9 +31,10 @@ export async function PATCH(
 
     const { id } = await params;
     const body = await request.json();
-    const song = await prisma.song.update({ where: { id }, data: body });
+    await adminDb.collection("songs").doc(id).update(body);
+    const updated = await adminDb.collection("songs").doc(id).get();
 
-    return NextResponse.json(song);
+    return NextResponse.json({ id: updated.id, ...updated.data() });
   } catch (error) {
     console.error(error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
@@ -52,7 +53,7 @@ export async function DELETE(
     }
 
     const { id } = await params;
-    await prisma.song.delete({ where: { id } });
+    await adminDb.collection("songs").doc(id).delete();
 
     return NextResponse.json({ success: true });
   } catch (error) {

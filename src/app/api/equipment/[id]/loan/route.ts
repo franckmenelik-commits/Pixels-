@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/db";
+import { adminDb } from "@/lib/firebase-admin";
 import { getSession } from "@/lib/auth";
+import { FieldValue } from "firebase-admin/firestore";
 
 export async function POST(
   request: NextRequest,
@@ -14,27 +15,26 @@ export async function POST(
     const body = await request.json();
     const { borrowerId, dueDate } = body;
 
-    const equipment = await prisma.equipment.findUnique({ where: { id } });
-    if (!equipment) return NextResponse.json({ error: "Equipment not found" }, { status: 404 });
+    const eqDoc = await adminDb.collection("equipment").doc(id).get();
+    if (!eqDoc.exists) return NextResponse.json({ error: "Equipment not found" }, { status: 404 });
+    const equipment = eqDoc.data()!;
     if (equipment.status !== "available") {
       return NextResponse.json({ error: "Equipment not available" }, { status: 400 });
     }
 
-    const loan = await prisma.equipmentLoan.create({
-      data: {
-        equipmentId: id,
-        borrowerId,
-        dueDate: new Date(dueDate),
-        conditionOut: equipment.condition,
-      },
+    const loanRef = await adminDb.collection("equipmentLoans").add({
+      equipmentId: id,
+      borrowerId,
+      dueDate,
+      conditionOut: equipment.condition,
+      status: "active",
+      createdAt: FieldValue.serverTimestamp(),
     });
 
-    await prisma.equipment.update({
-      where: { id },
-      data: { status: "reserved" },
-    });
+    await adminDb.collection("equipment").doc(id).update({ status: "reserved" });
 
-    return NextResponse.json(loan, { status: 201 });
+    const loan = await loanRef.get();
+    return NextResponse.json({ id: loanRef.id, ...loan.data() }, { status: 201 });
   } catch (error) {
     console.error(error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
@@ -53,29 +53,27 @@ export async function PATCH(
     const body = await request.json();
     const { conditionIn } = body;
 
-    const activeLoan = await prisma.equipmentLoan.findFirst({
-      where: { equipmentId: id, status: "active" },
-    });
-    if (!activeLoan) return NextResponse.json({ error: "No active loan found" }, { status: 404 });
+    const loansSnap = await adminDb.collection("equipmentLoans")
+      .where("equipmentId", "==", id)
+      .where("status", "==", "active")
+      .limit(1)
+      .get();
 
-    const loan = await prisma.equipmentLoan.update({
-      where: { id: activeLoan.id },
-      data: {
-        returnDate: new Date(),
-        conditionIn,
-        status: "returned",
-      },
+    if (loansSnap.empty) return NextResponse.json({ error: "No active loan found" }, { status: 404 });
+
+    const loanDoc = loansSnap.docs[0];
+    await loanDoc.ref.update({
+      returnDate: new Date().toISOString(),
+      conditionIn,
+      status: "returned",
     });
 
-    const updateData: Record<string, unknown> = { status: "available" };
+    const updateData: Record<string, any> = { status: "available" };
     if (conditionIn) updateData.condition = conditionIn;
+    await adminDb.collection("equipment").doc(id).update(updateData);
 
-    await prisma.equipment.update({
-      where: { id },
-      data: updateData,
-    });
-
-    return NextResponse.json(loan);
+    const updated = await loanDoc.ref.get();
+    return NextResponse.json({ id: updated.id, ...updated.data() });
   } catch (error) {
     console.error(error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });

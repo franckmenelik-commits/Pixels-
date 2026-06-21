@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/db";
+import { adminDb } from "@/lib/firebase-admin";
 import { getSession } from "@/lib/auth";
 
 export async function GET(
@@ -11,10 +11,10 @@ export async function GET(
     if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
     const { id } = await params;
-    const incident = await prisma.incident.findUnique({ where: { id } });
-    if (!incident) return NextResponse.json({ error: "Incident not found" }, { status: 404 });
+    const doc = await adminDb.collection("incidents").doc(id).get();
+    if (!doc.exists) return NextResponse.json({ error: "Incident not found" }, { status: 404 });
 
-    return NextResponse.json(incident);
+    return NextResponse.json({ id: doc.id, ...doc.data() });
   } catch (error) {
     console.error(error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
@@ -31,9 +31,10 @@ export async function PATCH(
 
     const { id } = await params;
     const body = await request.json();
-    const incident = await prisma.incident.update({ where: { id }, data: body });
+    await adminDb.collection("incidents").doc(id).update(body);
+    const updated = await adminDb.collection("incidents").doc(id).get();
 
-    return NextResponse.json(incident);
+    return NextResponse.json({ id: updated.id, ...updated.data() });
   } catch (error) {
     console.error(error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });

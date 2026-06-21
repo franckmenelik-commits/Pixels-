@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/db";
+import { adminDb } from "@/lib/firebase-admin";
 import { getSession } from "@/lib/auth";
 
 export async function GET(
@@ -11,10 +11,10 @@ export async function GET(
     if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
     const { id } = await params;
-    const jamSession = await prisma.jamSession.findUnique({ where: { id } });
-    if (!jamSession) return NextResponse.json({ error: "Jam session not found" }, { status: 404 });
+    const doc = await adminDb.collection("jamSessions").doc(id).get();
+    if (!doc.exists) return NextResponse.json({ error: "Jam session not found" }, { status: 404 });
 
-    return NextResponse.json(jamSession);
+    return NextResponse.json({ id: doc.id, ...doc.data() });
   } catch (error) {
     console.error(error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
@@ -31,9 +31,10 @@ export async function PATCH(
 
     const { id } = await params;
     const body = await request.json();
-    const jamSession = await prisma.jamSession.update({ where: { id }, data: body });
+    await adminDb.collection("jamSessions").doc(id).update(body);
+    const updated = await adminDb.collection("jamSessions").doc(id).get();
 
-    return NextResponse.json(jamSession);
+    return NextResponse.json({ id: updated.id, ...updated.data() });
   } catch (error) {
     console.error(error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
@@ -52,10 +53,11 @@ export async function POST(
     const body = await request.json();
     const { action } = body;
 
-    const jamSession = await prisma.jamSession.findUnique({ where: { id } });
-    if (!jamSession) return NextResponse.json({ error: "Jam session not found" }, { status: 404 });
+    const doc = await adminDb.collection("jamSessions").doc(id).get();
+    if (!doc.exists) return NextResponse.json({ error: "Jam session not found" }, { status: 404 });
 
-    const participants: string[] = JSON.parse(jamSession.participants);
+    const jamSession = doc.data()!;
+    const participants: string[] = JSON.parse(jamSession.participants || "[]");
 
     if (action === "join") {
       if (participants.includes(session.user.id)) {
@@ -75,12 +77,10 @@ export async function POST(
       return NextResponse.json({ error: "Invalid action" }, { status: 400 });
     }
 
-    const updated = await prisma.jamSession.update({
-      where: { id },
-      data: { participants: JSON.stringify(participants) },
-    });
+    await adminDb.collection("jamSessions").doc(id).update({ participants: JSON.stringify(participants) });
+    const updated = await adminDb.collection("jamSessions").doc(id).get();
 
-    return NextResponse.json(updated);
+    return NextResponse.json({ id: updated.id, ...updated.data() });
   } catch (error) {
     console.error(error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });

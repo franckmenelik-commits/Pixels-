@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Outfit, Open_Sans } from "next/font/google";
 import "./globals.css";
+import { AuthProvider } from "@/lib/auth-context";
 
 const outfit = Outfit({
   variable: "--font-outfit",
@@ -26,7 +27,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="fr" className={`${outfit.variable} ${openSans.variable} h-full antialiased`}>
-      <body className="min-h-full flex flex-col pixel-grid">{children}</body>
+      <body className="min-h-full flex flex-col pixel-grid">
+        <AuthProvider>{children}</AuthProvider>
+      </body>
     </html>
   );
 }

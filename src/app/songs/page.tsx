@@ -9,6 +9,7 @@ import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
 import Select from "@/components/ui/Select";
 import Modal from "@/components/ui/Modal";
+import { useAuth } from "@/lib/auth-context";
 
 interface ChordSheets {
   piano?: string;
@@ -19,7 +20,8 @@ interface ChordSheets {
 }
 
 interface Song {
-  _id: string;
+  _id?: string;
+  id?: string;
   title: string;
   artistOriginal?: string;
   key?: string;
@@ -79,7 +81,7 @@ const instrumentLabels: Record<string, string> = {
 
 export default function SongsPage() {
   const router = useRouter();
-  const [user, setUser] = useState<any>(null);
+  const { user, token, loading: authLoading } = useAuth();
   const [songs, setSongs] = useState<Song[]>([]);
   const [search, setSearch] = useState("");
   const [genreFilter, setGenreFilter] = useState("");
@@ -94,15 +96,18 @@ export default function SongsPage() {
   });
 
   useEffect(() => {
-    fetch("/api/auth/me").then(r => { if (!r.ok) throw new Error(); return r.json(); }).then(d => setUser(d.user)).catch(() => router.push("/login"));
-  }, [router]);
+    if (!authLoading && !user) router.push("/login");
+  }, [authLoading, user, router]);
 
   useEffect(() => {
-    if (!user) return;
-    fetch("/api/songs").then(r => r.json()).then(d => setSongs(d.songs || [])).catch(() => {});
-  }, [user]);
+    if (!user || !token) return;
+    fetch("/api/songs", { headers: { Authorization: `Bearer ${token}` } })
+      .then(r => r.json())
+      .then(d => setSongs(d.songs || []))
+      .catch(() => {});
+  }, [user, token]);
 
-  if (!user) return <div className="min-h-screen bg-[#040E3A] flex items-center justify-center"><div className="text-[#8E9BC0]">Chargement...</div></div>;
+  if (authLoading || !user) return <div className="min-h-screen bg-[#040E3A] flex items-center justify-center"><div className="text-[#8E9BC0]">Chargement...</div></div>;
 
   const filtered = songs.filter(s => {
     const matchSearch = !search || s.title.toLowerCase().includes(search.toLowerCase()) || s.artistOriginal?.toLowerCase().includes(search.toLowerCase());
@@ -120,7 +125,7 @@ export default function SongsPage() {
         tempoBpm: form.tempoBpm ? Number(form.tempoBpm) : undefined,
         tags: form.tags ? form.tags.split(",").map(t => t.trim()) : [],
       };
-      const res = await fetch("/api/songs", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+      const res = await fetch("/api/songs", { method: "POST", headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` }, body: JSON.stringify(body) });
       if (res.ok) {
         const data = await res.json();
         setSongs(prev => [...prev, data.song]);
@@ -153,7 +158,7 @@ export default function SongsPage() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {filtered.map(song => (
-              <div key={song._id} onClick={() => { setSelectedSong(song); setActiveTab("piano"); }} className="cursor-pointer">
+              <div key={song.id || song._id} onClick={() => { setSelectedSong(song); setActiveTab("piano"); }} className="cursor-pointer">
                 <Card>
                   <div className="space-y-3">
                     <div className="flex justify-between items-start">

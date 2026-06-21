@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '@/lib/firebase';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -17,18 +19,14 @@ export default function LoginPage() {
     setError('');
     setLoading(true);
     try {
-      const res = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
-      });
-      if (!res.ok) {
-        const data = await res.json();
-        throw new Error(data.error || 'Identifiants invalides');
-      }
+      await signInWithEmailAndPassword(auth, form.email, form.password);
       router.push('/dashboard');
-    } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : 'Erreur de connexion');
+    } catch (err: any) {
+      if (err.code === 'auth/user-not-found' || err.code === 'auth/wrong-password' || err.code === 'auth/invalid-credential') {
+        setError('Identifiants invalides');
+      } else {
+        setError('Erreur de connexion');
+      }
     } finally {
       setLoading(false);
     }
@@ -40,7 +38,7 @@ export default function LoginPage() {
         <div className="glass rounded-2xl overflow-hidden">
           <div className="gradient-primary p-6 text-center">
             <h1 className="text-2xl font-bold text-white">Connexion</h1>
-            <p className="text-white/70 text-sm mt-1">Accédez à votre espace Pixels</p>
+            <p className="text-white/70 text-sm mt-1">Acc&eacute;dez &agrave; votre espace Pixels</p>
           </div>
           <form onSubmit={handleSubmit} className="p-8 space-y-6">
             {error && (

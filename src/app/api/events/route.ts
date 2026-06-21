@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/db";
+import { adminDb } from "@/lib/firebase-admin";
 import { getSession } from "@/lib/auth";
+import { FieldValue } from "firebase-admin/firestore";
 
 export async function GET() {
   try {
@@ -8,21 +9,16 @@ export async function GET() {
     if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
     const { user } = session;
-    let where = {};
+    let eventsRef = adminDb.collection("events") as any;
 
     if (user.role === "organizer") {
-      const organizer = await prisma.organizer.findUnique({ where: { userId: user.id } });
-      if (!organizer) return NextResponse.json({ error: "Organizer not found" }, { status: 404 });
-      where = { organizerId: organizer.id };
+      eventsRef = eventsRef.where("organizerId", "==", user.id);
     } else if (user.role !== "admin" && user.role !== "operator") {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
-    const events = await prisma.event.findMany({
-      where,
-      include: { organizer: true, quote: true },
-      orderBy: { createdAt: "desc" },
-    });
+    const snapshot = await eventsRef.orderBy("createdAt", "desc").get();
+    const events = snapshot.docs.map((doc: any) => ({ id: doc.id, ...doc.data() }));
 
     return NextResponse.json(events);
   } catch (error) {
@@ -37,21 +33,20 @@ export async function POST(request: NextRequest) {
     if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     if (session.user.role !== "organizer") return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
-    const organizer = await prisma.organizer.findUnique({ where: { userId: session.user.id } });
-    if (!organizer) return NextResponse.json({ error: "Organizer profile not found" }, { status: 404 });
-
     const body = await request.json();
-    const event = await prisma.event.create({
-      data: {
-        ...body,
-        organizerId: organizer.id,
-        dateStart: new Date(body.dateStart),
-        dateEnd: new Date(body.dateEnd),
-      },
-      include: { organizer: true },
-    });
+    const eventData = {
+      ...body,
+      organizerId: session.user.id,
+      dateStart: body.dateStart,
+      dateEnd: body.dateEnd,
+      status: "nouveau",
+      createdAt: FieldValue.serverTimestamp(),
+    };
 
-    return NextResponse.json(event, { status: 201 });
+    const ref = await adminDb.collection("events").add(eventData);
+    const doc = await ref.get();
+
+    return NextResponse.json({ id: ref.id, ...doc.data() }, { status: 201 });
   } catch (error) {
     console.error(error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });

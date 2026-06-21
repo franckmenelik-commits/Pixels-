@@ -6,6 +6,8 @@ import Link from 'next/link';
 import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
 import Select from '@/components/ui/Select';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '@/lib/firebase';
 
 function RegisterForm() {
   const router = useRouter();
@@ -43,6 +45,7 @@ function RegisterForm() {
         const data = await res.json();
         throw new Error(data.error || "Erreur lors de l'inscription");
       }
+      await signInWithEmailAndPassword(auth, form.email, form.password);
       router.push('/dashboard');
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Erreur lors de l'inscription");
@@ -57,7 +60,7 @@ function RegisterForm() {
     <div className="glass rounded-2xl overflow-hidden">
       <div className="gradient-primary p-6 text-center">
         <h1 className="text-2xl font-bold text-white">Inscription</h1>
-        <p className="text-white/70 text-sm mt-1">Rejoignez la communauté Pixels</p>
+        <p className="text-white/70 text-sm mt-1">Rejoignez la communaut&eacute; Pixels</p>
       </div>
       <form onSubmit={handleSubmit} className="p-8 space-y-5">
         {error && (
@@ -69,7 +72,7 @@ function RegisterForm() {
         <Input label="Email" type="email" value={form.email} onChange={(e) => update('email', e.target.value)} required />
         <Input label="Mot de passe" type="password" value={form.password} onChange={(e) => update('password', e.target.value)} required />
         <Select
-          label="Rôle"
+          label="R&ocirc;le"
           value={form.role}
           onChange={(e) => update('role', e.target.value)}
           options={[
@@ -80,7 +83,7 @@ function RegisterForm() {
 
         {form.role === 'artist' && (
           <>
-            <Input label="Université" value={form.university} onChange={(e) => update('university', e.target.value)} />
+            <Input label="Universit&eacute;" value={form.university} onChange={(e) => update('university', e.target.value)} />
             <Input label="Programme" value={form.program} onChange={(e) => update('program', e.target.value)} />
           </>
         )}
@@ -93,11 +96,11 @@ function RegisterForm() {
               value={form.orgType}
               onChange={(e) => update('orgType', e.target.value)}
               options={[
-                { value: '', label: 'Sélectionner...' },
+                { value: '', label: 'S&eacute;lectionner...' },
                 { value: 'company', label: 'Entreprise' },
                 { value: 'association', label: 'Association' },
                 { value: 'individual', label: 'Particulier' },
-                { value: 'school', label: 'École / Université' },
+                { value: 'school', label: '&Eacute;cole / Universit&eacute;' },
               ]}
             />
           </>
@@ -107,7 +110,7 @@ function RegisterForm() {
           {loading ? 'Inscription...' : "S'inscrire"}
         </Button>
         <p className="text-center text-[#8E9BC0] text-sm">
-          Déjà un compte?{' '}
+          D&eacute;j&agrave; un compte?{' '}
           <Link href="/login" className="text-[#061E66] hover:underline">
             Se connecter
           </Link>

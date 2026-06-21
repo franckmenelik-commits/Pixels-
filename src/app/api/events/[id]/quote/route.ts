@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/db";
+import { adminDb } from "@/lib/firebase-admin";
 import { getSession } from "@/lib/auth";
+import { FieldValue } from "firebase-admin/firestore";
 
 export async function POST(
   _request: NextRequest,
@@ -14,9 +15,10 @@ export async function POST(
     }
 
     const { id } = await params;
-    const event = await prisma.event.findUnique({ where: { id } });
-    if (!event) return NextResponse.json({ error: "Event not found" }, { status: 404 });
+    const eventDoc = await adminDb.collection("events").doc(id).get();
+    if (!eventDoc.exists) return NextResponse.json({ error: "Event not found" }, { status: 404 });
 
+    const event = eventDoc.data()!;
     const musicians = event.musiciansCount || 1;
     const duration = event.duration || 2;
 
@@ -31,26 +33,21 @@ export async function POST(
     const sound = event.hasSound ? 0 : 200;
     const amount = musiciansTotal + durationTotal + transport + sound;
 
-    const breakdown = JSON.stringify({
-      musicians: musiciansTotal,
-      duration: durationTotal,
-      transport,
-      sound,
-    });
+    const breakdown = JSON.stringify({ musicians: musiciansTotal, duration: durationTotal, transport, sound });
 
-    const quote = await prisma.quote.create({
-      data: {
-        eventId: id,
-        amount,
-        breakdown,
-        status: "draft",
-        expiresAt: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000),
-      },
-    });
+    const quoteData = {
+      eventId: id,
+      amount,
+      breakdown,
+      status: "draft",
+      expiresAt: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString(),
+      createdAt: FieldValue.serverTimestamp(),
+    };
 
-    await prisma.event.update({ where: { id }, data: { status: "quote_sent" } });
+    const ref = await adminDb.collection("quotes").add(quoteData);
+    await adminDb.collection("events").doc(id).update({ status: "quote_sent" });
 
-    return NextResponse.json(quote, { status: 201 });
+    return NextResponse.json({ id: ref.id, ...quoteData }, { status: 201 });
   } catch (error) {
     console.error(error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
@@ -71,15 +68,14 @@ export async function PATCH(
     const { id } = await params;
     const body = await request.json();
 
-    const quote = await prisma.quote.findUnique({ where: { eventId: id } });
-    if (!quote) return NextResponse.json({ error: "Quote not found" }, { status: 404 });
+    const quotesSnap = await adminDb.collection("quotes").where("eventId", "==", id).limit(1).get();
+    if (quotesSnap.empty) return NextResponse.json({ error: "Quote not found" }, { status: 404 });
 
-    const updated = await prisma.quote.update({
-      where: { id: quote.id },
-      data: body,
-    });
+    const quoteDoc = quotesSnap.docs[0];
+    await quoteDoc.ref.update(body);
+    const updated = await quoteDoc.ref.get();
 
-    return NextResponse.json(updated);
+    return NextResponse.json({ id: updated.id, ...updated.data() });
   } catch (error) {
     console.error(error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });

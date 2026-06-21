@@ -7,8 +7,7 @@ import Card from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
 import Select from '@/components/ui/Select';
-
-interface User { _id: string; name: string; email: string; role: string; artistProfile?: string; }
+import { useAuth } from '@/lib/auth-context';
 
 const INSTRUMENTS_OPTIONS = ['Piano', 'Guitare', 'Basse', 'Batterie', 'Violon', 'Saxophone', 'Trompette', 'Flûte', 'Voix', 'Contrebasse', 'Ukulélé', 'Percussion', 'Clavier', 'Autre'];
 const GENRES = ['Jazz', 'Pop', 'Rock', 'R&B', 'Soul', 'Classique', 'Afro', 'Latin', 'Funk', 'Blues', 'Hip-Hop', 'Électronique', 'Folk', 'Autre'];
@@ -25,7 +24,7 @@ interface Profile {
 
 export default function ProfilePage() {
   const router = useRouter();
-  const [user, setUser] = useState<User | null>(null);
+  const { user, token, loading: authLoading } = useAuth();
   const [profile, setProfile] = useState<Profile>({
     stageName: '', university: '', program: '', bio: '',
     instruments: [], genres: [], canSing: false, vocalRange: '',
@@ -36,29 +35,26 @@ export default function ProfilePage() {
   const [message, setMessage] = useState('');
 
   useEffect(() => {
-    fetch('/api/auth/me')
-      .then(r => { if (!r.ok) throw new Error(); return r.json(); })
-      .then(data => {
-        setUser(data.user);
-        if (data.user.role !== 'artist') { router.push('/dashboard'); return; }
-        if (data.user.artistProfile) {
-          fetch(`/api/artists/${data.user.artistProfile}`)
-            .then(r => r.json())
-            .then(d => { if (d.artist) setProfile(prev => ({ ...prev, ...d.artist })); })
-            .catch(() => {});
-        }
-      })
-      .catch(() => router.push('/login'));
-  }, [router]);
+    if (!authLoading && !user) router.push('/login');
+  }, [authLoading, user, router]);
+
+  useEffect(() => {
+    if (!user || !token) return;
+    if (user.role !== 'artist') { router.push('/dashboard'); return; }
+    fetch(`/api/artists/${user.id}`, { headers: { Authorization: `Bearer ${token}` } })
+      .then(r => r.json())
+      .then(d => { if (d) setProfile(prev => ({ ...prev, ...d })); })
+      .catch(() => {});
+  }, [user, token, router]);
 
   const handleSave = async () => {
-    if (!user?.artistProfile) return;
+    if (!user || !token) return;
     setSaving(true);
     setMessage('');
     try {
-      const res = await fetch(`/api/artists/${user.artistProfile}`, {
+      const res = await fetch(`/api/artists/${user.id}`, {
         method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
         body: JSON.stringify(profile),
       });
       if (!res.ok) throw new Error();
@@ -92,7 +88,7 @@ export default function ProfilePage() {
     });
   };
 
-  if (!user) return <div className="min-h-screen bg-[#040E3A] flex items-center justify-center text-[#8E9BC0]">Chargement...</div>;
+  if (authLoading || !user) return <div className="min-h-screen bg-[#040E3A] flex items-center justify-center text-[#8E9BC0]">Chargement...</div>;
 
   return (
     <DashboardLayout user={user}>
@@ -107,7 +103,7 @@ export default function ProfilePage() {
 
         {/* Identité */}
         <Card>
-          <h2 className="text-xl font-semibold text-[#061E66] mb-4">Identité</h2>
+          <h2 className="text-xl font-semibold text-[#061E66] mb-4">Identit&eacute;</h2>
           <div className="space-y-4">
             <Input label="Nom de scène" value={profile.stageName} onChange={e => setProfile({ ...profile, stageName: e.target.value })} />
             <Input label="Université" value={profile.university} onChange={e => setProfile({ ...profile, university: e.target.value })} />
@@ -126,9 +122,8 @@ export default function ProfilePage() {
 
         {/* Compétences Musicales */}
         <Card>
-          <h2 className="text-xl font-semibold text-[#061E66] mb-4">Compétences Musicales</h2>
+          <h2 className="text-xl font-semibold text-[#061E66] mb-4">Comp&eacute;tences Musicales</h2>
           <div className="space-y-6">
-            {/* Instruments */}
             <div>
               <div className="flex justify-between items-center mb-3">
                 <label className="text-sm font-medium text-[#F0F0F0]">Instruments</label>
@@ -152,12 +147,11 @@ export default function ProfilePage() {
                       options={LEVELS.map(l => ({ value: l, label: l }))}
                     />
                   </div>
-                  <Button variant="danger" size="sm" onClick={() => removeInstrument(i)}>×</Button>
+                  <Button variant="danger" size="sm" onClick={() => removeInstrument(i)}>&times;</Button>
                 </div>
               ))}
             </div>
 
-            {/* Genres */}
             <div>
               <label className="block text-sm font-medium text-[#F0F0F0] mb-2">Genres musicaux</label>
               <div className="flex flex-wrap gap-2">
@@ -178,7 +172,6 @@ export default function ProfilePage() {
               </div>
             </div>
 
-            {/* Vocal */}
             <div className="flex items-center gap-4">
               <label className="flex items-center gap-2 text-[#F0F0F0]">
                 <input type="checkbox" checked={profile.canSing} onChange={e => setProfile({ ...profile, canSing: e.target.checked })} className="accent-[#FF8C45]" />
@@ -191,9 +184,8 @@ export default function ProfilePage() {
 
             <Input label="Formation musicale" value={profile.musicTraining} onChange={e => setProfile({ ...profile, musicTraining: e.target.value })} />
 
-            {/* Skills */}
             <div>
-              <label className="block text-sm font-medium text-[#F0F0F0] mb-2">Compétences</label>
+              <label className="block text-sm font-medium text-[#F0F0F0] mb-2">Comp&eacute;tences</label>
               <div className="flex flex-wrap gap-2">
                 {SKILLS.map(s => (
                   <button

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/db";
+import { adminDb } from "@/lib/firebase-admin";
 import { getSession } from "@/lib/auth";
+import { FieldValue } from "firebase-admin/firestore";
 
 export async function GET(request: NextRequest) {
   try {
@@ -12,20 +13,19 @@ export async function GET(request: NextRequest) {
     const difficulty = searchParams.get("difficulty");
     const search = searchParams.get("search");
 
-    const where: Record<string, unknown> = {};
-    if (genre) where.genre = genre;
-    if (difficulty) where.difficulty = difficulty;
-    if (search) {
-      where.OR = [
-        { title: { contains: search } },
-        { artistOrig: { contains: search } },
-      ];
-    }
+    let query = adminDb.collection("songs") as any;
+    if (genre) query = query.where("genre", "==", genre);
+    if (difficulty) query = query.where("difficulty", "==", difficulty);
 
-    const songs = await prisma.song.findMany({
-      where,
-      orderBy: { createdAt: "desc" },
-    });
+    const snapshot = await query.orderBy("createdAt", "desc").get();
+    let songs = snapshot.docs.map((doc: any) => ({ id: doc.id, ...doc.data() }));
+
+    if (search) {
+      const s = search.toLowerCase();
+      songs = songs.filter((song: any) =>
+        song.title?.toLowerCase().includes(s) || song.artistOrig?.toLowerCase().includes(s)
+      );
+    }
 
     return NextResponse.json(songs);
   } catch (error) {
@@ -43,14 +43,14 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const song = await prisma.song.create({
-      data: {
-        ...body,
-        createdBy: session.user.id,
-      },
+    const ref = await adminDb.collection("songs").add({
+      ...body,
+      createdBy: session.user.id,
+      createdAt: FieldValue.serverTimestamp(),
     });
 
-    return NextResponse.json(song, { status: 201 });
+    const doc = await ref.get();
+    return NextResponse.json({ id: ref.id, ...doc.data() }, { status: 201 });
   } catch (error) {
     console.error(error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });

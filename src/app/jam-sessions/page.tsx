@@ -8,9 +8,11 @@ import Badge from "@/components/ui/Badge";
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
 import Modal from "@/components/ui/Modal";
+import { useAuth } from "@/lib/auth-context";
 
 interface JamSession {
-  _id: string;
+  _id?: string;
+  id?: string;
   date: string;
   venueName?: string;
   venueAddress?: string;
@@ -51,21 +53,24 @@ const formatDate = (d: string) => {
 
 export default function JamSessionsPage() {
   const router = useRouter();
-  const [user, setUser] = useState<any>(null);
+  const { user, token, loading: authLoading } = useAuth();
   const [sessions, setSessions] = useState<JamSession[]>([]);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [form, setForm] = useState({ date: "", venueName: "", venueAddress: "", theme: "", capacity: "", description: "" });
 
   useEffect(() => {
-    fetch("/api/auth/me").then(r => { if (!r.ok) throw new Error(); return r.json(); }).then(d => setUser(d.user)).catch(() => router.push("/login"));
-  }, [router]);
+    if (!authLoading && !user) router.push("/login");
+  }, [authLoading, user, router]);
 
   useEffect(() => {
-    if (!user) return;
-    fetch("/api/jam-sessions").then(r => r.json()).then(d => setSessions(d.sessions || [])).catch(() => {});
-  }, [user]);
+    if (!user || !token) return;
+    fetch("/api/jam-sessions", { headers: { Authorization: `Bearer ${token}` } })
+      .then(r => r.json())
+      .then(d => setSessions(d.sessions || []))
+      .catch(() => {});
+  }, [user, token]);
 
-  if (!user) return <div className="min-h-screen bg-[#040E3A] flex items-center justify-center"><div className="text-[#8E9BC0]">Chargement...</div></div>;
+  if (authLoading || !user) return <div className="min-h-screen bg-[#040E3A] flex items-center justify-center"><div className="text-[#8E9BC0]">Chargement...</div></div>;
 
   const now = new Date();
   const upcoming = sessions.filter(s => new Date(s.date) >= now && s.status !== "completed");
@@ -75,11 +80,11 @@ export default function JamSessionsPage() {
   const handleJoinLeave = async (sessionId: string, action: "join" | "leave") => {
     try {
       const res = await fetch(`/api/jam-sessions/${sessionId}`, {
-        method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ action }),
+        method: "POST", headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` }, body: JSON.stringify({ action }),
       });
       if (res.ok) {
         const data = await res.json();
-        setSessions(prev => prev.map(s => s._id === sessionId ? { ...s, ...data.session } : s));
+        setSessions(prev => prev.map(s => (s.id || s._id) === sessionId ? { ...s, ...data.session } : s));
       }
     } catch {}
   };
@@ -87,7 +92,7 @@ export default function JamSessionsPage() {
   const handleCreate = async () => {
     try {
       const body = { ...form, capacity: form.capacity ? Number(form.capacity) : undefined };
-      const res = await fetch("/api/jam-sessions", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+      const res = await fetch("/api/jam-sessions", { method: "POST", headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` }, body: JSON.stringify(body) });
       if (res.ok) {
         const data = await res.json();
         setSessions(prev => [...prev, data.session]);
@@ -97,7 +102,7 @@ export default function JamSessionsPage() {
     } catch {}
   };
 
-  const isParticipant = (s: JamSession) => s.participants?.includes(user._id || user.id);
+  const isParticipant = (s: JamSession) => s.participants?.includes(user.id);
 
   const SessionCard = ({ session, isPast }: { session: JamSession; isPast?: boolean }) => (
     <Card>
@@ -121,9 +126,9 @@ export default function JamSessionsPage() {
         {!isPast && (
           <div className="pt-2">
             {isParticipant(session) ? (
-              <Button variant="danger" size="sm" onClick={() => handleJoinLeave(session._id, "leave")}>Quitter</Button>
+              <Button variant="danger" size="sm" onClick={() => handleJoinLeave(session.id || session._id!, "leave")}>Quitter</Button>
             ) : (
-              <Button size="sm" onClick={() => handleJoinLeave(session._id, "join")}
+              <Button size="sm" onClick={() => handleJoinLeave(session.id || session._id!, "join")}
                 disabled={!!session.capacity && (session.participants?.length || 0) >= session.capacity}>
                 Rejoindre
               </Button>
@@ -150,7 +155,7 @@ export default function JamSessionsPage() {
             <Card><p className="text-[#8E9BC0]">Aucune session à venir.</p></Card>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {upcoming.map(s => <SessionCard key={s._id} session={s} />)}
+              {upcoming.map(s => <SessionCard key={s.id || s._id} session={s} />)}
             </div>
           )}
         </div>
@@ -161,7 +166,7 @@ export default function JamSessionsPage() {
             <Card><p className="text-[#8E9BC0]">Aucune session passée.</p></Card>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {past.map(s => <SessionCard key={s._id} session={s} isPast />)}
+              {past.map(s => <SessionCard key={s.id || s._id} session={s} isPast />)}
             </div>
           )}
         </div>

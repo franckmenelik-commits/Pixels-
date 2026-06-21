@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/db";
+import { adminDb } from "@/lib/firebase-admin";
 import { getSession } from "@/lib/auth";
+import { FieldValue } from "firebase-admin/firestore";
 
 export async function POST(
   request: NextRequest,
@@ -16,28 +17,32 @@ export async function POST(
     const { id } = await params;
     const { artistId, instrument } = await request.json();
 
-    const mission = await prisma.mission.findUnique({
-      where: { id },
-      include: { slots: true },
-    });
-    if (!mission) return NextResponse.json({ error: "Mission not found" }, { status: 404 });
+    const missionDoc = await adminDb.collection("missions").doc(id).get();
+    if (!missionDoc.exists) return NextResponse.json({ error: "Mission not found" }, { status: 404 });
 
-    const slotCount = mission.slots.length + 1;
-    const payAmount = (mission.totalAmount * (mission.musiciansPct / 100)) / slotCount;
+    const mission = missionDoc.data()!;
+    const slotsSnap = await adminDb.collection("missions").doc(id).collection("missionSlots").get();
+    const slotCount = slotsSnap.size + 1;
+    const musicianPool = mission.totalAmount * (mission.musiciansPct / 100);
+    const payAmount = musicianPool / slotCount;
 
-    const slot = await prisma.missionSlot.create({
-      data: { missionId: id, artistId, instrument, payAmount },
-      include: { artist: true },
+    const slotRef = await adminDb.collection("missions").doc(id).collection("missionSlots").add({
+      artistId,
+      instrument,
+      payAmount,
+      status: "pending",
+      createdAt: FieldValue.serverTimestamp(),
     });
 
     // Recalculate existing slots pay
-    const musicianPool = mission.totalAmount * (mission.musiciansPct / 100);
-    await prisma.missionSlot.updateMany({
-      where: { missionId: id },
-      data: { payAmount: musicianPool / slotCount },
-    });
+    const batch = adminDb.batch();
+    for (const slotDoc of slotsSnap.docs) {
+      batch.update(slotDoc.ref, { payAmount });
+    }
+    await batch.commit();
 
-    return NextResponse.json(slot, { status: 201 });
+    const newSlot = await slotRef.get();
+    return NextResponse.json({ id: slotRef.id, ...newSlot.data() }, { status: 201 });
   } catch (error) {
     console.error(error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
@@ -52,17 +57,17 @@ export async function PATCH(
     const session = await getSession();
     if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
+    const { id } = await params;
     const { slotId, status } = await request.json();
 
-    const slot = await prisma.missionSlot.update({
-      where: { id: slotId },
-      data: {
-        status,
-        confirmedAt: status === "accepted" ? new Date() : undefined,
-      },
-    });
+    const slotRef = adminDb.collection("missions").doc(id).collection("missionSlots").doc(slotId);
+    const updateData: Record<string, any> = { status };
+    if (status === "accepted") updateData.confirmedAt = new Date().toISOString();
 
-    return NextResponse.json(slot);
+    await slotRef.update(updateData);
+    const updated = await slotRef.get();
+
+    return NextResponse.json({ id: updated.id, ...updated.data() });
   } catch (error) {
     console.error(error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });

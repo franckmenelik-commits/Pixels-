@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/db";
+import { adminDb } from "@/lib/firebase-admin";
 import { getSession } from "@/lib/auth";
 
 export async function GET() {
@@ -10,9 +10,7 @@ export async function GET() {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
-    const allTransactions = await prisma.transaction.findMany({
-      where: { status: "completed" },
-    });
+    const allSnap = await adminDb.collection("transactions").where("status", "==", "completed").get();
 
     let totalRevenue = 0;
     let totalPaidToMusicians = 0;
@@ -20,10 +18,12 @@ export async function GET() {
     let totalReserve = 0;
     const monthlyMap: Record<string, number> = {};
 
-    for (const t of allTransactions) {
+    for (const doc of allSnap.docs) {
+      const t = doc.data();
       if (t.type === "income") {
         totalRevenue += t.amount;
-        const key = `${t.date.getFullYear()}-${String(t.date.getMonth() + 1).padStart(2, "0")}`;
+        const date = t.date?.toDate ? t.date.toDate() : new Date(t.date);
+        const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
         monthlyMap[key] = (monthlyMap[key] || 0) + t.amount;
       }
       if (t.category === "musician_payment") totalPaidToMusicians += t.amount;
@@ -31,15 +31,27 @@ export async function GET() {
       if (t.category === "reserve") totalReserve += t.amount;
     }
 
-    const recentTransactions = await prisma.transaction.findMany({
-      orderBy: { date: "desc" },
-      take: 20,
-      include: { mission: { include: { event: true } } },
-    });
+    const recentSnap = await adminDb.collection("transactions").orderBy("date", "desc").limit(20).get();
+    const recentTransactions = [];
+    for (const doc of recentSnap.docs) {
+      const data = doc.data();
+      let mission = null;
+      if (data.missionId) {
+        const mDoc = await adminDb.collection("missions").doc(data.missionId).get();
+        if (mDoc.exists) {
+          const mData = mDoc.data()!;
+          let event = null;
+          if (mData.eventId) {
+            const eDoc = await adminDb.collection("events").doc(mData.eventId).get();
+            if (eDoc.exists) event = { id: eDoc.id, ...eDoc.data() };
+          }
+          mission = { id: mDoc.id, ...mData, event };
+        }
+      }
+      recentTransactions.push({ id: doc.id, ...data, mission });
+    }
 
-    const monthlyRevenue = Object.entries(monthlyMap)
-      .sort()
-      .map(([month, amount]) => ({ month, amount }));
+    const monthlyRevenue = Object.entries(monthlyMap).sort().map(([month, amount]) => ({ month, amount }));
 
     return NextResponse.json({
       totalRevenue,

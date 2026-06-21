@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/db";
+import { adminDb } from "@/lib/firebase-admin";
 import { getSession } from "@/lib/auth";
+import { FieldValue } from "firebase-admin/firestore";
 
 export async function POST(
   _request: NextRequest,
@@ -14,70 +15,89 @@ export async function POST(
     }
 
     const { id } = await params;
-    const mission = await prisma.mission.findUnique({
-      where: { id },
-      include: { slots: { include: { artist: { include: { user: true } } } }, event: true },
-    });
-    if (!mission) return NextResponse.json({ error: "Mission not found" }, { status: 404 });
+    const missionDoc = await adminDb.collection("missions").doc(id).get();
+    if (!missionDoc.exists) return NextResponse.json({ error: "Mission not found" }, { status: 404 });
+
+    const mission = missionDoc.data()!;
+    const eventDoc = await adminDb.collection("events").doc(mission.eventId).get();
+    const eventName = eventDoc.exists ? eventDoc.data()!.name : "Unknown";
+
+    const slotsSnap = await adminDb.collection("missions").doc(id).collection("missionSlots").get();
 
     const total = mission.totalAmount;
     const musicianPool = total * (mission.musiciansPct / 100);
     const logisticsAmount = total * (mission.logisticsPct / 100);
     const reserveAmount = total * (mission.reservePct / 100);
-    const slotCount = mission.slots.length || 1;
+    const slotCount = slotsSnap.size || 1;
     const perMusician = musicianPool / slotCount;
 
-    const transactions = [];
+    const batch = adminDb.batch();
 
     // Income transaction
-    transactions.push({
+    const incomeRef = adminDb.collection("transactions").doc();
+    batch.set(incomeRef, {
       missionId: id,
       type: "income",
       amount: total,
       category: "event_payment",
-      description: `Payment for event: ${mission.event.name}`,
+      description: `Payment for event: ${eventName}`,
       status: "completed",
+      date: FieldValue.serverTimestamp(),
     });
 
     // Musician payments
-    for (const slot of mission.slots) {
-      const artistName = slot.artist?.user?.name || "Unknown";
-      transactions.push({
+    for (const slot of slotsSnap.docs) {
+      const slotData = slot.data();
+      let artistName = "Unknown";
+      if (slotData.artistId) {
+        const userDoc = await adminDb.collection("users").doc(slotData.artistId).get();
+        if (userDoc.exists) artistName = userDoc.data()!.name || "Unknown";
+      }
+
+      const expRef = adminDb.collection("transactions").doc();
+      batch.set(expRef, {
         missionId: id,
         type: "expense",
         amount: perMusician,
         category: "musician_payment",
-        description: `Payment to ${artistName} (${slot.instrument})`,
-        fromTo: slot.artist?.userId,
+        description: `Payment to ${artistName} (${slotData.instrument})`,
+        fromTo: slotData.artistId,
         status: "completed",
+        date: FieldValue.serverTimestamp(),
       });
     }
 
     // Logistics
-    transactions.push({
+    const logRef = adminDb.collection("transactions").doc();
+    batch.set(logRef, {
       missionId: id,
       type: "expense",
       amount: logisticsAmount,
       category: "logistics",
       description: "Logistics costs",
       status: "completed",
+      date: FieldValue.serverTimestamp(),
     });
 
     // Reserve
-    transactions.push({
+    const resRef = adminDb.collection("transactions").doc();
+    batch.set(resRef, {
       missionId: id,
       type: "expense",
       amount: reserveAmount,
       category: "reserve",
       description: "Reserve fund",
       status: "completed",
+      date: FieldValue.serverTimestamp(),
     });
 
-    await prisma.transaction.createMany({ data: transactions });
-    await prisma.mission.update({ where: { id }, data: { status: "completed" } });
-    await prisma.event.update({ where: { id: mission.eventId }, data: { status: "paid" } });
+    // Update mission and event status
+    batch.update(adminDb.collection("missions").doc(id), { status: "completed" });
+    batch.update(adminDb.collection("events").doc(mission.eventId), { status: "paid" });
 
-    return NextResponse.json({ success: true, transactionsCreated: transactions.length });
+    await batch.commit();
+
+    return NextResponse.json({ success: true, transactionsCreated: slotsSnap.size + 3 });
   } catch (error) {
     console.error(error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });

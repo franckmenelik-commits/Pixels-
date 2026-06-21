@@ -9,9 +9,11 @@ import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
 import Select from "@/components/ui/Select";
 import Modal from "@/components/ui/Modal";
+import { useAuth } from "@/lib/auth-context";
 
 interface Equipment {
-  _id: string;
+  _id?: string;
+  id?: string;
   name: string;
   type?: string;
   ownerType?: string;
@@ -22,7 +24,8 @@ interface Equipment {
 }
 
 interface Loan {
-  _id: string;
+  _id?: string;
+  id?: string;
   equipmentId: string;
   equipmentName?: string;
   borrower?: string;
@@ -72,7 +75,7 @@ const conditions = [
 
 export default function EquipmentPage() {
   const router = useRouter();
-  const [user, setUser] = useState<any>(null);
+  const { user, token, loading: authLoading } = useAuth();
   const [equipment, setEquipment] = useState<Equipment[]>([]);
   const [loans, setLoans] = useState<Loan[]>([]);
   const [activeFilter, setActiveFilter] = useState("Tous");
@@ -80,26 +83,29 @@ export default function EquipmentPage() {
   const [form, setForm] = useState({ name: "", type: "", condition: "good", status: "available", value: "", description: "", ownerType: "association" });
 
   useEffect(() => {
-    fetch("/api/auth/me").then(r => { if (!r.ok) throw new Error(); return r.json(); }).then(d => setUser(d.user)).catch(() => router.push("/login"));
-  }, [router]);
+    if (!authLoading && !user) router.push("/login");
+  }, [authLoading, user, router]);
 
   useEffect(() => {
-    if (!user) return;
-    fetch("/api/equipment").then(r => r.json()).then(d => { setEquipment(d.equipment || []); setLoans(d.loans || []); }).catch(() => {});
-  }, [user]);
+    if (!user || !token) return;
+    fetch("/api/equipment", { headers: { Authorization: `Bearer ${token}` } })
+      .then(r => r.json())
+      .then(d => { setEquipment(d.equipment || []); setLoans(d.loans || []); })
+      .catch(() => {});
+  }, [user, token]);
 
-  if (!user) return <div className="min-h-screen bg-[#040E3A] flex items-center justify-center"><div className="text-[#8E9BC0]">Chargement...</div></div>;
+  if (authLoading || !user) return <div className="min-h-screen bg-[#040E3A] flex items-center justify-center"><div className="text-[#8E9BC0]">Chargement...</div></div>;
 
   const isAdmin = user.role === "admin" || user.role === "operator";
   const filtered = activeFilter === "Tous" ? equipment : equipment.filter(e => e.type === typeApiValues[activeFilter]);
 
   const handleBorrow = async (eqId: string) => {
     try {
-      const res = await fetch("/api/equipment/loans", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ equipmentId: eqId }) });
+      const res = await fetch("/api/equipment/loans", { method: "POST", headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` }, body: JSON.stringify({ equipmentId: eqId }) });
       if (res.ok) {
         const data = await res.json();
         if (data.loan) setLoans(prev => [...prev, data.loan]);
-        setEquipment(prev => prev.map(e => e._id === eqId ? { ...e, status: "loaned" } : e));
+        setEquipment(prev => prev.map(e => (e.id || e._id) === eqId ? { ...e, status: "loaned" } : e));
       }
     } catch {}
   };
@@ -107,7 +113,7 @@ export default function EquipmentPage() {
   const handleAdd = async () => {
     try {
       const body = { ...form, value: form.value ? Number(form.value) : undefined };
-      const res = await fetch("/api/equipment", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+      const res = await fetch("/api/equipment", { method: "POST", headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` }, body: JSON.stringify(body) });
       if (res.ok) {
         const data = await res.json();
         setEquipment(prev => [...prev, data.equipment]);
@@ -140,9 +146,10 @@ export default function EquipmentPage() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {filtered.map(eq => {
+              const eqId = eq.id || eq._id!;
               const cond = conditionConfig[eq.condition || "good"] || conditionConfig.good;
               return (
-                <Card key={eq._id}>
+                <Card key={eqId}>
                   <div className="space-y-3">
                     <div className="flex justify-between items-start">
                       <h3 className="text-lg font-semibold text-[#F0F0F0]">{eq.name}</h3>
@@ -155,7 +162,7 @@ export default function EquipmentPage() {
                     {eq.ownerType && <p className="text-xs text-[#8E9BC0]">Propriétaire: {eq.ownerType}</p>}
                     {eq.value != null && <p className="text-sm text-[#061E66]">{eq.value.toLocaleString("fr-FR")} €</p>}
                     {eq.status === "available" && (
-                      <Button size="sm" variant="secondary" onClick={() => handleBorrow(eq._id)}>Emprunter</Button>
+                      <Button size="sm" variant="secondary" onClick={() => handleBorrow(eqId)}>Emprunter</Button>
                     )}
                   </div>
                 </Card>
@@ -169,7 +176,7 @@ export default function EquipmentPage() {
             <h2 className="text-xl font-semibold text-[#F0F0F0]">Emprunts actifs</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {activeLoans.map(loan => (
-                <Card key={loan._id}>
+                <Card key={loan.id || loan._id}>
                   <div className="space-y-2">
                     <h3 className="text-base font-semibold text-[#F0F0F0]">{loan.equipmentName || "Équipement"}</h3>
                     {loan.borrower && <p className="text-sm text-[#8E9BC0]">Emprunteur: {loan.borrower}</p>}
