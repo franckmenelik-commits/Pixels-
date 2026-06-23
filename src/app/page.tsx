@@ -20,7 +20,7 @@ export default function LandingPage() {
         <div className="max-w-[1400px] mx-auto flex items-center justify-between px-6 md:px-10">
           <Link href="/" className="flex items-center">
             <Image
-              src="/images/pixels-logo.svg"
+              src="/images/pixels-logo.png"
               alt="pixels™"
               width={120}
               height={34}
@@ -405,7 +405,7 @@ export default function LandingPage() {
       {/* ── MERCH / HOODIE ── */}
       <section className="grid md:grid-cols-2">
         <div className="relative min-h-[500px]">
-          <Image src="/images/event-2.jpg" alt="La famille Pixels" fill className="object-cover" sizes="50vw" />
+          <Image src="/images/hoodie.jpg" alt="Le hoodie Pixels — la famille" fill className="object-cover object-center" sizes="50vw" />
         </div>
         <div className="bg-[var(--surface)] p-10 md:p-16 lg:p-20 flex flex-col justify-center">
           <p className="text-[var(--primary)] text-sm tracking-[0.15em] uppercase font-semibold mb-4">La famille</p>
@@ -486,7 +486,7 @@ export default function LandingPage() {
       <footer className="bg-[var(--dark)] text-white py-16">
         <div className="max-w-[1400px] mx-auto px-6 md:px-10">
           <div className="text-center mb-16">
-            <Image src="/images/pixels-logo.svg" alt="pixels™" width={160} height={46} className="brightness-0 invert mx-auto" />
+            <Image src="/images/pixels-logo.png" alt="pixels™" width={160} height={46} className="brightness-0 invert mx-auto" />
             <p className="text-white/30 mt-6 max-w-md mx-auto leading-relaxed">
               Tant qu&rsquo;&agrave; traverser quelque chose de difficile, autant essayer d&rsquo;en faire quelque chose de beau.
             </p>
