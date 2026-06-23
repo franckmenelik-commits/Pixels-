@@ -55,8 +55,7 @@ export default function LandingPage() {
             playsInline
             className="w-full h-full object-cover"
           >
-            <source src="/images/hero-video.mov" type="video/quicktime" />
-            <source src="/images/hero-video.mov" type="video/mp4" />
+            <source src="/images/hero-video.mp4" type="video/mp4" />
           </video>
           <div className="absolute inset-0 bg-[#0B1D3D]/60" />
         </div>
@@ -173,26 +172,19 @@ export default function LandingPage() {
         <div className="max-w-[1400px] mx-auto px-6 md:px-10 py-16">
           <p className="text-[var(--primary)] text-sm tracking-[0.15em] uppercase font-semibold mb-8 text-center">En live</p>
           <div className="grid md:grid-cols-2 gap-4">
-            {[
-              { src: '/images/live-1.mov', type: 'video/quicktime' },
-              { src: '/images/live-2.mp4', type: 'video/mp4' },
-            ].map((v) => (
-              <div key={v.src} className="aspect-video rounded-xl overflow-hidden bg-[var(--dark-surface)]">
+            {['/images/live-1.mp4', '/images/live-2.mp4'].map((src) => (
+              <div key={src} className="aspect-video rounded-xl overflow-hidden bg-[var(--dark-surface)]">
                 <video autoPlay muted loop playsInline preload="auto" className="w-full h-full object-cover">
-                  <source src={v.src} type={v.type} />
+                  <source src={src} type="video/mp4" />
                 </video>
               </div>
             ))}
           </div>
           <div className="grid grid-cols-3 gap-4 mt-4">
-            {[
-              { src: '/images/live-3.mov', type: 'video/quicktime' },
-              { src: '/images/live-4.mov', type: 'video/quicktime' },
-              { src: '/images/live-5.mov', type: 'video/quicktime' },
-            ].map((v) => (
-              <div key={v.src} className="aspect-video rounded-xl overflow-hidden bg-[var(--dark-surface)]">
+            {['/images/live-3.mp4', '/images/live-4.mp4', '/images/live-5.mp4'].map((src) => (
+              <div key={src} className="aspect-video rounded-xl overflow-hidden bg-[var(--dark-surface)]">
                 <video autoPlay muted loop playsInline preload="auto" className="w-full h-full object-cover">
-                  <source src={v.src} type={v.type} />
+                  <source src={src} type="video/mp4" />
                 </video>
               </div>
             ))}
