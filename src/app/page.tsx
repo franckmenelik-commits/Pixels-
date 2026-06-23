@@ -2,270 +2,230 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import Button from '@/components/ui/Button';
-
-function NavIcon({ d }: { d: string }) {
-  return (
-    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-      <path strokeLinecap="round" strokeLinejoin="round" d={d} />
-    </svg>
-  );
-}
 
 export default function LandingPage() {
   return (
     <div className="min-h-screen bg-white text-[var(--text)]">
       {/* ── Navbar ── */}
-      <nav className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-[var(--border)]">
-        <div className="max-w-7xl mx-auto flex items-center justify-between px-6 md:px-10 py-4">
-          <Link href="/" className="pixels-logo text-xl">pixels&trade;</Link>
-          <div className="hidden md:flex items-center gap-8 text-sm text-[var(--text-muted)]">
-            <a href="#mission" className="hover:text-[var(--text)] transition">Notre mission</a>
-            <a href="#comment" className="hover:text-[var(--text)] transition">Comment ca marche</a>
-            <a href="#temoignages" className="hover:text-[var(--text)] transition">Temoignages</a>
-            <a href="#galerie" className="hover:text-[var(--text)] transition">Galerie</a>
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-b border-[var(--border)]">
+        <div className="max-w-[1400px] mx-auto flex items-center justify-between px-6 md:px-10 py-4">
+          <Link href="/" className="pixels-logo text-xl text-[var(--dark)]">pixels</Link>
+          <div className="hidden md:flex items-center gap-8 text-[13px] text-[var(--text-muted)]">
+            <a href="#projets" className="hover:text-[var(--dark)] transition">Projets</a>
+            <a href="#artistes" className="hover:text-[var(--dark)] transition">Artistes</a>
+            <a href="#communaute" className="hover:text-[var(--dark)] transition">Communaute</a>
+            <a href="#apropos" className="hover:text-[var(--dark)] transition">A propos</a>
+            <a href="#contact" className="hover:text-[var(--dark)] transition">Contact</a>
           </div>
           <div className="flex items-center gap-3">
-            <Link href="/login" className="text-sm text-[var(--text-muted)] hover:text-[var(--text)] transition hidden sm:block">
+            <Link href="/login" className="text-[13px] text-[var(--text-muted)] hover:text-[var(--dark)] transition hidden sm:block">
               Connexion
             </Link>
-            <Link href="/register">
-              <Button variant="primary" size="sm">Rejoindre Pixels</Button>
+            <Link href="/register" className="text-[13px] bg-[var(--primary)] text-white px-5 py-2 rounded-full hover:brightness-110 transition font-medium">
+              Rejoindre Pixels
             </Link>
           </div>
         </div>
       </nav>
 
-      {/* ── Hero ── */}
-      <section className="relative overflow-hidden">
-        <div className="max-w-7xl mx-auto px-6 md:px-10 pt-20 pb-24 md:pt-28 md:pb-32">
-          <div className="max-w-3xl">
-            <span className="tag-label">Incubateur Culturel Musical &mdash; Montreal</span>
-            <h1 className="editorial-heading text-5xl md:text-7xl mt-4 text-[var(--secondary)]">
-              La musique<br />
-              se vit mieux<br />
-              <span className="text-[var(--primary)]">ensemble.</span>
-            </h1>
-            <p className="text-lg md:text-xl text-[var(--text-muted)] mt-6 max-w-xl leading-relaxed">
-              Pixels connecte les artistes emergents aux organisateurs d&apos;evenements
-              culturels. Un espace ou chaque talent trouve sa scene.
+      {/* ── 01 HERO ── */}
+      <section className="bg-[var(--dark)] text-white min-h-screen flex items-end relative overflow-hidden pt-20">
+        <div className="absolute inset-0">
+          <Image
+            src="/images/event-1.jpg"
+            alt="Pixels live performance"
+            fill
+            className="object-cover opacity-40"
+            priority
+            sizes="100vw"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-[var(--dark)] via-[var(--dark)]/60 to-transparent" />
+        </div>
+        <div className="relative z-10 max-w-[1400px] mx-auto px-6 md:px-10 pb-20 w-full">
+          <h1 className="editorial-heading text-6xl md:text-8xl lg:text-9xl text-white leading-[0.95]">
+            Creer<span className="text-[var(--primary)]">.</span><br />
+            Rassembler<span className="text-[var(--primary)]">.</span><br />
+            Faire vibrer<span className="text-[var(--primary)]">.</span>
+          </h1>
+          <p className="text-white/60 mt-8 max-w-lg text-lg leading-relaxed">
+            Pixels reunit les talents pour creer des experiences qui marquent.
+          </p>
+          <div className="mt-10 flex items-center gap-6">
+            <Link href="/register" className="bg-[var(--primary)] text-white px-8 py-4 rounded-full text-[15px] font-medium hover:brightness-110 transition inline-flex items-center gap-2">
+              Rejoindre la communaute
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* ── 02 A PROPOS ── */}
+      <section id="apropos" className="grid md:grid-cols-2 border-b border-[var(--border)]">
+        <div className="p-10 md:p-16 flex flex-col justify-center">
+          <span className="section-num">02 &mdash; A propos</span>
+          <h2 className="editorial-heading text-4xl md:text-5xl mt-4">
+            Une rencontre peut tout changer<span className="text-[var(--primary)]">.</span>
+          </h2>
+          <p className="text-[var(--text-muted)] mt-6 leading-relaxed max-w-md">
+            Pixels est ne a Montreal d&apos;une envie simple : rassembler les talents et creer ensemble.
+          </p>
+          <p className="text-[var(--text-muted)] mt-4 leading-relaxed max-w-md">
+            De la musique aux images, des idees aux emotions. Tout commence par une rencontre.
+          </p>
+        </div>
+        <div className="relative min-h-[400px] md:min-h-0">
+          <Image src="/images/event-6.jpg" alt="Pixels community" fill className="object-cover" sizes="50vw" />
+        </div>
+      </section>
+
+      {/* ── 03 EXPERIENCES ── */}
+      <section className="grid md:grid-cols-2 border-b border-[var(--border)]">
+        <div className="relative min-h-[400px] md:min-h-0 order-2 md:order-1">
+          <Image src="/images/event-3.jpg" alt="Pixels experience" fill className="object-cover" sizes="50vw" />
+        </div>
+        <div className="p-10 md:p-16 flex flex-col justify-center order-1 md:order-2">
+          <span className="section-num">03 &mdash; Experiences</span>
+          <h2 className="editorial-heading text-4xl md:text-5xl mt-4">
+            Des experiences sur mesure<span className="text-[var(--primary)]">.</span>
+          </h2>
+          <ul className="mt-8 space-y-3 text-[15px]">
+            {['Concerts & showcases', 'Evenements corporatifs', 'Mariages & celebrations', 'Festivals & evenements publics', 'Projets speciaux'].map((item) => (
+              <li key={item} className="flex items-center gap-3">
+                <span className="w-1.5 h-1.5 rounded-full bg-[var(--primary)]" />
+                {item}
+              </li>
+            ))}
+          </ul>
+          <p className="text-[var(--text-muted)] mt-6 text-sm leading-relaxed max-w-md">
+            Chaque projet est unique. Notre approche aussi.
+          </p>
+        </div>
+      </section>
+
+      {/* ── 04 ARTISTES ── */}
+      <section id="artistes" className="grid md:grid-cols-3 border-b border-[var(--border)]">
+        <div className="p-10 md:p-12 flex flex-col justify-between">
+          <div>
+            <span className="section-num">04 &mdash; Artistes</span>
+            <h2 className="editorial-heading text-3xl md:text-4xl mt-4">
+              Un collectif de talents<span className="text-[var(--primary)]">.</span>
+            </h2>
+            <p className="text-[var(--text-muted)] mt-4 text-sm leading-relaxed">
+              Musiciens, producteurs, realisateurs, techniciens, createurs.
+              Des profils varies, une meme passion.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 mt-10">
-              <Link href="/register?role=artist">
-                <Button variant="primary" size="lg">Rejoindre en tant qu&apos;artiste</Button>
-              </Link>
-              <Link href="/register?role=organizer">
-                <Button variant="secondary" size="lg">Soumettre un evenement</Button>
-              </Link>
-            </div>
           </div>
+          <Link href="/register?role=artist" className="inline-flex items-center gap-2 text-sm mt-8 hover:gap-3 transition-all">
+            Decouvrir les artistes
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+          </Link>
         </div>
-        <div className="absolute top-16 right-0 w-1/3 h-full opacity-10 pointer-events-none hidden lg:block">
-          <div className="w-full h-full bg-gradient-to-bl from-[var(--primary)] to-transparent rounded-full blur-3xl" />
+        <div className="md:col-span-2 grid grid-cols-3 gap-1 p-1">
+          {[2, 4, 5, 7, 1, 3].map((n, i) => (
+            <div key={i} className="relative aspect-square">
+              <Image src={`/images/event-${n}.jpg`} alt={`Artiste ${i+1}`} fill className="object-cover" sizes="(max-width: 768px) 33vw, 22vw" />
+            </div>
+          ))}
         </div>
       </section>
 
-      {/* ── Stats ── */}
-      <section className="section-cream py-20 border-y border-[var(--border)]">
-        <div className="max-w-7xl mx-auto px-6 md:px-10">
-          <span className="tag-label">Pixels en chiffres</span>
-          <h2 className="editorial-heading text-3xl md:text-4xl mt-3 text-[var(--secondary)]">
-            Une communaute qui grandit.
+      {/* ── 05 PROJETS ── */}
+      <section id="projets" className="grid md:grid-cols-3 border-b border-[var(--border)]">
+        <div className="p-10 md:p-12 flex flex-col justify-between">
+          <div>
+            <span className="section-num">05 &mdash; Projets</span>
+            <h2 className="editorial-heading text-3xl md:text-4xl mt-4">
+              Nos projets en images<span className="text-[var(--primary)]">.</span>
+            </h2>
+          </div>
+          <a href="#galerie" className="inline-flex items-center gap-2 text-sm mt-8 hover:gap-3 transition-all">
+            Voir tous les projets
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+          </a>
+        </div>
+        <div className="md:col-span-2 grid grid-cols-2 gap-1 p-1">
+          {[6, 3, 1, 5].map((n, i) => (
+            <div key={i} className="relative aspect-[4/3]">
+              <Image src={`/images/event-${n}.jpg`} alt={`Projet ${i+1}`} fill className="object-cover hover:scale-[1.02] transition-transform duration-500" sizes="(max-width: 768px) 50vw, 33vw" />
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ── 06 COMMUNAUTE ── */}
+      <section id="communaute" className="grid md:grid-cols-3 border-b border-[var(--border)]">
+        <div className="md:col-span-2 p-10 md:p-16 flex flex-col justify-center">
+          <span className="section-num">06 &mdash; Communaute</span>
+          <h2 className="editorial-heading text-3xl md:text-5xl mt-4">
+            Montreal nous inspire<span className="text-[var(--primary)]">.</span>
           </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-12">
+          <p className="text-[var(--text-muted)] mt-6 leading-relaxed max-w-lg">
+            Un reseau qui grandit, des connexions qui durent.
+          </p>
+          <div className="flex flex-wrap gap-3 mt-8">
+            {['HEC Montreal', 'Polytechnique', 'McGill', 'Montreal', 'Laval'].map((uni) => (
+              <span key={uni} className="px-4 py-2 rounded-full border border-[var(--border)] text-sm text-[var(--text-muted)] hover:border-[var(--primary)] hover:text-[var(--primary)] transition cursor-default">
+                {uni}
+              </span>
+            ))}
+          </div>
+        </div>
+        <div className="relative min-h-[300px]">
+          <Image src="/images/event-7.jpg" alt="Communaute Pixels" fill className="object-cover" sizes="33vw" />
+        </div>
+      </section>
+
+      {/* ── 07 IMPACT (Stats) ── */}
+      <section className="grid md:grid-cols-2 border-b border-[var(--border)]">
+        <div className="p-10 md:p-16">
+          <span className="section-num">07 &mdash; Impact</span>
+          <div className="mt-8 space-y-8">
             {[
-              { value: '80+', label: 'Artistes actifs', sub: 'Musiciens, chanteurs et DJs de la scene montrealaise' },
-              { value: '10 000+', label: 'Personnes rejointes', sub: 'A travers nos evenements et jam sessions' },
-              { value: '4', label: 'Jam Sessions', sub: 'Des soirees ouvertes pour jouer, experimenter, creer' },
+              { value: '80+', label: 'artistes' },
+              { value: '150+', label: 'projets realises' },
+              { value: '10K+', label: 'personnes touchees' },
+              { value: '5', label: 'universites' },
             ].map((s) => (
-              <div key={s.label} className="bg-white border border-[var(--border)] rounded-xl p-6">
-                <div className="text-4xl md:text-5xl font-bold text-[var(--primary)]">{s.value}</div>
-                <div className="text-lg font-semibold text-[var(--text)] mt-2">{s.label}</div>
-                <p className="text-sm text-[var(--text-muted)] mt-1">{s.sub}</p>
+              <div key={s.label} className="flex items-baseline gap-6">
+                <span className="editorial-heading text-4xl md:text-5xl text-[var(--dark)] min-w-[120px]">{s.value}</span>
+                <span className="text-[var(--text-muted)] text-sm">{s.label}</span>
               </div>
             ))}
           </div>
         </div>
-      </section>
-
-      {/* ── Mission ── */}
-      <section id="mission" className="py-24">
-        <div className="max-w-7xl mx-auto px-6 md:px-10">
-          <div className="grid md:grid-cols-2 gap-16 items-center">
-            <div>
-              <span className="tag-label">Notre mission</span>
-              <h2 className="editorial-heading text-3xl md:text-5xl mt-3 text-[var(--secondary)]">
-                Un tremplin pour les artistes qui debutent &mdash;
-                pas un algorithme.
-              </h2>
-              <p className="text-[var(--text-muted)] mt-6 leading-relaxed text-lg">
-                Pixels est ne d&apos;un constat simple : les musiciens etudiants
-                ont du talent, mais pas de scene. Les organisateurs cherchent
-                des artistes, mais ne savent pas ou regarder. On a cree le pont.
-              </p>
-            </div>
-            <div className="relative rounded-2xl overflow-hidden aspect-[4/3] bg-[var(--surface)]">
-              <Image
-                src="/images/event-1.jpg"
-                alt="Evenement Pixels"
-                fill
-                className="object-cover"
-                sizes="(max-width: 768px) 100vw, 50vw"
-              />
-            </div>
-          </div>
+        <div className="relative min-h-[400px]">
+          <Image src="/images/event-4.jpg" alt="Impact Pixels" fill className="object-cover" sizes="50vw" />
         </div>
       </section>
 
-      {/* ── Ce dont on ne parle pas ── */}
-      <section className="section-cream py-20 border-y border-[var(--border)]">
-        <div className="max-w-7xl mx-auto px-6 md:px-10">
-          <span className="tag-label">Le constat</span>
-          <h2 className="editorial-heading text-3xl md:text-4xl mt-3 text-[var(--secondary)] max-w-2xl">
-            Ce dont on ne parle jamais dans les ecoles de musique.
-          </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-10">
+      {/* ── 08 JOURNAL ── */}
+      <section className="grid md:grid-cols-3 border-b border-[var(--border)]">
+        <div className="p-10 md:p-12 flex flex-col justify-between">
+          <div>
+            <span className="section-num">08 &mdash; Journal</span>
+            <h2 className="editorial-heading text-3xl md:text-4xl mt-4">
+              Histoires, rencontres, inspirations<span className="text-[var(--primary)]">.</span>
+            </h2>
+          </div>
+          <a href="#" className="inline-flex items-center gap-2 text-sm mt-8 hover:gap-3 transition-all">
+            Lire le journal
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+          </a>
+        </div>
+        <div className="md:col-span-2 p-6 md:p-10">
+          <div className="space-y-6">
             {[
-              { title: 'La solitude du musicien freelance', desc: 'Jouer seul dans sa chambre ne mene nulle part. Il faut un reseau, des connexions, une scene.' },
-              { title: 'Le manque de visibilite', desc: 'Les talents sont la. Les organisateurs aussi. Mais personne ne se trouve.' },
-              { title: 'La gestion qui deborde', desc: 'Contrats, paiements, logistique, repertoire... Tout est eparpille.' },
-              { title: 'La pression financiere', desc: 'Etre etudiant et musicien, c\'est jongler entre passion et survie.' },
-              { title: 'L\'acces au materiel', desc: 'Instruments, cables, sonorisation — pas tout le monde a les moyens.' },
-              { title: 'Le passage a l\'action', desc: 'On reve de jouer, mais on ne sait pas par ou commencer.' },
-            ].map((c) => (
-              <div key={c.title} className="bg-white border border-[var(--border)] rounded-xl p-6">
-                <h3 className="font-semibold text-[var(--text)] mb-2">{c.title}</h3>
-                <p className="text-sm text-[var(--text-muted)] leading-relaxed">{c.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── Quote ── */}
-      <section className="py-20">
-        <div className="max-w-4xl mx-auto px-6 md:px-10 text-center">
-          <div className="text-5xl text-[var(--primary)] mb-6">&laquo;</div>
-          <blockquote className="editorial-heading text-2xl md:text-3xl text-[var(--secondary)] leading-snug">
-            Il faut creer une bulle bienveillante pour leur permettre de
-            deposer leurs peurs, leurs questionnements mais aussi leur faire
-            entrevoir la beaute de ce qui les attend.
-          </blockquote>
-          <p className="text-[var(--text-muted)] mt-6 text-sm uppercase tracking-wider">
-            &mdash; L&apos;equipe Pixels
-          </p>
-        </div>
-      </section>
-
-      {/* ── Comment ca marche ── */}
-      <section id="comment" className="section-cream py-24 border-y border-[var(--border)]">
-        <div className="max-w-7xl mx-auto px-6 md:px-10">
-          <div className="grid md:grid-cols-2 gap-16 items-start">
-            <div>
-              <span className="tag-label">Comment ca marche</span>
-              <h2 className="editorial-heading text-3xl md:text-5xl mt-3 text-[var(--secondary)]">
-                Une reponse construite par celles et ceux qui sont passes par la.
-              </h2>
-              <p className="text-[var(--text-muted)] mt-6 leading-relaxed">
-                Pas d&apos;algorithme, pas de matching automatique.
-                Des humains qui ecoutent, qui connectent, qui accompagnent.
-              </p>
-            </div>
-            <div className="space-y-8">
-              {[
-                { n: '01', title: 'Des conversations, pas des cours.', desc: 'On parle musique, carriere, vie. Pas de programme rigide, juste des echanges qui font avancer.' },
-                { n: '02', title: 'Du matching pensé, pas algorithmique.', desc: 'On te propose des missions qui collent a ton profil, ton style, tes disponibilites.' },
-                { n: '03', title: 'Des rencontres, pivoter quand ca se branche.', desc: 'Les jam sessions sont la pour ca : jouer ensemble, decouvrir des affinites, monter des projets.' },
-                { n: '04', title: 'Une communaute qui se renouvelle.', desc: 'Chaque session amene de nouveaux visages, de nouvelles energies, de nouvelles collaborations.' },
-              ].map((step) => (
-                <div key={step.n} className="flex gap-5">
-                  <span className="text-2xl font-bold text-[var(--primary)] flex-shrink-0 mt-1">{step.n}</span>
-                  <div>
-                    <h3 className="font-semibold text-[var(--text)] text-lg">{step.title}</h3>
-                    <p className="text-[var(--text-muted)] text-sm mt-1 leading-relaxed">{step.desc}</p>
-                  </div>
+              { date: '12.04.2026', title: 'Retour sur notre dernier Music Monday', img: 2 },
+              { date: '28.03.2026', title: '5 questions a Oscar Anton', img: 5 },
+              { date: '15.03.2026', title: 'Creer du lien a travers la musique', img: 7 },
+            ].map((article) => (
+              <div key={article.title} className="flex gap-4 items-start group cursor-pointer">
+                <div className="relative w-20 h-20 rounded-lg overflow-hidden flex-shrink-0">
+                  <Image src={`/images/event-${article.img}.jpg`} alt={article.title} fill className="object-cover group-hover:scale-110 transition-transform duration-300" sizes="80px" />
                 </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── Nos valeurs ── */}
-      <section className="py-20">
-        <div className="max-w-5xl mx-auto px-6 md:px-10 text-center">
-          <span className="tag-label">Nos valeurs</span>
-          <h2 className="editorial-heading text-3xl md:text-4xl mt-3 text-[var(--secondary)]">
-            Pas une charte. Une boussole.
-          </h2>
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-6 mt-12">
-            {[
-              { name: 'Inclusion', desc: 'Chaque voix compte, chaque style a sa place.' },
-              { name: 'Bienveillance', desc: 'On grandit mieux dans un espace safe.' },
-              { name: 'Transparence', desc: 'Les finances, les decisions — tout est ouvert.' },
-              { name: 'Ecoute', desc: 'Avant de parler, on ecoute.' },
-              { name: 'Authenticite', desc: 'Sois toi-meme. Le reste suivra.' },
-            ].map((v) => (
-              <div key={v.name} className="text-left">
-                <h3 className="text-[var(--primary)] font-bold text-lg">{v.name}</h3>
-                <p className="text-sm text-[var(--text-muted)] mt-1">{v.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── Photo Gallery ── */}
-      <section id="galerie" className="section-cream py-20 border-y border-[var(--border)]">
-        <div className="max-w-7xl mx-auto px-6 md:px-10">
-          <span className="tag-label">Galerie</span>
-          <h2 className="editorial-heading text-3xl md:text-4xl mt-3 text-[var(--secondary)]">
-            Des moments qui comptent.
-          </h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-10">
-            {[1, 2, 3, 4, 5, 6, 7, 1].map((n, i) => (
-              <div key={i} className={`relative overflow-hidden rounded-xl bg-[var(--border)] ${i === 0 || i === 5 ? 'row-span-2 aspect-[3/4]' : 'aspect-square'}`}>
-                <Image
-                  src={`/images/event-${n}.jpg`}
-                  alt={`Pixels evenement ${i + 1}`}
-                  fill
-                  className="object-cover hover:scale-105 transition-transform duration-500"
-                  sizes="(max-width: 768px) 50vw, 25vw"
-                />
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── Parcours / Phases ── */}
-      <section className="py-24">
-        <div className="max-w-4xl mx-auto px-6 md:px-10">
-          <span className="tag-label">Le parcours</span>
-          <h2 className="editorial-heading text-3xl md:text-5xl mt-3 text-[var(--secondary)]">
-            De la terminale a la scene, en six etapes.
-          </h2>
-          <p className="text-[var(--text-muted)] mt-4 text-lg">
-            Un accompagnement progressif pour te lancer sans pression.
-          </p>
-          <div className="mt-14 space-y-12">
-            {[
-              { phase: 'Phase 0', title: 'Inscription', desc: 'Cree ton profil, presente tes instruments et tes styles. 3 minutes, pas plus.', tags: ['Profil', 'Instruments', 'Genres'] },
-              { phase: 'Phase 1', title: 'Decouverte', desc: 'Participe a ta premiere jam session. Rencontre d\'autres musiciens, joue, ecoute.', tags: ['Jam Session', 'Reseau'] },
-              { phase: 'Phase 2', title: 'Premiere mission', desc: 'On te propose un evenement qui colle a ton profil. Tu decides si tu y vas.', tags: ['Evenement', 'Scene'] },
-              { phase: 'Phase 3', title: 'Studio Musical', desc: 'Accede aux partitions, aux grilles d\'accords, aux transpositions pour tes instruments.', tags: ['Partitions', 'Accords'] },
-              { phase: 'Phase 4', title: 'Autonomie', desc: 'Tu geres tes dispos, tes missions, tes finances. Tout au meme endroit.', tags: ['Gestion', 'Finance'] },
-              { phase: 'Phase 5', title: 'Communaute', desc: 'Tu deviens un pilier. Tu accueilles les nouveaux, tu proposes des jams, tu partages.', tags: ['Mentorat', 'Leadership'] },
-            ].map((p) => (
-              <div key={p.phase} className="border-l-2 border-[var(--primary)] pl-8 relative">
-                <div className="absolute -left-[9px] top-1 w-4 h-4 rounded-full bg-[var(--primary)]" />
-                <span className="text-xs font-bold uppercase tracking-wider text-[var(--primary)]">{p.phase}</span>
-                <h3 className="editorial-heading text-2xl text-[var(--secondary)] mt-1">{p.title}</h3>
-                <p className="text-[var(--text-muted)] mt-2">{p.desc}</p>
-                <div className="flex gap-2 mt-3">
-                  {p.tags.map((t) => (
-                    <span key={t} className="text-xs px-2.5 py-1 rounded-full bg-[var(--primary)]/10 text-[var(--primary)] font-medium">{t}</span>
-                  ))}
+                <div>
+                  <span className="text-xs text-[var(--text-light)]">{article.date}</span>
+                  <h3 className="font-semibold text-[15px] mt-1 group-hover:text-[var(--primary)] transition">{article.title}</h3>
                 </div>
               </div>
             ))}
@@ -273,69 +233,107 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── CTA ── */}
-      <section className="section-dark py-20">
-        <div className="max-w-4xl mx-auto px-6 md:px-10 text-center">
-          <h2 className="editorial-heading text-3xl md:text-5xl text-white">
-            Ca commence quand tu veux.
+      {/* ── 09 REJOINDRE ── */}
+      <section className="grid md:grid-cols-2 border-b border-[var(--border)]">
+        <div className="p-10 md:p-16 flex flex-col justify-center">
+          <span className="section-num">09 &mdash; Rejoindre Pixels</span>
+          <h2 className="editorial-heading text-4xl md:text-5xl mt-4">
+            Rejoins l&apos;aventure<span className="text-[var(--primary)]">.</span>
           </h2>
-          <p className="text-white/70 mt-4 text-lg max-w-xl mx-auto">
-            Tu es musicien a Montreal ? Tu veux organiser un evenement culturel ?
-            Rejoins la communaute.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 mt-10 justify-center">
-            <Link href="/register?role=artist">
-              <Button variant="primary" size="lg">Commencer comme artiste</Button>
-            </Link>
-            <Link href="/register?role=organizer">
-              <button className="px-7 py-3.5 text-lg rounded-xl font-semibold border border-white/30 text-white hover:bg-white/10 transition w-full">
-                Devenir organisateur
-              </button>
-            </Link>
-          </div>
+          <ul className="mt-8 space-y-2 text-sm text-[var(--text-muted)]">
+            <li>Artistes</li>
+            <li>Benevoles</li>
+            <li>Partenaires</li>
+          </ul>
+          <Link href="/register" className="inline-flex items-center gap-2 text-sm mt-8 hover:gap-3 transition-all font-medium">
+            En savoir plus
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+          </Link>
+        </div>
+        <div className="relative min-h-[400px]">
+          <Image src="/images/event-2.jpg" alt="Rejoindre Pixels" fill className="object-cover" sizes="50vw" />
         </div>
       </section>
 
-      {/* ── Footer ── */}
-      <footer className="bg-[var(--cream)] border-t border-[var(--border)] py-16">
-        <div className="max-w-7xl mx-auto px-6 md:px-10">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
+      {/* ── 10 CONTACT ── */}
+      <section id="contact" className="grid md:grid-cols-2 border-b border-[var(--border)]">
+        <div className="p-10 md:p-16">
+          <span className="section-num">10 &mdash; Contact</span>
+          <h2 className="editorial-heading text-4xl md:text-5xl mt-4">
+            Discutons de votre projet<span className="text-[var(--primary)]">.</span>
+          </h2>
+          <div className="mt-8 space-y-2 text-sm text-[var(--text-muted)]">
+            <p>hello@pixels-montreal.com</p>
+            <p>514 123-4567</p>
+            <p>Montreal, Canada</p>
+          </div>
+        </div>
+        <div className="p-10 md:p-16 flex flex-col justify-center">
+          <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
+            <input type="text" placeholder="Nom" className="w-full border-b border-[var(--border)] py-3 text-sm bg-transparent focus:outline-none focus:border-[var(--dark)] transition placeholder:text-[var(--text-light)]" />
+            <input type="email" placeholder="Courriel" className="w-full border-b border-[var(--border)] py-3 text-sm bg-transparent focus:outline-none focus:border-[var(--dark)] transition placeholder:text-[var(--text-light)]" />
+            <input type="text" placeholder="Sujet" className="w-full border-b border-[var(--border)] py-3 text-sm bg-transparent focus:outline-none focus:border-[var(--dark)] transition placeholder:text-[var(--text-light)]" />
+            <textarea placeholder="Votre message" rows={3} className="w-full border-b border-[var(--border)] py-3 text-sm bg-transparent focus:outline-none focus:border-[var(--dark)] transition resize-none placeholder:text-[var(--text-light)]" />
+            <button type="submit" className="bg-[var(--dark)] text-white px-8 py-3 rounded-full text-sm font-medium hover:bg-[var(--dark)]/90 transition mt-4">
+              Envoyer
+            </button>
+          </form>
+        </div>
+      </section>
+
+      {/* ── FOOTER ── */}
+      <footer className="bg-[var(--dark)] text-white py-16">
+        <div className="max-w-[1400px] mx-auto px-6 md:px-10">
+          <div className="flex justify-center mb-12">
+            <span className="pixels-logo text-2xl text-white">pixels</span>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-8 text-[13px]">
             <div>
-              <span className="pixels-logo text-xl">pixels&trade;</span>
-              <p className="text-sm text-[var(--text-muted)] mt-3 leading-relaxed">
-                Pixels est un incubateur culturel musical qui relie les
-                artistes emergents aux organisateurs d&apos;evenements a Montreal.
-              </p>
-            </div>
-            <div>
-              <h4 className="font-semibold text-[var(--text)] text-sm mb-3">Le site</h4>
-              <ul className="space-y-2 text-sm text-[var(--text-muted)]">
-                <li><a href="#mission" className="hover:text-[var(--text)] transition">Notre mission</a></li>
-                <li><a href="#comment" className="hover:text-[var(--text)] transition">Comment ca marche</a></li>
-                <li><a href="#galerie" className="hover:text-[var(--text)] transition">Galerie</a></li>
+              <h4 className="font-semibold mb-4 text-white/80">Projets</h4>
+              <ul className="space-y-2 text-white/40">
+                <li>Tous les projets</li>
+                <li>Concerts</li>
+                <li>Evenements</li>
+                <li>Films & contenus</li>
               </ul>
             </div>
             <div>
-              <h4 className="font-semibold text-[var(--text)] text-sm mb-3">Participer</h4>
-              <ul className="space-y-2 text-sm text-[var(--text-muted)]">
-                <li><Link href="/register?role=artist" className="hover:text-[var(--text)] transition">Devenir artiste</Link></li>
-                <li><Link href="/register?role=organizer" className="hover:text-[var(--text)] transition">Soumettre un evenement</Link></li>
-                <li><Link href="/login" className="hover:text-[var(--text)] transition">Se connecter</Link></li>
+              <h4 className="font-semibold mb-4 text-white/80">Artistes</h4>
+              <ul className="space-y-2 text-white/40">
+                <li>Musiciens</li>
+                <li>Createurs</li>
+                <li>Equipe technique</li>
               </ul>
             </div>
             <div>
-              <h4 className="font-semibold text-[var(--text)] text-sm mb-3">Contact</h4>
-              <ul className="space-y-2 text-sm text-[var(--text-muted)]">
-                <li>Montreal, QC</li>
-                <li>pixels-montreal.com</li>
+              <h4 className="font-semibold mb-4 text-white/80">Communaute</h4>
+              <ul className="space-y-2 text-white/40">
+                <li>Universites</li>
+                <li>Partenaires</li>
+                <li>Benevoles</li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-semibold mb-4 text-white/80">A propos</h4>
+              <ul className="space-y-2 text-white/40">
+                <li>Notre histoire</li>
+                <li>Notre mission</li>
+                <li>Impact</li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-semibold mb-4 text-white/80">Contact</h4>
+              <ul className="space-y-2 text-white/40">
+                <li>Parlons de votre projet</li>
+                <li>Travailler avec nous</li>
               </ul>
             </div>
           </div>
-          <div className="border-t border-[var(--border)] mt-12 pt-6 flex flex-col md:flex-row justify-between items-center gap-4">
-            <p className="text-xs text-[var(--text-muted)]">&copy; 2026 Pixels &mdash; Incubateur Culturel Musical. Tous droits reserves.</p>
-            <div className="flex gap-6 text-xs text-[var(--text-muted)]">
-              <a href="#" className="hover:text-[var(--text)] transition">Mentions legales</a>
-              <a href="#" className="hover:text-[var(--text)] transition">Confidentialite</a>
+          <div className="border-t border-[var(--border-dark)] mt-12 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+            <p className="text-xs text-white/30">&copy; 2026 Pixels</p>
+            <div className="flex gap-6 text-xs text-white/30">
+              <span>Instagram</span>
+              <span>LinkedIn</span>
             </div>
           </div>
         </div>

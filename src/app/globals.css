@@ -5,11 +5,15 @@
   --secondary: #061E66;
   --accent: #FF8C45;
   --bg: #FFFFFF;
-  --surface: #F7F5F0;
+  --surface: #F5F5F0;
   --cream: #FBF9F4;
-  --text: #1A1A2E;
+  --dark: #111111;
+  --dark-surface: #1A1A1A;
+  --text: #111111;
   --text-muted: #6B7280;
-  --border: #E5E2DA;
+  --text-light: #999999;
+  --border: #E5E5E0;
+  --border-dark: #2A2A2A;
   --success: #10B981;
   --warning: #F59E0B;
   --error: #EF4444;
@@ -43,30 +47,28 @@ h1, h2, h3, h4, h5, h6 {
   font-family: 'Outfit', cursive;
   font-style: italic;
   font-weight: 700;
-  color: var(--secondary);
 }
 
 .editorial-heading {
   font-family: 'Outfit', serif;
   font-weight: 700;
-  line-height: 1.1;
-  letter-spacing: -0.02em;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
 }
 
-.section-cream {
-  background: var(--cream);
-}
-
-.section-dark {
-  background: var(--secondary);
-  color: white;
+.section-num {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  opacity: 0.5;
 }
 
 .tag-label {
   font-family: 'Open Sans', sans-serif;
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.15em;
   color: var(--primary);
   font-weight: 600;
 }
