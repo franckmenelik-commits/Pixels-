@@ -178,7 +178,7 @@ export default function LandingPage() {
               { src: '/images/live-2.mp4', type: 'video/mp4' },
             ].map((v) => (
               <div key={v.src} className="aspect-video rounded-xl overflow-hidden bg-[var(--dark-surface)]">
-                <video controls playsInline preload="metadata" className="w-full h-full object-cover">
+                <video autoPlay muted loop playsInline preload="auto" className="w-full h-full object-cover">
                   <source src={v.src} type={v.type} />
                 </video>
               </div>
@@ -191,7 +191,7 @@ export default function LandingPage() {
               { src: '/images/live-5.mov', type: 'video/quicktime' },
             ].map((v) => (
               <div key={v.src} className="aspect-video rounded-xl overflow-hidden bg-[var(--dark-surface)]">
-                <video controls playsInline preload="metadata" className="w-full h-full object-cover">
+                <video autoPlay muted loop playsInline preload="auto" className="w-full h-full object-cover">
                   <source src={v.src} type={v.type} />
                 </video>
               </div>
