@@ -53,11 +53,19 @@ export async function GET() {
 
     const monthlyRevenue = Object.entries(monthlyMap).sort().map(([month, amount]) => ({ month, amount }));
 
+    // 60/20/20 auto split: musicians 60%, logistics 20%, reserve 20%
+    const split = {
+      musicians: { percent: 0.6, target: totalRevenue * 0.6, actual: totalPaidToMusicians },
+      logistics: { percent: 0.2, target: totalRevenue * 0.2, actual: totalLogistics },
+      reserve: { percent: 0.2, target: totalRevenue * 0.2, actual: totalReserve },
+    };
+
     return NextResponse.json({
       totalRevenue,
       totalPaidToMusicians,
       totalLogistics,
       totalReserve,
+      split,
       recentTransactions,
       monthlyRevenue,
     });

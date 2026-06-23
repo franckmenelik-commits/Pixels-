@@ -63,7 +63,7 @@ const checks: Check[] = [
   { module: 'Marketplace', objective: 'Quote generation API', check: () => apiRouteExists('events/[id]/quote'), priority: 'MVP' },
   { module: 'Marketplace', objective: 'Quote accept flow', check: () => apiRouteExists('events/[id]/quote/accept'), priority: 'MVP' },
   { module: 'Marketplace', objective: 'Pipeline Kanban view', check: () => fileContains('src/app/events/page.tsx', 'status') || fileContains('src/app/events/page.tsx', 'kanban'), priority: 'V1' },
-  { module: 'Marketplace', objective: 'Digital contract generation', check: () => false, priority: 'V1' },
+  { module: 'Marketplace', objective: 'Digital contract generation', check: () => apiRouteExists('events/[id]/contract'), priority: 'V1' },
   { module: 'Marketplace', objective: 'Electronic signature', check: () => false, priority: 'V2' },
 
   // ── MODULE 3: MISSION BUILDER ──
@@ -72,8 +72,8 @@ const checks: Check[] = [
   { module: 'Mission Builder', objective: 'Mission completion flow', check: () => apiRouteExists('missions/[id]/complete'), priority: 'MVP' },
   { module: 'Mission Builder', objective: 'Missions listing page', check: () => pageExists('missions'), priority: 'MVP' },
   { module: 'Mission Builder', objective: 'Mission detail page', check: () => pageExists('missions/[id]'), priority: 'MVP' },
-  { module: 'Mission Builder', objective: 'Auto roster suggestion', check: () => false, priority: 'V1' },
-  { module: 'Mission Builder', objective: 'Mission chat (per-mission)', check: () => false, priority: 'V1' },
+  { module: 'Mission Builder', objective: 'Auto roster suggestion', check: () => apiRouteExists('missions/[id]/suggest-roster'), priority: 'V1' },
+  { module: 'Mission Builder', objective: 'Mission chat (per-mission)', check: () => apiRouteExists('missions/[id]/chat'), priority: 'V1' },
 
   // ── MODULE 4: STUDIO MUSICAL ──
   { module: 'Studio Musical', objective: 'Song library page', check: () => pageExists('studio'), priority: 'V1' },
@@ -99,7 +99,7 @@ const checks: Check[] = [
   // ── MODULE 6: FINANCE & TRESORERIE ──
   { module: 'Finance', objective: 'Finance dashboard page', check: () => pageExists('finances'), priority: 'MVP' },
   { module: 'Finance', objective: 'Finance API', check: () => apiRouteExists('finances'), priority: 'MVP' },
-  { module: 'Finance', objective: '60/20/20 auto split', check: () => fileContains('src/app/api/finances/route.ts', '60') || fileContains('src/app/api/finances/route.ts', '0.6'), priority: 'MVP' },
+  { module: 'Finance', objective: '60/20/20 auto split', check: () => fileContains('src/app/api/finances/route.ts', '0.6'), priority: 'MVP' },
   { module: 'Finance', objective: 'Stripe Connect integration', check: () => false, priority: 'V2' },
   { module: 'Finance', objective: 'Invoice generation', check: () => false, priority: 'V2' },
 
