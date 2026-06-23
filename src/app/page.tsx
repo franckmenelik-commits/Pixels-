@@ -173,16 +173,27 @@ export default function LandingPage() {
         <div className="max-w-[1400px] mx-auto px-6 md:px-10 py-16">
           <p className="text-[var(--primary)] text-sm tracking-[0.15em] uppercase font-semibold mb-8 text-center">En live</p>
           <div className="grid md:grid-cols-2 gap-4">
-            {['1JDwAiZ2RYhI5WIX9GNDnShnf7uDsfRhZ', '1_XRBIdac61rW5Ebum8rqhApPSvXP7mSh'].map((id) => (
-              <div key={id} className="aspect-video rounded-xl overflow-hidden bg-[var(--dark-surface)]">
-                <iframe src={`https://drive.google.com/file/d/${id}/preview`} className="w-full h-full" allow="autoplay; encrypted-media" allowFullScreen loading="lazy" />
+            {[
+              { src: '/images/live-1.mov', type: 'video/quicktime' },
+              { src: '/images/live-2.mp4', type: 'video/mp4' },
+            ].map((v) => (
+              <div key={v.src} className="aspect-video rounded-xl overflow-hidden bg-[var(--dark-surface)]">
+                <video controls playsInline preload="metadata" className="w-full h-full object-cover">
+                  <source src={v.src} type={v.type} />
+                </video>
               </div>
             ))}
           </div>
           <div className="grid grid-cols-3 gap-4 mt-4">
-            {['1QbNQLD-SNqURBr-9HLUOLjb2qhwuWU_-', '1ZeNz3tdaNAu2JVoPkA84CKZvkD3pHc9C', '1JOaWrMlRQjsMjnuPgH7O-4XyViEqPZRY'].map((id) => (
-              <div key={id} className="aspect-video rounded-xl overflow-hidden bg-[var(--dark-surface)]">
-                <iframe src={`https://drive.google.com/file/d/${id}/preview`} className="w-full h-full" allow="autoplay; encrypted-media" allowFullScreen loading="lazy" />
+            {[
+              { src: '/images/live-3.mov', type: 'video/quicktime' },
+              { src: '/images/live-4.mov', type: 'video/quicktime' },
+              { src: '/images/live-5.mov', type: 'video/quicktime' },
+            ].map((v) => (
+              <div key={v.src} className="aspect-video rounded-xl overflow-hidden bg-[var(--dark-surface)]">
+                <video controls playsInline preload="metadata" className="w-full h-full object-cover">
+                  <source src={v.src} type={v.type} />
+                </video>
               </div>
             ))}
           </div>
