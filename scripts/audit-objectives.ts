@@ -64,7 +64,7 @@ const checks: Check[] = [
   { module: 'Marketplace', objective: 'Quote accept flow', check: () => apiRouteExists('events/[id]/quote/accept'), priority: 'MVP' },
   { module: 'Marketplace', objective: 'Pipeline Kanban view', check: () => fileContains('src/app/events/page.tsx', 'status') || fileContains('src/app/events/page.tsx', 'kanban'), priority: 'V1' },
   { module: 'Marketplace', objective: 'Digital contract generation', check: () => apiRouteExists('events/[id]/contract'), priority: 'V1' },
-  { module: 'Marketplace', objective: 'Electronic signature', check: () => false, priority: 'V2' },
+  { module: 'Marketplace', objective: 'Electronic signature', check: () => apiRouteExists('contracts/[id]/sign'), priority: 'V2' },
 
   // ── MODULE 3: MISSION BUILDER ──
   { module: 'Mission Builder', objective: 'Mission CRUD API', check: () => apiRouteExists('missions') && apiRouteExists('missions/[id]'), priority: 'MVP' },
@@ -93,31 +93,31 @@ const checks: Check[] = [
   { module: 'Logistique', objective: 'Equipment loan system', check: () => apiRouteExists('equipment/[id]/loan'), priority: 'V1' },
   { module: 'Logistique', objective: 'Incident management page', check: () => pageExists('incidents'), priority: 'V1' },
   { module: 'Logistique', objective: 'Incident API', check: () => apiRouteExists('incidents'), priority: 'V1' },
-  { module: 'Logistique', objective: 'Studio/venue directory', check: () => false, priority: 'V2' },
-  { module: 'Logistique', objective: 'Transport checklist system', check: () => false, priority: 'V2' },
+  { module: 'Logistique', objective: 'Studio/venue directory', check: () => apiRouteExists('venues') && pageExists('venues'), priority: 'V2' },
+  { module: 'Logistique', objective: 'Transport checklist system', check: () => apiRouteExists('transport-checklists'), priority: 'V2' },
 
   // ── MODULE 6: FINANCE & TRESORERIE ──
   { module: 'Finance', objective: 'Finance dashboard page', check: () => pageExists('finances'), priority: 'MVP' },
   { module: 'Finance', objective: 'Finance API', check: () => apiRouteExists('finances'), priority: 'MVP' },
   { module: 'Finance', objective: '60/20/20 auto split', check: () => fileContains('src/app/api/finances/route.ts', '0.6'), priority: 'MVP' },
-  { module: 'Finance', objective: 'Stripe Connect integration', check: () => false, priority: 'V2' },
-  { module: 'Finance', objective: 'Invoice generation', check: () => false, priority: 'V2' },
+  { module: 'Finance', objective: 'Stripe Connect integration', check: () => apiRouteExists('stripe'), priority: 'V2' },
+  { module: 'Finance', objective: 'Invoice generation', check: () => apiRouteExists('invoices'), priority: 'V2' },
 
   // ── MODULE 7: COMMUNAUTE & JAM SESSIONS ──
   { module: 'Communaute', objective: 'Jam sessions page', check: () => pageExists('jam-sessions'), priority: 'V1' },
   { module: 'Communaute', objective: 'Jam sessions API', check: () => apiRouteExists('jam-sessions'), priority: 'V1' },
   { module: 'Communaute', objective: 'Join/leave jam sessions', check: () => apiRouteExists('jam-sessions/[id]'), priority: 'V1' },
-  { module: 'Communaute', objective: 'Community feed', check: () => false, priority: 'V2' },
-  { module: 'Communaute', objective: 'Direct messaging', check: () => false, priority: 'V2' },
-  { module: 'Communaute', objective: 'Push notifications (PWA)', check: () => false, priority: 'V2' },
+  { module: 'Communaute', objective: 'Community feed', check: () => apiRouteExists('feed') && pageExists('feed'), priority: 'V2' },
+  { module: 'Communaute', objective: 'Direct messaging', check: () => apiRouteExists('messages') && pageExists('messages'), priority: 'V2' },
+  { module: 'Communaute', objective: 'Push notifications (PWA)', check: () => apiRouteExists('push-subscribe'), priority: 'V2' },
 
   // ── MODULE 8: ADMINISTRATION ──
   { module: 'Administration', objective: 'Admin dashboard', check: () => fileContains('src/app/dashboard/page.tsx', 'admin'), priority: 'MVP' },
   { module: 'Administration', objective: 'Role-based access (sidebar)', check: () => fileContains('src/components/layout/Sidebar.tsx', 'roles'), priority: 'MVP' },
   { module: 'Administration', objective: 'Multi-role auth (artist/organizer/admin/operator)', check: () => fileContains('src/app/api/auth/register/route.ts', 'role'), priority: 'MVP' },
-  { module: 'Administration', objective: 'Wiki/documentation system', check: () => false, priority: 'V2' },
-  { module: 'Administration', objective: 'Musical director training program', check: () => false, priority: 'V2' },
-  { module: 'Administration', objective: 'Multi-city support', check: () => false, priority: 'V2' },
+  { module: 'Administration', objective: 'Wiki/documentation system', check: () => apiRouteExists('wiki') && pageExists('wiki'), priority: 'V2' },
+  { module: 'Administration', objective: 'Musical director training program', check: () => apiRouteExists('training'), priority: 'V2' },
+  { module: 'Administration', objective: 'Multi-city support', check: () => apiRouteExists('cities'), priority: 'V2' },
 
   // ── DESIGN & UX ──
   { module: 'Design', objective: 'Landing page (editorial design)', check: () => pageExists('') && fileContains('src/app/page.tsx', 'editorial-heading'), priority: 'MVP' },

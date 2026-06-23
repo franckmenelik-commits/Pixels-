@@ -40,7 +40,7 @@ export async function POST(
       ],
       status: "draft",
       generatedAt: new Date().toISOString(),
-      generatedBy: session.user.uid,
+      generatedBy: session.user.id,
     };
 
     const ref = await adminDb.collection("contracts").add(contract);

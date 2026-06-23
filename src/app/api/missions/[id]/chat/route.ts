@@ -42,7 +42,7 @@ export async function POST(
 
     const message = {
       text: text.trim(),
-      senderId: session.user.uid,
+      senderId: session.user.id,
       senderName: session.user.name || session.user.email,
       senderRole: session.user.role,
       createdAt: new Date().toISOString(),

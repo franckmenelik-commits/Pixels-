@@ -9,7 +9,33 @@ import Input from '@/components/ui/Input';
 import Select from '@/components/ui/Select';
 import { useAuth } from '@/lib/auth-context';
 
-const INSTRUMENTS_OPTIONS = ['Piano', 'Guitare', 'Basse', 'Batterie', 'Violon', 'Saxophone', 'Trompette', 'Flûte', 'Voix', 'Contrebasse', 'Ukulélé', 'Percussion', 'Clavier', 'Autre'];
+function BadgeDisplay({ token }: { token: string | null }) {
+  const [badges, setBadges] = useState<any[]>([]);
+  const [level, setLevel] = useState(0);
+  const [title, setTitle] = useState("");
+  useEffect(() => {
+    if (!token) return;
+    fetch("/api/badges", { headers: { Authorization: `Bearer ${token}` } })
+      .then(r => r.json())
+      .then(data => { if (data.badges) { setBadges(data.badges); setLevel(data.level); setTitle(data.title); } });
+  }, [token]);
+  return (
+    <div>
+      <p className="text-sm text-[var(--text-muted)] mb-3">Niveau {level} — <span className="font-semibold text-[var(--primary)]">{title}</span></p>
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        {badges.map(b => (
+          <div key={b.id} className={`text-center p-3 rounded-xl border ${b.earned ? 'border-[var(--primary)] bg-[var(--primary)]/5' : 'border-[var(--border)] opacity-40'}`}>
+            <div className="text-2xl mb-1">{b.icon}</div>
+            <p className="text-xs font-semibold">{b.name}</p>
+            {!b.earned && <div className="mt-1 h-1 bg-[var(--border)] rounded-full"><div className="h-1 bg-[var(--primary)] rounded-full" style={{ width: `${b.progress * 100}%` }} /></div>}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+const INSTRUMENTS_OPTIONS =['Piano', 'Guitare', 'Basse', 'Batterie', 'Violon', 'Saxophone', 'Trompette', 'Flûte', 'Voix', 'Contrebasse', 'Ukulélé', 'Percussion', 'Clavier', 'Autre'];
 const GENRES = ['Jazz', 'Pop', 'Rock', 'R&B', 'Soul', 'Classique', 'Afro', 'Latin', 'Funk', 'Blues', 'Hip-Hop', 'Électronique', 'Folk', 'Autre'];
 const LEVELS = ['Débutant', 'Intermédiaire', 'Avancé', 'Professionnel'];
 const SKILLS = ['Arrangement', 'Composition', 'Direction musicale', 'Oreille absolue', 'Lecture de partitions', 'Improvisation'];
@@ -94,6 +120,12 @@ export default function ProfilePage() {
     <DashboardLayout user={user}>
       <div className="space-y-8 max-w-3xl">
         <h1 className="text-3xl font-bold text-[var(--text)]">Mon Profil Artiste</h1>
+
+        {/* Badges & Progression */}
+        <Card>
+          <h2 className="text-xl font-semibold text-[var(--secondary)] mb-4">Badges & Progression</h2>
+          <BadgeDisplay token={token} />
+        </Card>
 
         {message && (
           <div className={`rounded-lg p-3 text-sm ${message.includes('Erreur') ? 'bg-[var(--primary)]/10 text-[var(--primary)]' : 'bg-[var(--secondary)]/10 text-[var(--secondary)]'}`}>
