@@ -48,7 +48,7 @@ export default function LandingPage() {
       {/* ── HERO ── */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0">
-          <Image src="/images/event-1.jpg" alt="Pixels — musique vivante" fill className="object-cover" priority sizes="100vw" />
+          <Image src="/images/event-2.jpg" alt="Pixels — musique vivante" fill className="object-cover" priority sizes="100vw" />
           <div className="absolute inset-0 bg-[#0B1D3D]/60" />
         </div>
         <div className="relative z-10 text-center px-6 max-w-4xl">
