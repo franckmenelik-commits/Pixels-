@@ -48,7 +48,16 @@ export default function LandingPage() {
       {/* ── HERO ── */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0">
-          <Image src="/images/event-2.jpg" alt="Pixels — musique vivante" fill className="object-cover" priority sizes="100vw" />
+          <video
+            autoPlay
+            muted
+            loop
+            playsInline
+            className="w-full h-full object-cover"
+          >
+            <source src="/images/hero-video.mov" type="video/quicktime" />
+            <source src="/images/hero-video.mov" type="video/mp4" />
+          </video>
           <div className="absolute inset-0 bg-[#0B1D3D]/60" />
         </div>
         <div className="relative z-10 text-center px-6 max-w-4xl">
