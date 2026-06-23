@@ -1,19 +1,19 @@
 @import "tailwindcss";
 
 :root {
-  --primary: #FF8C45;
-  --secondary: #061E66;
-  --accent: #FF8C45;
+  --primary: #E0582F;
+  --secondary: #0B1D3D;
+  --accent: #E0582F;
   --bg: #FFFFFF;
-  --surface: #F5F5F0;
-  --cream: #FBF9F4;
-  --dark: #111111;
-  --dark-surface: #1A1A1A;
-  --text: #111111;
+  --surface: #F6F6F4;
+  --cream: #FDE8DE;
+  --dark: #0B1D3D;
+  --dark-surface: #142847;
+  --text: #0B1D3D;
   --text-muted: #6B7280;
   --text-light: #999999;
   --border: #E5E5E0;
-  --border-dark: #2A2A2A;
+  --border-dark: #1E3A5F;
   --success: #10B981;
   --warning: #F59E0B;
   --error: #EF4444;
@@ -22,11 +22,11 @@
 body {
   background: var(--bg);
   color: var(--text);
-  font-family: 'Open Sans', sans-serif;
+  font-family: 'Inter', sans-serif;
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: 'Outfit', sans-serif;
+  font-family: 'Satoshi', sans-serif;
 }
 
 .glass {
@@ -36,28 +36,28 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .gradient-primary {
-  background: linear-gradient(135deg, #FF8C45, #FF6B1A);
+  background: linear-gradient(135deg, #E0582F, #C44A25);
 }
 
 .gradient-accent {
-  background: linear-gradient(135deg, #061E66, #0A2D8A);
+  background: linear-gradient(135deg, #0B1D3D, #142847);
 }
 
 .pixels-logo {
-  font-family: 'Outfit', sans-serif;
-  font-weight: 800;
+  font-family: 'Satoshi', sans-serif;
+  font-weight: 900;
   letter-spacing: -0.02em;
 }
 
 .editorial-heading {
-  font-family: 'Outfit', serif;
+  font-family: 'Satoshi', sans-serif;
   font-weight: 700;
   line-height: 1.05;
   letter-spacing: -0.03em;
 }
 
 .section-num {
-  font-family: 'Open Sans', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size: 0.7rem;
   text-transform: uppercase;
   letter-spacing: 0.15em;
@@ -65,7 +65,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .tag-label {
-  font-family: 'Open Sans', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size: 0.7rem;
   text-transform: uppercase;
   letter-spacing: 0.15em;

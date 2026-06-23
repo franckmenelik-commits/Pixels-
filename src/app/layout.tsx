@@ -1,23 +1,17 @@
 import type { Metadata } from "next";
-import { Outfit, Open_Sans } from "next/font/google";
+import { Inter } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/lib/auth-context";
 
-const outfit = Outfit({
-  variable: "--font-outfit",
-  subsets: ["latin"],
-  display: "swap",
-});
-
-const openSans = Open_Sans({
-  variable: "--font-open-sans",
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
   display: "swap",
 });
 
 export const metadata: Metadata = {
   title: "Pixels — Incubateur Culturel Musical",
-  description: "Plateforme de mise en relation pour l'industrie musicale",
+  description: "Créer des ponts humains à travers l'art vivant. Pixels rassemble artistes, organisateurs et communautés à Montréal.",
 };
 
 export default function RootLayout({
@@ -26,7 +20,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="fr" className={`${outfit.variable} ${openSans.variable} h-full antialiased`}>
+    <html lang="fr" className={`${inter.variable} h-full antialiased`}>
+      <head>
+        <link rel="preconnect" href="https://api.fontshare.com" />
+        <link href="https://api.fontshare.com/v2/css?f[]=satoshi@700,800,900&display=swap" rel="stylesheet" />
+      </head>
       <body className="min-h-full flex flex-col">
         <AuthProvider>{children}</AuthProvider>
       </body>
