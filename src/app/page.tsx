@@ -18,8 +18,15 @@ export default function LandingPage() {
       {/* ── Navbar (transparent → solid on scroll) ── */}
       <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'bg-white/95 backdrop-blur-sm border-b border-[var(--border)] py-3' : 'bg-transparent py-5'}`}>
         <div className="max-w-[1400px] mx-auto flex items-center justify-between px-6 md:px-10">
-          <Link href="/" className={`pixels-logo text-xl transition-colors duration-300 ${scrolled ? 'text-[var(--secondary)]' : 'text-white'}`}>
-            pixels<sup className="text-[10px] ml-0.5">™</sup>
+          <Link href="/" className="flex items-center">
+            <Image
+              src="/images/pixels-logo.svg"
+              alt="pixels™"
+              width={120}
+              height={34}
+              className={`transition-all duration-300 ${scrolled ? '' : 'brightness-0 invert'}`}
+              priority
+            />
           </Link>
           <div className={`hidden md:flex items-center gap-8 text-[13px] transition-colors duration-300 ${scrolled ? 'text-[var(--text-muted)]' : 'text-white/70'}`}>
             <a href="#pourquoi" className={`hover:${scrolled ? 'text-[var(--dark)]' : 'text-white'} transition`}>Pourquoi</a>
@@ -411,10 +418,11 @@ export default function LandingPage() {
           <p className="text-[var(--text-muted)] mt-4 leading-relaxed">
             De 6 musiciens en septembre 2025 &agrave; plus de 80 en mai 2026. Une croissance organique port&eacute;e par la conviction que les gens continuent de venir le lundi soir.
           </p>
-          <div className="mt-8 flex gap-4 text-sm">
-            <span className="px-4 py-2 bg-white rounded-full text-[var(--text-muted)] border border-[var(--border)]">Franck Afane</span>
-            <span className="px-4 py-2 bg-white rounded-full text-[var(--text-muted)] border border-[var(--border)]">Mai Linh Pham Dac</span>
-            <span className="px-4 py-2 bg-white rounded-full text-[var(--text-muted)] border border-[var(--border)]">+ 80 artistes</span>
+          <div className="mt-8 flex flex-wrap gap-2 text-xs">
+            {['Franck Afane', 'Jean-Paul Romero', 'Paloma Hesry', 'Mai Linh Pham Dac', 'Louise Wang', 'Mira Charabati', 'Naomi Slama', 'Ivan Gaspart'].map(name => (
+              <span key={name} className="px-3 py-1.5 bg-white rounded-full text-[var(--text-muted)] border border-[var(--border)]">{name}</span>
+            ))}
+            <span className="px-3 py-1.5 bg-[var(--primary)] rounded-full text-white font-medium">+ 80 artistes</span>
           </div>
         </div>
       </section>
@@ -478,7 +486,7 @@ export default function LandingPage() {
       <footer className="bg-[var(--dark)] text-white py-16">
         <div className="max-w-[1400px] mx-auto px-6 md:px-10">
           <div className="text-center mb-16">
-            <span className="pixels-logo text-3xl text-white">pixels<sup className="text-xs">™</sup></span>
+            <Image src="/images/pixels-logo.svg" alt="pixels™" width={160} height={46} className="brightness-0 invert mx-auto" />
             <p className="text-white/30 mt-6 max-w-md mx-auto leading-relaxed">
               Tant qu&rsquo;&agrave; traverser quelque chose de difficile, autant essayer d&rsquo;en faire quelque chose de beau.
             </p>
