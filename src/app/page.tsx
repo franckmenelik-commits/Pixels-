@@ -117,7 +117,7 @@ export default function LandingPage() {
       <section className="py-16 md:py-20">
         <div className="max-w-3xl mx-auto px-6 text-center">
           <p className="editorial-heading text-2xl md:text-3xl lg:text-4xl text-[var(--dark)] leading-snug">
-            &laquo;&nbsp;Nous croyons que les plus belles opportunit&eacute;s naissent souvent d&rsquo;une rencontre.&nbsp;&raquo;
+            &laquo;&nbsp;Les plus belles rencontres humaines naissent lorsque l&rsquo;on cr&eacute;e ensemble.&nbsp;&raquo;
           </p>
           <p className="text-[var(--primary)] mt-6 text-lg font-medium">
             Pixels existe pour provoquer ces rencontres.
@@ -408,7 +408,7 @@ export default function LandingPage() {
                 Des rencontres qui durent bien apr&egrave;s l&rsquo;&eacute;v&eacute;nement<span className="text-[var(--primary)]">.</span>
               </h2>
               <p className="text-[var(--text-muted)] mt-6 leading-relaxed text-lg">
-                Certaines personnes viennent pour jouer. D&rsquo;autres pour organiser. D&rsquo;autres simplement pour rencontrer du monde.
+                Des personnes qui ne se seraient jamais rencontr&eacute;es apprennent &agrave; collaborer, &agrave; cr&eacute;er et &agrave; tisser des liens.
               </p>
               <p className="text-[var(--dark)] mt-3 leading-relaxed text-lg font-medium">
                 Souvent, elles repartent avec bien plus que pr&eacute;vu.
