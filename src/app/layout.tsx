@@ -10,7 +10,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Pixels — Incubateur Culturel Musical",
+  title: "Pixels — Infrastructure Culturelle Étudiante à Montréal",
   description: "Créer des ponts humains à travers l'art vivant. Pixels rassemble artistes, organisateurs et communautés à Montréal.",
 };
 

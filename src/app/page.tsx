@@ -61,7 +61,7 @@ export default function LandingPage() {
         </div>
         <div className="relative z-10 text-center px-6 max-w-4xl">
           <p className="text-white/50 text-sm tracking-[0.2em] uppercase mb-8 font-medium">
-            Incubateur culturel &bull; Montr&eacute;al
+            Infrastructure culturelle &eacute;tudiante &bull; Montr&eacute;al
           </p>
           <h1 className="editorial-heading text-5xl sm:text-6xl md:text-7xl lg:text-8xl text-white leading-[1.05]">
             Composer l&rsquo;harmonie<br />des gens heureux<span className="text-[var(--primary)]">.</span>
