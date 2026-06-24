@@ -92,6 +92,161 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* ── FORCE D'AVENIR ── */}
+      <section className="bg-[var(--surface)]">
+        {/* Intro */}
+        <div className="max-w-[1400px] mx-auto px-6 md:px-10 pt-24 md:pt-32 pb-16">
+          <p className="text-[var(--primary)] text-sm tracking-[0.15em] uppercase font-semibold mb-6">Force d&rsquo;avenir</p>
+          <h2 className="editorial-heading text-4xl md:text-6xl lg:text-7xl max-w-4xl leading-[1.05]">
+            Pourquoi Pixels est une force d&rsquo;avenir<span className="text-[var(--primary)]">.</span>
+          </h2>
+          <p className="text-[var(--text-muted)] mt-8 text-xl leading-relaxed max-w-2xl">
+            Pixels ne parle pas seulement de musique. Pixels r&eacute;pond &agrave; une question de soci&eacute;t&eacute;&nbsp;: comment recr&eacute;er du lien humain dans une g&eacute;n&eacute;ration hyperconnect&eacute;e, mais souvent isol&eacute;e&nbsp;?
+          </p>
+        </div>
+
+        {/* Statement */}
+        <div className="bg-[var(--dark)] py-16 md:py-20">
+          <div className="max-w-[1400px] mx-auto px-6 md:px-10">
+            <p className="editorial-heading text-2xl md:text-4xl lg:text-5xl text-white leading-snug max-w-3xl">
+              Le futur ne sera pas seulement technologique. Il aura aussi besoin d&rsquo;espaces o&ugrave; les humains se rencontrent encore<span className="text-[var(--primary)]">.</span>
+            </p>
+          </div>
+        </div>
+
+        {/* Bloc 1 — Recréer du lien */}
+        <div className="max-w-[1400px] mx-auto px-6 md:px-10">
+          <div className="grid md:grid-cols-2 gap-0 items-stretch">
+            <div className="py-16 md:py-24 md:pr-16 flex flex-col justify-center">
+              <span className="text-[var(--primary)] text-xs font-semibold tracking-[0.15em] uppercase">01</span>
+              <h3 className="editorial-heading text-3xl md:text-4xl mt-4 mb-6">
+                Recr&eacute;er du lien<span className="text-[var(--primary)]">.</span>
+              </h3>
+              <p className="text-[var(--text-muted)] text-lg leading-relaxed">
+                Pixels rassemble des musicien&middot;ne&middot;s, des artistes, des &eacute;tudiant&middot;e&middot;s et des publics qui n&rsquo;auraient parfois jamais d&ucirc; se rencontrer.
+              </p>
+              <p className="text-[var(--dark)] text-lg leading-relaxed mt-4 font-medium">
+                Une jam devient une rencontre. Une rencontre devient un projet. Un projet devient une communaut&eacute;.
+              </p>
+            </div>
+            <div className="relative min-h-[400px] md:min-h-0">
+              <Image src="/images/event-7.jpg" alt="Jam session Pixels" fill className="object-cover" sizes="50vw" />
+            </div>
+          </div>
+        </div>
+
+        {/* Bloc 2 — Défendre le vivant */}
+        <div className="max-w-[1400px] mx-auto px-6 md:px-10">
+          <div className="grid md:grid-cols-2 gap-0 items-stretch">
+            <div className="relative min-h-[400px] md:min-h-0 order-2 md:order-1">
+              <Image src="/images/event-5.jpg" alt="Concert Pixels live" fill className="object-cover" sizes="50vw" />
+            </div>
+            <div className="py-16 md:py-24 md:pl-16 flex flex-col justify-center order-1 md:order-2">
+              <span className="text-[var(--primary)] text-xs font-semibold tracking-[0.15em] uppercase">02</span>
+              <h3 className="editorial-heading text-3xl md:text-4xl mt-4 mb-6">
+                D&eacute;fendre le vivant<span className="text-[var(--primary)]">.</span>
+              </h3>
+              <p className="text-[var(--text-muted)] text-lg leading-relaxed">
+                &Agrave; une &eacute;poque o&ugrave; produire du contenu est facile, cr&eacute;er une vraie exp&eacute;rience humaine devient rare.
+              </p>
+              <p className="text-[var(--dark)] text-lg leading-relaxed mt-4 font-medium">
+                Pixels mise sur le spectacle vivant, l&rsquo;improvisation, la pr&eacute;sence et l&rsquo;&eacute;motion partag&eacute;e.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Full-width image break */}
+        <div className="relative h-[300px] md:h-[400px] overflow-hidden">
+          <Image src="/images/event-1.jpg" alt="Public Pixels" fill className="object-cover" sizes="100vw" />
+          <div className="absolute inset-0 bg-[var(--dark)]/30" />
+        </div>
+
+        {/* Bloc 3 — Former des leaders */}
+        <div className="max-w-[1400px] mx-auto px-6 md:px-10">
+          <div className="grid md:grid-cols-2 gap-0 items-stretch">
+            <div className="py-16 md:py-24 md:pr-16 flex flex-col justify-center">
+              <span className="text-[var(--primary)] text-xs font-semibold tracking-[0.15em] uppercase">03</span>
+              <h3 className="editorial-heading text-3xl md:text-4xl mt-4 mb-6">
+                Former des leaders<span className="text-[var(--primary)]">.</span>
+              </h3>
+              <p className="text-[var(--text-muted)] text-lg leading-relaxed">
+                Derri&egrave;re chaque &eacute;v&eacute;nement, il y a une &eacute;quipe, des budgets, des partenaires, des impr&eacute;vus, des conflits, des d&eacute;cisions et une gouvernance.
+              </p>
+              <p className="text-[var(--dark)] text-lg leading-relaxed mt-4 font-medium">
+                Pixels est aussi un laboratoire de leadership culturel.
+              </p>
+            </div>
+            <div className="relative min-h-[400px] md:min-h-0">
+              <Image src="/images/event-3.jpg" alt="Organisation Pixels" fill className="object-cover" sizes="50vw" />
+            </div>
+          </div>
+        </div>
+
+        {/* Bloc 4 — Ouvrir l'accès */}
+        <div className="max-w-[1400px] mx-auto px-6 md:px-10">
+          <div className="grid md:grid-cols-2 gap-0 items-stretch">
+            <div className="relative min-h-[400px] md:min-h-0 order-2 md:order-1">
+              <Image src="/images/event-2.jpg" alt="Musiciens Pixels" fill className="object-cover" sizes="50vw" />
+            </div>
+            <div className="py-16 md:py-24 md:pl-16 flex flex-col justify-center order-1 md:order-2">
+              <span className="text-[var(--primary)] text-xs font-semibold tracking-[0.15em] uppercase">04</span>
+              <h3 className="editorial-heading text-3xl md:text-4xl mt-4 mb-6">
+                Ouvrir l&rsquo;acc&egrave;s &agrave; la cr&eacute;ation<span className="text-[var(--primary)]">.</span>
+              </h3>
+              <p className="text-[var(--text-muted)] text-lg leading-relaxed">
+                Dans beaucoup de milieux artistiques, il faut d&eacute;j&agrave; conna&icirc;tre les bonnes personnes.
+              </p>
+              <p className="text-[var(--dark)] text-lg leading-relaxed mt-4 font-medium">
+                Pixels dit simplement&nbsp;: &laquo;&nbsp;Tu joues&nbsp;? Viens.&nbsp;&raquo;
+              </p>
+              <p className="text-[var(--text-muted)] text-sm leading-relaxed mt-3">
+                Pas besoin d&rsquo;&ecirc;tre c&eacute;l&egrave;bre, sign&eacute; ou parfaitement l&eacute;gitime pour commencer.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Bloc 5 — Infrastructure culturelle */}
+        <div className="bg-[var(--dark)] py-20 md:py-28">
+          <div className="max-w-[1400px] mx-auto px-6 md:px-10">
+            <div className="max-w-3xl">
+              <span className="text-[var(--primary)] text-xs font-semibold tracking-[0.15em] uppercase">05</span>
+              <h3 className="editorial-heading text-3xl md:text-4xl lg:text-5xl text-white mt-4 mb-8">
+                Construire une infrastructure culturelle<span className="text-[var(--primary)]">.</span>
+              </h3>
+              <p className="text-white/60 text-lg leading-relaxed">
+                Un concert est un &eacute;v&eacute;nement. Une jam session est une activit&eacute;. Pixels cherche &agrave; devenir quelque chose de plus durable.
+              </p>
+              <p className="text-white text-lg leading-relaxed mt-4 font-medium">
+                Une infrastructure humaine qui continue de cr&eacute;er des rencontres, des projets et des opportunit&eacute;s &mdash; m&ecirc;me lorsque le fondateur n&rsquo;est pas dans la pi&egrave;ce.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Citation finale + CTA */}
+        <div className="py-20 md:py-28">
+          <div className="max-w-3xl mx-auto px-6 text-center">
+            <p className="editorial-heading text-2xl md:text-3xl lg:text-4xl text-[var(--dark)] leading-snug">
+              Pixels ne vend pas seulement de la musique. Pixels fabrique des rencontres qui n&rsquo;auraient jamais d&ucirc; exister &mdash; et certaines changent la trajectoire des gens<span className="text-[var(--primary)]">.</span>
+            </p>
+            <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-4">
+              <Link href="/register" className="bg-[var(--primary)] text-white px-8 py-4 rounded-full text-[15px] font-medium hover:brightness-110 transition inline-flex items-center gap-2">
+                Rejoindre la communaut&eacute;
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+              </Link>
+              <a href="#contact" className="text-[var(--dark)] border-2 border-[var(--dark)] px-8 py-4 rounded-full text-[15px] font-medium hover:bg-[var(--dark)] hover:text-white transition">
+                Inviter Pixels
+              </a>
+              <a href="#histoires" className="text-[var(--text-muted)] text-sm hover:text-[var(--dark)] transition font-medium">
+                D&eacute;couvrir nos histoires &darr;
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* ── D'OÙ VIENT PIXELS ── */}
       <section id="origine" className="bg-[var(--cream)] py-20 md:py-28">
         <div className="max-w-3xl mx-auto px-6">
