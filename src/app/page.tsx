@@ -6,6 +6,7 @@ import Image from 'next/image';
 
 export default function LandingPage() {
   const [scrolled, setScrolled] = useState(false);
+  const [openStory, setOpenStory] = useState<string | null>(null);
   const [liveIndex, setLiveIndex] = useState(0);
   const liveVideos = ['/images/live-1.mp4', '/images/live-2.mp4', '/images/live-3.mp4', '/images/live-4.mp4', '/images/live-5.mp4', '/images/live-6.mp4'];
 
@@ -93,23 +94,31 @@ export default function LandingPage() {
 
       {/* ── D'OÙ VIENT PIXELS ── */}
       <section id="origine" className="bg-[var(--cream)] py-20 md:py-28">
-        <div className="max-w-3xl mx-auto px-6 text-center">
-          <p className="text-[var(--primary)] text-sm tracking-[0.15em] uppercase font-semibold mb-6">L&rsquo;origine</p>
-          <h2 className="editorial-heading text-2xl md:text-3xl lg:text-4xl text-[var(--dark)] leading-snug">
-            Avant Pixels, il y avait simplement un piano dans une r&eacute;sidence &eacute;tudiante.
+        <div className="max-w-3xl mx-auto px-6">
+          <p className="text-[var(--primary)] text-sm tracking-[0.15em] uppercase font-semibold mb-6 text-center">L&rsquo;origine</p>
+          <h2 className="editorial-heading text-2xl md:text-3xl lg:text-4xl text-[var(--dark)] leading-snug text-center">
+            D&rsquo;o&ugrave; vient Pixels<span className="text-[var(--primary)]">.</span>
           </h2>
-          <p className="text-[var(--text-muted)] mt-8 text-lg leading-relaxed max-w-2xl mx-auto">
-            Une amie voulait jouer davantage de musique avec d&rsquo;autres personnes. Elle ne savait pas par o&ugrave; commencer.
-          </p>
-          <p className="text-[var(--text-muted)] mt-4 text-lg leading-relaxed max-w-2xl mx-auto">
-            Alors nous avons cr&eacute;&eacute; un endroit o&ugrave; personne n&rsquo;a besoin de demander la permission pour jouer.
-          </p>
-          <p className="text-[var(--text-muted)] mt-4 text-lg leading-relaxed max-w-2xl mx-auto">
-            Quelques personnes sont venues. Puis d&rsquo;autres. Puis d&rsquo;autres encore.
-          </p>
-          <p className="text-[var(--dark)] mt-6 text-lg leading-relaxed max-w-2xl mx-auto font-medium">
-            Aujourd&rsquo;hui, des dizaines d&rsquo;artistes se rencontrent chaque semaine gr&acirc;ce &agrave; cette m&ecirc;me id&eacute;e&nbsp;: la musique est plus belle lorsqu&rsquo;elle est partag&eacute;e.
-          </p>
+          <div className="mt-10 space-y-6 text-lg leading-relaxed max-w-2xl mx-auto">
+            <p className="text-[var(--text-muted)]">
+              Je suis arriv&eacute; &agrave; Montr&eacute;al avec une certitude&nbsp;: je voulais faire de la musique. Mais HEC et le conservatoire, c&rsquo;&eacute;tait l&rsquo;un ou l&rsquo;autre. Pas les deux.
+            </p>
+            <p className="text-[var(--text-muted)]">
+              Puis j&rsquo;ai rencontr&eacute; M&eacute;line. M&ecirc;me background, m&ecirc;me envie, m&ecirc;me frustration. On s&rsquo;est regard&eacute;s et on s&rsquo;est dit&nbsp;: si personne ne cr&eacute;e cet espace, on le fait nous-m&ecirc;mes.
+            </p>
+            <p className="text-[var(--text-muted)]">
+              Quelques mois plus t&ocirc;t, une amie avait fait son anniversaire chez moi. Il y avait un piano &agrave; queue. Parmi les invit&eacute;s, Paloma. Elle m&rsquo;a dit&nbsp;: &laquo;&nbsp;J&rsquo;aimerais tellement qu&rsquo;on fasse &ccedil;a chaque semaine.&nbsp;&raquo; Je lui ai r&eacute;pondu que c&rsquo;&eacute;tait possible.
+            </p>
+            <p className="text-[var(--text-muted)]">
+              Elle l&rsquo;a fait. Les Music Mondays sont n&eacute;s.
+            </p>
+            <p className="text-[var(--text-muted)]">
+              Nous, on montait un groupe. Paloma faisait vivre ses lundis. On se connaissait tous sans savoir qu&rsquo;on construisait la m&ecirc;me chose.
+            </p>
+            <p className="text-[var(--dark)] font-medium">
+              Le jour o&ugrave; ces histoires se sont rejointes, Pixels existait d&eacute;j&agrave;.
+            </p>
+          </div>
         </div>
       </section>
 
@@ -248,17 +257,33 @@ export default function LandingPage() {
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {[
-              { title: 'Music Mondays', desc: 'Un piano, une résidence étudiante, un lundi soir. C\'est là que tout a commencé. Aujourd\'hui, des dizaines de musiciens se retrouvent chaque semaine.', tag: 'Origine' },
-              { title: 'Le Centre des sciences', desc: 'Notre premier événement d\'envergure. Le moment où Pixels est passé d\'une idée à un mouvement.', tag: 'Événement' },
-              { title: 'Le premier mariage', desc: 'Un couple nous a fait confiance pour le plus beau jour de leur vie. On a compris qu\'on pouvait aller plus loin.', tag: 'Confiance' },
-              { title: 'Forces AVENIR', desc: 'La reconnaissance que l\'impact de Pixels dépasse la musique. C\'est un projet de société étudiante.', tag: 'Reconnaissance' },
-              { title: 'Des artistes qui se trouvent', desc: 'Deux musiciens qui ne se connaissaient pas il y a six mois. Aujourd\'hui, ils composent ensemble.', tag: 'Rencontre' },
-              { title: 'Le premier festival', desc: 'Quand la communauté grandit au point de créer son propre rendez-vous. Un moment fondateur.', tag: 'Communauté' },
+              { id: 'music-mondays', title: 'Music Mondays', desc: 'Un piano, une résidence étudiante, un lundi soir. C\'est là que tout a commencé.', tag: 'Origine', full: 'Paloma a vu un piano à queue dans un salon étudiant et a dit : « J\'aimerais tellement qu\'on fasse ça chaque semaine. » On lui a répondu que c\'était possible. Elle l\'a fait. Les Music Mondays sont nés comme ça — sans structure, sans budget, juste l\'envie de jouer ensemble. Aujourd\'hui, des dizaines de musiciens se retrouvent chaque lundi soir. Personne ne demande la permission. Tout le monde est le bienvenu.' },
+              { id: 'centre-sciences', title: 'Le Centre des sciences', desc: 'Notre premier événement d\'envergure. Le moment où Pixels est passé d\'une idée à un mouvement.', tag: 'Événement', full: 'On nous a confié une soirée entière au Centre des sciences de Montréal. C\'était la première fois qu\'on jouait dans un lieu aussi grand, devant un public qu\'on ne connaissait pas. Ce soir-là, on a compris que ce qu\'on construisait dépassait notre cercle. Les gens sont venus pour la musique. Ils sont restés pour l\'énergie. Pixels n\'était plus une idée — c\'était un mouvement.' },
+              { id: 'premier-mariage', title: 'Le premier mariage', desc: 'Un couple nous a fait confiance pour le plus beau jour de leur vie.', tag: 'Confiance', full: 'Un couple qu\'on ne connaissait pas nous a contactés. Ils voulaient de la musique live pour leur mariage. Pas un DJ, pas un groupe professionnel — ils voulaient Pixels. Cette confiance nous a marqués. On a compris qu\'on pouvait aller au-delà des jams et des événements étudiants. Que les gens croyaient en ce qu\'on faisait assez pour nous confier leurs moments les plus importants.' },
+              { id: 'forces-avenir', title: 'Forces AVENIR', desc: 'La reconnaissance que l\'impact de Pixels dépasse la musique.', tag: 'Reconnaissance', full: 'Forces AVENIR récompense les initiatives étudiantes qui transforment leur communauté. Quand Pixels a été reconnu, ça a confirmé quelque chose qu\'on sentait depuis longtemps : ce qu\'on construit n\'est pas seulement un projet musical. C\'est un projet de société étudiante. Un espace où des gens d\'horizons différents apprennent à créer ensemble.' },
+              { id: 'artistes-trouvent', title: 'Des artistes qui se trouvent', desc: 'Deux musiciens qui ne se connaissaient pas il y a six mois. Aujourd\'hui, ils composent ensemble.', tag: 'Rencontre', full: 'L\'un étudiait à McGill, l\'autre à HEC. Ils jouaient du même instrument sans le savoir. Ils se sont croisés à un Music Monday, ont commencé à jammer, puis à répéter ensemble, puis à composer. Six mois plus tard, ils avaient un projet à eux. C\'est exactement pour ça que Pixels existe : créer les conditions pour que ces rencontres arrivent.' },
+              { id: 'premier-festival', title: 'Le premier festival', desc: 'Quand la communauté grandit au point de créer son propre rendez-vous.', tag: 'Communauté', full: 'On ne l\'avait pas planifié. La communauté avait grandi au point qu\'un simple lundi soir ne suffisait plus. Il fallait un moment plus grand, un rendez-vous fondateur. Le premier festival Pixels est né de cette nécessité. Pas d\'un business plan — d\'une énergie collective qui avait besoin d\'un espace à sa mesure.' },
             ].map((story) => (
-              <div key={story.title} className="border border-[var(--border)] rounded-2xl p-8 hover:border-[var(--primary)]/30 transition-colors">
-                <span className="text-[var(--primary)] text-xs font-semibold tracking-wider uppercase">{story.tag}</span>
-                <h3 className="editorial-heading text-xl mt-3 mb-3">{story.title}</h3>
-                <p className="text-[var(--text-muted)] text-sm leading-relaxed">{story.desc}</p>
+              <div
+                key={story.id}
+                className={`border rounded-2xl p-8 cursor-pointer transition-all duration-300 ${openStory === story.id ? 'border-[var(--primary)] bg-[var(--cream)]' : 'border-[var(--border)] hover:border-[var(--primary)]/30'}`}
+                onClick={() => setOpenStory(openStory === story.id ? null : story.id)}
+              >
+                <div className="flex items-start justify-between gap-4">
+                  <div>
+                    <span className="text-[var(--primary)] text-xs font-semibold tracking-wider uppercase">{story.tag}</span>
+                    <h3 className="editorial-heading text-xl mt-3 mb-3">{story.title}</h3>
+                    <p className="text-[var(--text-muted)] text-sm leading-relaxed">{story.desc}</p>
+                  </div>
+                  <svg className={`w-5 h-5 text-[var(--primary)] flex-shrink-0 mt-1 transition-transform duration-300 ${openStory === story.id ? 'rotate-45' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                  </svg>
+                </div>
+                <div className={`overflow-hidden transition-all duration-500 ${openStory === story.id ? 'max-h-96 opacity-100 mt-6' : 'max-h-0 opacity-0'}`}>
+                  <div className="border-t border-[var(--primary)]/20 pt-6">
+                    <p className="text-[var(--text)] text-sm leading-relaxed">{story.full}</p>
+                  </div>
+                </div>
               </div>
             ))}
           </div>
@@ -315,7 +340,7 @@ export default function LandingPage() {
                 Rejoins les Music Mondays<span className="text-[var(--primary)]">.</span>
               </h3>
               <p className="text-[var(--text-muted)] leading-relaxed mb-4">
-                Avant Pixels, il y avait simplement un piano &agrave; queue. Une amie, Paloma, m&rsquo;a dit qu&rsquo;elle aimerait faire davantage de musique avec d&rsquo;autres. Je lui ai r&eacute;pondu&nbsp;: &laquo;&nbsp;&Agrave; la r&eacute;sidence il y a un piano. Qu&rsquo;est-ce que tu attends&nbsp;?&nbsp;&raquo;
+                Paloma a vu un piano &agrave; queue dans un salon &eacute;tudiant et a dit&nbsp;: &laquo;&nbsp;J&rsquo;aimerais tellement qu&rsquo;on fasse &ccedil;a chaque semaine.&nbsp;&raquo; On lui a r&eacute;pondu que c&rsquo;&eacute;tait possible. Elle l&rsquo;a fait.
               </p>
               <p className="text-[var(--text)] font-medium">
                 Jam sessions ouvertes, cr&eacute;ation collective, z&eacute;ro jugement. Viens comme tu es.
