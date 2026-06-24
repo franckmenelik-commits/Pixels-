@@ -6,12 +6,21 @@ import Image from 'next/image';
 
 export default function LandingPage() {
   const [scrolled, setScrolled] = useState(false);
+  const [liveIndex, setLiveIndex] = useState(0);
+  const liveVideos = ['/images/live-1.mp4', '/images/live-2.mp4', '/images/live-3.mp4', '/images/live-4.mp4', '/images/live-5.mp4', '/images/live-6.mp4'];
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 60);
     window.addEventListener('scroll', onScroll);
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setLiveIndex((prev) => (prev + 1) % liveVideos.length);
+    }, 6000);
+    return () => clearInterval(timer);
+  }, [liveVideos.length]);
 
   return (
     <div className="min-h-screen bg-white text-[var(--text)]">
@@ -191,27 +200,39 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── VIDÉO LIVE ── */}
+      {/* ── VIDÉO LIVE — CARROUSEL ── */}
       <section className="bg-[var(--dark)]">
         <div className="max-w-[1400px] mx-auto px-6 md:px-10 py-16">
           <p className="text-[var(--primary)] text-sm tracking-[0.15em] uppercase font-semibold mb-8 text-center">En live</p>
-          <div className="grid md:grid-cols-2 gap-4">
-            {['/images/live-1.mp4', '/images/live-2.mp4'].map((src) => (
-              <div key={src} className="aspect-video rounded-xl overflow-hidden bg-[var(--dark-surface)]">
-                <video autoPlay muted loop playsInline preload="auto" className="w-full h-full object-cover">
-                  <source src={src} type="video/mp4" />
-                </video>
-              </div>
+          <div className="relative aspect-video rounded-2xl overflow-hidden bg-[var(--dark-surface)]">
+            {liveVideos.map((src, i) => (
+              <video
+                key={src}
+                autoPlay
+                muted
+                loop
+                playsInline
+                preload={i <= 1 ? 'auto' : 'none'}
+                className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${i === liveIndex ? 'opacity-100' : 'opacity-0'}`}
+              >
+                <source src={src} type="video/mp4" />
+              </video>
             ))}
-          </div>
-          <div className="grid grid-cols-3 gap-4 mt-4">
-            {['/images/live-3.mp4', '/images/live-4.mp4', '/images/live-5.mp4'].map((src) => (
-              <div key={src} className="aspect-video rounded-xl overflow-hidden bg-[var(--dark-surface)]">
-                <video autoPlay muted loop playsInline preload="auto" className="w-full h-full object-cover">
-                  <source src={src} type="video/mp4" />
-                </video>
-              </div>
-            ))}
+            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2 z-10">
+              {liveVideos.map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => setLiveIndex(i)}
+                  className={`w-2 h-2 rounded-full transition-all ${i === liveIndex ? 'bg-white w-6' : 'bg-white/40'}`}
+                />
+              ))}
+            </div>
+            <button onClick={() => setLiveIndex((prev) => (prev - 1 + liveVideos.length) % liveVideos.length)} className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/30 backdrop-blur-sm flex items-center justify-center text-white/70 hover:text-white hover:bg-black/50 transition z-10">
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" /></svg>
+            </button>
+            <button onClick={() => setLiveIndex((prev) => (prev + 1) % liveVideos.length)} className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/30 backdrop-blur-sm flex items-center justify-center text-white/70 hover:text-white hover:bg-black/50 transition z-10">
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" /></svg>
+            </button>
           </div>
         </div>
       </section>
@@ -256,7 +277,9 @@ export default function LandingPage() {
 
           <div className="grid md:grid-cols-2 gap-8 mb-16 items-center">
             <div className="relative aspect-[4/3] rounded-2xl overflow-hidden">
-              <Image src="/images/event-5.jpg" alt="Artiste Pixels sur scène" fill className="object-cover" sizes="50vw" />
+              <video autoPlay muted loop playsInline preload="auto" className="w-full h-full object-cover">
+                <source src="/images/rejoindre-preview.mp4" type="video/mp4" />
+              </video>
             </div>
             <div>
               <span className="text-[var(--primary)] font-semibold text-sm tracking-wider uppercase">Tu es musicien&middot;ne</span>
@@ -412,7 +435,9 @@ export default function LandingPage() {
               </div>
             </div>
             <div className="relative aspect-[3/4] rounded-2xl overflow-hidden">
-              <Image src="/images/event-4.jpg" alt="Impact Pixels" fill className="object-cover" sizes="50vw" />
+              <video autoPlay muted loop playsInline preload="auto" className="w-full h-full object-cover">
+                <source src="/images/impact-video.mp4" type="video/mp4" />
+              </video>
             </div>
           </div>
         </div>
@@ -439,8 +464,10 @@ export default function LandingPage() {
 
       {/* ── LA FAMILLE ── */}
       <section className="grid md:grid-cols-2">
-        <div className="relative min-h-[500px]">
-          <Image src="/images/event-2.jpg" alt="La famille Pixels" fill className="object-cover object-center" sizes="50vw" />
+        <div className="relative min-h-[500px] overflow-hidden">
+          <video autoPlay muted loop playsInline preload="auto" className="absolute inset-0 w-full h-full object-cover">
+            <source src="/images/community-video.mp4" type="video/mp4" />
+          </video>
         </div>
         <div className="bg-[var(--surface)] p-10 md:p-16 lg:p-20 flex flex-col justify-center">
           <p className="text-[var(--primary)] text-sm tracking-[0.15em] uppercase font-semibold mb-4">La famille</p>
