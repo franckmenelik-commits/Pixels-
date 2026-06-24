@@ -276,7 +276,7 @@ export default function LandingPage() {
           </div>
 
           <div className="grid md:grid-cols-2 gap-8 mb-16 items-center">
-            <div className="relative aspect-[4/3] rounded-2xl overflow-hidden">
+            <div className="relative aspect-video rounded-2xl overflow-hidden">
               <video autoPlay muted loop playsInline preload="auto" className="w-full h-full object-cover">
                 <source src="/images/rejoindre-preview.mp4" type="video/mp4" />
               </video>
