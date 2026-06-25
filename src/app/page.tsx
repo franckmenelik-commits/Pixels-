@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 
@@ -9,6 +9,7 @@ export default function LandingPage() {
   const [openStory, setOpenStory] = useState<string | null>(null);
   const [liveIndex, setLiveIndex] = useState(0);
   const liveVideos = ['/images/live-1.mp4', '/images/live-2.mp4', '/images/live-3.mp4', '/images/live-4.mp4', '/images/live-5.mp4', '/images/live-6.mp4'];
+  const constellationRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 60);
@@ -24,25 +25,18 @@ export default function LandingPage() {
   }, [liveVideos.length]);
 
   return (
-    <div className="min-h-screen bg-white text-[var(--text)]">
+    <div className="min-h-screen bg-[var(--surface)] text-[var(--text)]">
       {/* ── Navbar ── */}
       <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'bg-white/95 backdrop-blur-sm border-b border-[var(--border)] py-3' : 'bg-transparent py-5'}`}>
         <div className="max-w-[1400px] mx-auto flex items-center justify-between px-6 md:px-10">
           <Link href="/" className="flex items-center">
-            <Image
-              src="/images/pixels-logo.png"
-              alt="pixels™"
-              width={120}
-              height={34}
-              className={`transition-all duration-300 ${scrolled ? '' : 'brightness-0 invert'}`}
-              priority
-            />
+            <Image src="/images/pixels-logo.png" alt="pixels™" width={100} height={28} className={`transition-all duration-300 ${scrolled ? '' : 'brightness-0 invert'}`} priority />
           </Link>
           <div className={`hidden md:flex items-center gap-8 text-[13px] font-medium transition-colors duration-300 ${scrolled ? 'text-[var(--text-muted)]' : 'text-white/70'}`}>
-            <a href="#ecosysteme" className="hover:text-[var(--primary)] transition">L&rsquo;&eacute;cosyst&egrave;me</a>
-            <a href="#histoires" className="hover:text-[var(--primary)] transition">Nos histoires</a>
-            <a href="#valeurs" className="hover:text-[var(--primary)] transition">Valeurs</a>
-            <a href="#rejoindre" className="hover:text-[var(--primary)] transition">Rejoindre</a>
+            <a href="#artistes" className="hover:text-[var(--primary)] transition">Artistes</a>
+            <a href="#organisateurs" className="hover:text-[var(--primary)] transition">Organisateurs</a>
+            <a href="#histoires" className="hover:text-[var(--primary)] transition">Histoire</a>
+            <a href="#contact" className="hover:text-[var(--primary)] transition">Contact</a>
           </div>
           <div className="flex items-center gap-3">
             <Link href="/login" className={`text-[13px] font-medium transition hidden sm:block ${scrolled ? 'text-[var(--text-muted)] hover:text-[var(--dark)]' : 'text-white/70 hover:text-white'}`}>
@@ -55,200 +49,443 @@ export default function LandingPage() {
         </div>
       </nav>
 
-      {/* ── HERO ── */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+      {/* ═══════════════════════════════════════════════
+          1. HERO — QUESTION D'ENTRÉE
+      ═══════════════════════════════════════════════ */}
+      <section className="relative min-h-screen flex items-end pb-20 md:pb-28 overflow-hidden">
         <div className="absolute inset-0">
-          <video
-            autoPlay
-            muted
-            loop
-            playsInline
-            className="w-full h-full object-cover"
-          >
+          <video autoPlay muted loop playsInline className="w-full h-full object-cover">
             <source src="/images/hero-video.mp4" type="video/mp4" />
           </video>
-          <div className="absolute inset-0 bg-[#0B1D3D]/60" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#0B1D3D]/90 via-[#0B1D3D]/40 to-transparent" />
         </div>
-        <div className="relative z-10 text-center px-6 max-w-4xl">
-          <p className="text-white/50 text-sm tracking-[0.2em] uppercase mb-8 font-medium">
+        <div className="relative z-10 max-w-[1400px] mx-auto px-6 md:px-10 w-full">
+          <p className="text-white/40 text-sm tracking-[0.2em] uppercase mb-6 font-medium">
             Infrastructure culturelle &eacute;tudiante &bull; Montr&eacute;al
           </p>
-          <h1 className="editorial-heading text-5xl sm:text-6xl md:text-7xl lg:text-8xl text-white leading-[1.05]">
-            La musique rassemble<span className="text-[var(--primary)]">.</span><br />
-            <span className="text-white/70">Nous faisons le reste.</span>
+          <h1 className="editorial-heading text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-white leading-[1.08] max-w-4xl">
+            &Agrave; quand remonte la derni&egrave;re fois que la musique t&rsquo;a pr&eacute;sent&eacute; quelqu&rsquo;un<span className="text-[var(--primary)]">&nbsp;?</span>
           </h1>
-          <p className="text-white/60 mt-8 max-w-2xl mx-auto text-lg leading-relaxed">
-            Nous cr&eacute;ons les espaces o&ugrave; artistes, &eacute;tudiants et communaut&eacute;s peuvent enfin se rencontrer, collaborer et construire quelque chose qui leur ressemble.
+          <p className="text-white/50 mt-6 max-w-xl text-lg leading-relaxed">
+            Pixels cr&eacute;e les espaces o&ugrave; les artistes, les organisateurs et le public se rencontrent.
           </p>
-          <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link href="/register" className="bg-[var(--primary)] text-white px-8 py-4 rounded-full text-[15px] font-medium hover:brightness-110 transition inline-flex items-center gap-2">
-              Rejoindre la communaut&eacute;
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
-            </Link>
-            <a href="#origine" className="text-white/50 text-sm hover:text-white transition font-medium">
-              D&rsquo;o&ugrave; vient Pixels ? &darr;
+          <div className="mt-10 flex flex-wrap items-center gap-4">
+            <a href="#portes" className="bg-[var(--primary)] text-white px-8 py-4 rounded-full text-[15px] font-medium hover:brightness-110 transition inline-flex items-center gap-2">
+              Entrer dans l&rsquo;histoire
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M19 14l-7 7m0 0l-7-7m7 7V3" /></svg>
+            </a>
+            <a href="#contact" className="text-white/60 border border-white/20 px-8 py-4 rounded-full text-[15px] font-medium hover:bg-white/10 transition">
+              Inviter Pixels
             </a>
           </div>
         </div>
       </section>
 
-      {/* ── FORCE D'AVENIR ── */}
-      <section className="bg-[var(--surface)]">
-        {/* Intro */}
-        <div className="max-w-[1400px] mx-auto px-6 md:px-10 pt-24 md:pt-32 pb-16">
-          <p className="text-[var(--primary)] text-sm tracking-[0.15em] uppercase font-semibold mb-6">Force d&rsquo;avenir</p>
-          <h2 className="editorial-heading text-4xl md:text-6xl lg:text-7xl max-w-4xl leading-[1.05]">
-            Pourquoi Pixels est une force d&rsquo;avenir<span className="text-[var(--primary)]">.</span>
+      {/* ═══════════════════════════════════════════════
+          2. LES TROIS PORTES
+      ═══════════════════════════════════════════════ */}
+      <section id="portes" className="py-20 md:py-28 bg-white">
+        <div className="max-w-[1400px] mx-auto px-6 md:px-10">
+          <h2 className="editorial-heading text-3xl md:text-5xl text-center mb-16">
+            Pourquoi es-tu ici<span className="text-[var(--primary)]">&nbsp;?</span>
           </h2>
-          <p className="text-[var(--text-muted)] mt-8 text-xl leading-relaxed max-w-2xl">
-            Pixels ne parle pas seulement de musique. Pixels r&eacute;pond &agrave; une question de soci&eacute;t&eacute;&nbsp;: comment recr&eacute;er du lien humain dans une g&eacute;n&eacute;ration hyperconnect&eacute;e, mais souvent isol&eacute;e&nbsp;?
+          <div className="grid md:grid-cols-3 gap-6">
+            {[
+              {
+                img: '/images/event-5.jpg',
+                title: 'Je fais de la musique',
+                desc: "Tu ne cherches peut-être pas seulement une scène. Tu cherches peut-être des personnes avec qui grandir.",
+                cta: 'Rejoindre les artistes',
+                href: '#artistes',
+              },
+              {
+                img: '/images/event-3.jpg',
+                title: "J'organise un événement",
+                desc: "Les invités oublieront peut-être le menu. Ils oublieront rarement le moment où la musique a commencé.",
+                cta: 'Créer un moment',
+                href: '#organisateurs',
+              },
+              {
+                img: '/images/event-7.jpg',
+                title: 'Je veux vivre quelque chose',
+                desc: "Tu ne joues peut-être d'aucun instrument. Et pourtant, tu fais déjà partie de l'histoire.",
+                cta: 'Découvrir les rendez-vous',
+                href: '#vibrer',
+              },
+            ].map((card) => (
+              <a key={card.title} href={card.href} className="group relative rounded-2xl overflow-hidden aspect-[3/4] flex flex-col justify-end p-8 cursor-pointer">
+                <Image src={card.img} alt={card.title} fill className="object-cover group-hover:scale-105 transition-transform duration-700" sizes="33vw" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0B1D3D]/80 via-[#0B1D3D]/20 to-transparent" />
+                <div className="relative z-10">
+                  <h3 className="editorial-heading text-2xl text-white mb-3">{card.title}</h3>
+                  <p className="text-white/60 text-sm leading-relaxed mb-5">{card.desc}</p>
+                  <span className="inline-flex items-center gap-2 text-[var(--primary)] text-sm font-medium group-hover:gap-3 transition-all">
+                    {card.cta}
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+                  </span>
+                </div>
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════════
+          3. MANIFESTE COURT
+      ═══════════════════════════════════════════════ */}
+      <section className="py-20 md:py-28 bg-[var(--surface)]">
+        <div className="max-w-3xl mx-auto px-6">
+          <h2 className="editorial-heading text-3xl md:text-4xl lg:text-5xl text-center leading-snug">
+            Les concerts ne sont qu&rsquo;une excuse<span className="text-[var(--primary)]">.</span>
+          </h2>
+          <p className="text-[var(--text-muted)] mt-8 text-lg leading-relaxed text-center">
+            Ce qui nous int&eacute;resse vraiment, c&rsquo;est ce qui se passe avant et apr&egrave;s la musique&nbsp;: les rencontres, les r&eacute;p&eacute;titions, les conversations, les projets qui naissent, les personnes qui se d&eacute;couvrent.
           </p>
         </div>
+      </section>
 
-        {/* Statement */}
-        <div className="bg-[var(--dark)] py-16 md:py-20">
-          <div className="max-w-[1400px] mx-auto px-6 md:px-10">
-            <p className="editorial-heading text-2xl md:text-4xl lg:text-5xl text-white leading-snug max-w-3xl">
-              Le futur ne sera pas seulement technologique. Il aura aussi besoin d&rsquo;espaces o&ugrave; les humains se rencontrent encore<span className="text-[var(--primary)]">.</span>
-            </p>
-          </div>
+      {/* Manifeste — phrase isolée plein écran */}
+      <section className="relative py-32 md:py-44 overflow-hidden">
+        <Image src="/images/event-1.jpg" alt="Public Pixels" fill className="object-cover" sizes="100vw" />
+        <div className="absolute inset-0 bg-[#0B1D3D]/70" />
+        <div className="relative z-10 max-w-4xl mx-auto px-6 text-center">
+          <p className="editorial-heading text-3xl md:text-5xl lg:text-6xl text-white leading-[1.1]">
+            &laquo;&nbsp;Je veux voir des humains vibrer ensemble.&nbsp;&raquo;
+          </p>
         </div>
+      </section>
 
-        {/* Bloc 1 — Recréer du lien */}
+      {/* ═══════════════════════════════════════════════
+          4. ARTISTES — CRÉER
+      ═══════════════════════════════════════════════ */}
+      <section id="artistes" className="py-20 md:py-28 bg-white">
         <div className="max-w-[1400px] mx-auto px-6 md:px-10">
-          <div className="grid md:grid-cols-2 gap-0 items-stretch">
-            <div className="py-16 md:py-24 md:pr-16 flex flex-col justify-center">
-              <span className="text-[var(--primary)] text-xs font-semibold tracking-[0.15em] uppercase">01</span>
-              <h3 className="editorial-heading text-3xl md:text-4xl mt-4 mb-6">
-                Recr&eacute;er du lien<span className="text-[var(--primary)]">.</span>
-              </h3>
-              <p className="text-[var(--text-muted)] text-lg leading-relaxed">
-                Pixels rassemble des musicien&middot;ne&middot;s, des artistes, des &eacute;tudiant&middot;e&middot;s et des publics qui n&rsquo;auraient parfois jamais d&ucirc; se rencontrer.
+          <div className="grid md:grid-cols-2 gap-12 items-center">
+            <div>
+              <p className="text-[var(--primary)] text-sm tracking-[0.15em] uppercase font-semibold mb-4">Artistes</p>
+              <h2 className="editorial-heading text-4xl md:text-6xl">
+                Cr&eacute;er<span className="text-[var(--primary)]">.</span>
+              </h2>
+              <p className="text-[var(--text-muted)] mt-3 text-lg">
+                Pour celles et ceux qui jouent, chantent, composent, improvisent ou veulent simplement recommencer.
               </p>
-              <p className="text-[var(--dark)] text-lg leading-relaxed mt-4 font-medium">
-                Une jam devient une rencontre. Une rencontre devient un projet. Un projet devient une communaut&eacute;.
+              <p className="text-[var(--text)] mt-6 text-lg leading-relaxed">
+                Pixels est un terrain de jeu pour les artistes qui veulent rencontrer d&rsquo;autres artistes. Pas besoin d&rsquo;&ecirc;tre c&eacute;l&egrave;bre, sign&eacute; ou parfaitement l&eacute;gitime. Si tu joues, viens.
               </p>
+              <div className="mt-8 bg-[var(--cream)] rounded-xl p-6">
+                <p className="text-[var(--text-muted)] text-sm italic">&laquo;&nbsp;Et si je ne suis pas assez bon&nbsp;?&nbsp;&raquo;</p>
+                <p className="text-[var(--dark)] text-sm font-medium mt-2">Parfait. Personne ne l&rsquo;&eacute;tait la premi&egrave;re fois.</p>
+              </div>
+              <div className="mt-8 flex flex-wrap gap-3">
+                <Link href="/register?role=artist" className="bg-[var(--dark)] text-white px-6 py-3 rounded-full text-sm font-medium hover:brightness-150 transition inline-flex items-center gap-2">
+                  Rejoindre une jam
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+                </Link>
+                <Link href="/register?role=artist" className="border-2 border-[var(--dark)] text-[var(--dark)] px-6 py-3 rounded-full text-sm font-medium hover:bg-[var(--dark)] hover:text-white transition">
+                  Proposer un projet
+                </Link>
+              </div>
             </div>
-            <div className="relative min-h-[400px] md:min-h-0">
-              <Image src="/images/event-7.jpg" alt="Jam session Pixels" fill className="object-cover" sizes="50vw" />
-            </div>
-          </div>
-        </div>
-
-        {/* Bloc 2 — Défendre le vivant */}
-        <div className="max-w-[1400px] mx-auto px-6 md:px-10">
-          <div className="grid md:grid-cols-2 gap-0 items-stretch">
-            <div className="relative min-h-[400px] md:min-h-0 order-2 md:order-1">
-              <Image src="/images/event-5.jpg" alt="Concert Pixels live" fill className="object-cover" sizes="50vw" />
-            </div>
-            <div className="py-16 md:py-24 md:pl-16 flex flex-col justify-center order-1 md:order-2">
-              <span className="text-[var(--primary)] text-xs font-semibold tracking-[0.15em] uppercase">02</span>
-              <h3 className="editorial-heading text-3xl md:text-4xl mt-4 mb-6">
-                D&eacute;fendre le vivant<span className="text-[var(--primary)]">.</span>
-              </h3>
-              <p className="text-[var(--text-muted)] text-lg leading-relaxed">
-                &Agrave; une &eacute;poque o&ugrave; produire du contenu est facile, cr&eacute;er une vraie exp&eacute;rience humaine devient rare.
-              </p>
-              <p className="text-[var(--dark)] text-lg leading-relaxed mt-4 font-medium">
-                Pixels mise sur le spectacle vivant, l&rsquo;improvisation, la pr&eacute;sence et l&rsquo;&eacute;motion partag&eacute;e.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Full-width image break */}
-        <div className="relative h-[300px] md:h-[400px] overflow-hidden">
-          <Image src="/images/event-1.jpg" alt="Public Pixels" fill className="object-cover" sizes="100vw" />
-          <div className="absolute inset-0 bg-[var(--dark)]/30" />
-        </div>
-
-        {/* Bloc 3 — Former des leaders */}
-        <div className="max-w-[1400px] mx-auto px-6 md:px-10">
-          <div className="grid md:grid-cols-2 gap-0 items-stretch">
-            <div className="py-16 md:py-24 md:pr-16 flex flex-col justify-center">
-              <span className="text-[var(--primary)] text-xs font-semibold tracking-[0.15em] uppercase">03</span>
-              <h3 className="editorial-heading text-3xl md:text-4xl mt-4 mb-6">
-                Former des leaders<span className="text-[var(--primary)]">.</span>
-              </h3>
-              <p className="text-[var(--text-muted)] text-lg leading-relaxed">
-                Derri&egrave;re chaque &eacute;v&eacute;nement, il y a une &eacute;quipe, des budgets, des partenaires, des impr&eacute;vus, des conflits, des d&eacute;cisions et une gouvernance.
-              </p>
-              <p className="text-[var(--dark)] text-lg leading-relaxed mt-4 font-medium">
-                Pixels est aussi un laboratoire de leadership culturel.
-              </p>
-            </div>
-            <div className="relative min-h-[400px] md:min-h-0">
-              <Image src="/images/event-3.jpg" alt="Organisation Pixels" fill className="object-cover" sizes="50vw" />
-            </div>
-          </div>
-        </div>
-
-        {/* Bloc 4 — Ouvrir l'accès */}
-        <div className="max-w-[1400px] mx-auto px-6 md:px-10">
-          <div className="grid md:grid-cols-2 gap-0 items-stretch">
-            <div className="relative min-h-[400px] md:min-h-0 order-2 md:order-1">
-              <Image src="/images/event-2.jpg" alt="Musiciens Pixels" fill className="object-cover" sizes="50vw" />
-            </div>
-            <div className="py-16 md:py-24 md:pl-16 flex flex-col justify-center order-1 md:order-2">
-              <span className="text-[var(--primary)] text-xs font-semibold tracking-[0.15em] uppercase">04</span>
-              <h3 className="editorial-heading text-3xl md:text-4xl mt-4 mb-6">
-                Ouvrir l&rsquo;acc&egrave;s &agrave; la cr&eacute;ation<span className="text-[var(--primary)]">.</span>
-              </h3>
-              <p className="text-[var(--text-muted)] text-lg leading-relaxed">
-                Dans beaucoup de milieux artistiques, il faut d&eacute;j&agrave; conna&icirc;tre les bonnes personnes.
-              </p>
-              <p className="text-[var(--dark)] text-lg leading-relaxed mt-4 font-medium">
-                Pixels dit simplement&nbsp;: &laquo;&nbsp;Tu joues&nbsp;? Viens.&nbsp;&raquo;
-              </p>
-              <p className="text-[var(--text-muted)] text-sm leading-relaxed mt-3">
-                Pas besoin d&rsquo;&ecirc;tre c&eacute;l&egrave;bre, sign&eacute; ou parfaitement l&eacute;gitime pour commencer.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Bloc 5 — Infrastructure culturelle */}
-        <div className="bg-[var(--dark)] py-20 md:py-28">
-          <div className="max-w-[1400px] mx-auto px-6 md:px-10">
-            <div className="max-w-3xl">
-              <span className="text-[var(--primary)] text-xs font-semibold tracking-[0.15em] uppercase">05</span>
-              <h3 className="editorial-heading text-3xl md:text-4xl lg:text-5xl text-white mt-4 mb-8">
-                Construire une infrastructure culturelle<span className="text-[var(--primary)]">.</span>
-              </h3>
-              <p className="text-white/60 text-lg leading-relaxed">
-                Un concert est un &eacute;v&eacute;nement. Une jam session est une activit&eacute;. Pixels cherche &agrave; devenir quelque chose de plus durable.
-              </p>
-              <p className="text-white text-lg leading-relaxed mt-4 font-medium">
-                Une infrastructure humaine qui continue de cr&eacute;er des rencontres, des projets et des opportunit&eacute;s &mdash; m&ecirc;me lorsque le fondateur n&rsquo;est pas dans la pi&egrave;ce.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Citation finale + CTA */}
-        <div className="py-20 md:py-28">
-          <div className="max-w-3xl mx-auto px-6 text-center">
-            <p className="editorial-heading text-2xl md:text-3xl lg:text-4xl text-[var(--dark)] leading-snug">
-              Pixels ne vend pas seulement de la musique. Pixels fabrique des rencontres qui n&rsquo;auraient jamais d&ucirc; exister &mdash; et certaines changent la trajectoire des gens<span className="text-[var(--primary)]">.</span>
-            </p>
-            <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Link href="/register" className="bg-[var(--primary)] text-white px-8 py-4 rounded-full text-[15px] font-medium hover:brightness-110 transition inline-flex items-center gap-2">
-                Rejoindre la communaut&eacute;
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
-              </Link>
-              <a href="#contact" className="text-[var(--dark)] border-2 border-[var(--dark)] px-8 py-4 rounded-full text-[15px] font-medium hover:bg-[var(--dark)] hover:text-white transition">
-                Inviter Pixels
-              </a>
-              <a href="#histoires" className="text-[var(--text-muted)] text-sm hover:text-[var(--dark)] transition font-medium">
-                D&eacute;couvrir nos histoires &darr;
-              </a>
+            <div className="relative aspect-video rounded-2xl overflow-hidden">
+              <video autoPlay muted loop playsInline preload="auto" className="w-full h-full object-cover">
+                <source src="/images/rejoindre-preview.mp4" type="video/mp4" />
+              </video>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ── D'OÙ VIENT PIXELS ── */}
-      <section id="origine" className="bg-[var(--cream)] py-20 md:py-28">
+      {/* ── Live carousel ── */}
+      <section className="bg-[var(--dark)]">
+        <div className="max-w-[1400px] mx-auto px-6 md:px-10 py-16">
+          <p className="text-[var(--primary)] text-sm tracking-[0.15em] uppercase font-semibold mb-8 text-center">En live</p>
+          <div className="relative aspect-video rounded-2xl overflow-hidden bg-[var(--dark-surface)]">
+            {liveVideos.map((src, i) => (
+              <video
+                key={src}
+                autoPlay
+                muted
+                loop
+                playsInline
+                preload={i <= 1 ? 'auto' : 'none'}
+                className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${i === liveIndex ? 'opacity-100' : 'opacity-0'}`}
+              >
+                <source src={src} type="video/mp4" />
+              </video>
+            ))}
+            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2 z-10">
+              {liveVideos.map((_, i) => (
+                <button key={i} onClick={() => setLiveIndex(i)} className={`w-2 h-2 rounded-full transition-all ${i === liveIndex ? 'bg-white w-6' : 'bg-white/40'}`} />
+              ))}
+            </div>
+            <button onClick={() => setLiveIndex((prev) => (prev - 1 + liveVideos.length) % liveVideos.length)} className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/30 backdrop-blur-sm flex items-center justify-center text-white/70 hover:text-white hover:bg-black/50 transition z-10">
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" /></svg>
+            </button>
+            <button onClick={() => setLiveIndex((prev) => (prev + 1) % liveVideos.length)} className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/30 backdrop-blur-sm flex items-center justify-center text-white/70 hover:text-white hover:bg-black/50 transition z-10">
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" /></svg>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════════
+          5. ORGANISATEURS — RASSEMBLER
+      ═══════════════════════════════════════════════ */}
+      <section id="organisateurs" className="py-20 md:py-28 bg-white">
+        <div className="max-w-[1400px] mx-auto px-6 md:px-10">
+          <div className="grid md:grid-cols-2 gap-12 items-center">
+            <div className="relative aspect-[4/3] rounded-2xl overflow-hidden order-2 md:order-1">
+              <Image src="/images/event-4.jpg" alt="Événement Pixels" fill className="object-cover" sizes="50vw" />
+            </div>
+            <div className="order-1 md:order-2">
+              <p className="text-[var(--primary)] text-sm tracking-[0.15em] uppercase font-semibold mb-4">Organisateurs</p>
+              <h2 className="editorial-heading text-4xl md:text-6xl">
+                Rassembler<span className="text-[var(--primary)]">.</span>
+              </h2>
+              <p className="text-[var(--text-muted)] mt-3 text-lg">
+                Pour les galas, mariages, festivals, lev&eacute;es de fonds, lancements, cocktails et moments qui m&eacute;ritent mieux qu&rsquo;une playlist.
+              </p>
+              <p className="text-[var(--text)] mt-6 text-lg leading-relaxed">
+                Nous ne r&eacute;servons pas seulement des musiciens. Nous cr&eacute;ons des moments. Une arriv&eacute;e au violon. Un piano qui transforme une salle. Une ambiance qui fait parler les invit&eacute;s longtemps apr&egrave;s la fin.
+              </p>
+              <p className="text-[var(--dark)] mt-6 font-medium text-lg border-l-2 border-[var(--primary)] pl-4">
+                Les gens n&rsquo;oublient pas une salle qui s&rsquo;est mise &agrave; vibrer.
+              </p>
+              <div className="mt-8 flex flex-wrap gap-3">
+                <a href="#contact" className="bg-[var(--primary)] text-white px-6 py-3 rounded-full text-sm font-medium hover:brightness-110 transition inline-flex items-center gap-2">
+                  Inviter Pixels
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          {/* Formats */}
+          <div className="grid md:grid-cols-3 gap-6 mt-16">
+            {[
+              { title: 'Ambiance live', desc: 'Musique d\'accompagnement élégante pour cocktails, réceptions et soirées.', img: '/images/event-6.jpg' },
+              { title: 'Moment signature', desc: 'Une prestation marquante intégrée dans votre événement. Première danse, ouverture, surprise.', img: '/images/event-2.jpg' },
+              { title: 'Création sur mesure', desc: 'Un concept musical entièrement pensé pour votre vision. De la direction artistique au dernier accord.', img: '/images/event-3.jpg' },
+            ].map((f) => (
+              <div key={f.title} className="group relative rounded-2xl overflow-hidden aspect-[4/3]">
+                <Image src={f.img} alt={f.title} fill className="object-cover group-hover:scale-105 transition-transform duration-700" sizes="33vw" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0B1D3D]/80 to-transparent" />
+                <div className="absolute bottom-0 left-0 right-0 p-6 z-10">
+                  <h4 className="text-white font-semibold text-lg">{f.title}</h4>
+                  <p className="text-white/50 text-sm mt-2 leading-relaxed">{f.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════════
+          6. PUBLIC — VIBRER
+      ═══════════════════════════════════════════════ */}
+      <section id="vibrer" className="relative py-20 md:py-28 overflow-hidden">
+        <div className="absolute inset-0">
+          <video autoPlay muted loop playsInline className="w-full h-full object-cover">
+            <source src="/images/community-video.mp4" type="video/mp4" />
+          </video>
+          <div className="absolute inset-0 bg-[#0B1D3D]/75" />
+        </div>
+        <div className="relative z-10 max-w-3xl mx-auto px-6 text-center">
+          <p className="text-[var(--primary)] text-sm tracking-[0.15em] uppercase font-semibold mb-4">Public</p>
+          <h2 className="editorial-heading text-4xl md:text-6xl text-white">
+            Vibrer<span className="text-[var(--primary)]">.</span>
+          </h2>
+          <p className="text-white/50 mt-3 text-lg">
+            Pour celles et ceux qui veulent simplement &ecirc;tre l&agrave; quand quelque chose se passe.
+          </p>
+          <p className="text-white/70 mt-8 text-lg leading-relaxed max-w-xl mx-auto">
+            Tu peux venir &eacute;couter, rencontrer, filmer, applaudir, parler, rester apr&egrave;s la derni&egrave;re note. Pixels n&rsquo;est pas seulement une sc&egrave;ne&nbsp;: c&rsquo;est une communaut&eacute;.
+          </p>
+          <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
+            <Link href="/register" className="bg-white text-[var(--dark)] px-6 py-3 rounded-full text-sm font-medium hover:bg-white/90 transition">
+              Voir les &eacute;v&eacute;nements
+            </Link>
+            <Link href="/register" className="border border-white/30 text-white px-6 py-3 rounded-full text-sm font-medium hover:bg-white/10 transition">
+              S&rsquo;abonner aux nouvelles
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════════
+          7. ÉCOSYSTÈME — CONSTELLATION
+      ═══════════════════════════════════════════════ */}
+      <section className="py-20 md:py-28 bg-[var(--dark)] overflow-hidden">
+        <div className="max-w-[1400px] mx-auto px-6 md:px-10">
+          <div className="max-w-3xl mx-auto text-center mb-16">
+            <h2 className="editorial-heading text-3xl md:text-5xl text-white leading-snug">
+              Pixels n&rsquo;est pas au centre<span className="text-[var(--primary)]">.</span><br />
+              Les connexions le sont.
+            </h2>
+            <p className="text-white/50 mt-6 text-lg leading-relaxed">
+              Un artiste rencontre un organisateur. Un &eacute;v&eacute;nement rassemble un public. Une personne du public devient b&eacute;n&eacute;vole, musicienne ou partenaire. Puis l&rsquo;histoire recommence.
+            </p>
+          </div>
+
+          {/* Constellation visuelle */}
+          <div ref={constellationRef} className="relative max-w-3xl mx-auto py-12">
+            {/* Lignes de connexion */}
+            <svg className="absolute inset-0 w-full h-full" viewBox="0 0 600 200" fill="none" preserveAspectRatio="xMidYMid meet">
+              <line x1="100" y1="100" x2="300" y2="50" stroke="var(--primary)" strokeWidth="0.5" opacity="0.4" />
+              <line x1="300" y1="50" x2="500" y2="100" stroke="var(--primary)" strokeWidth="0.5" opacity="0.4" />
+              <line x1="500" y1="100" x2="300" y2="150" stroke="var(--primary)" strokeWidth="0.5" opacity="0.4" />
+              <line x1="300" y1="150" x2="100" y2="100" stroke="var(--primary)" strokeWidth="0.5" opacity="0.4" />
+              <line x1="100" y1="100" x2="500" y2="100" stroke="var(--primary)" strokeWidth="0.3" opacity="0.2" />
+              <line x1="300" y1="50" x2="300" y2="150" stroke="var(--primary)" strokeWidth="0.3" opacity="0.2" />
+              {/* Nodes */}
+              <circle cx="100" cy="100" r="6" fill="var(--primary)" opacity="0.8" />
+              <circle cx="300" cy="50" r="6" fill="var(--primary)" opacity="0.8" />
+              <circle cx="500" cy="100" r="6" fill="var(--primary)" opacity="0.8" />
+              <circle cx="300" cy="150" r="6" fill="var(--primary)" opacity="0.8" />
+              {/* Glow */}
+              <circle cx="100" cy="100" r="20" fill="var(--primary)" opacity="0.08" />
+              <circle cx="300" cy="50" r="20" fill="var(--primary)" opacity="0.08" />
+              <circle cx="500" cy="100" r="20" fill="var(--primary)" opacity="0.08" />
+              <circle cx="300" cy="150" r="20" fill="var(--primary)" opacity="0.08" />
+            </svg>
+            <div className="relative grid grid-cols-4 gap-4 text-center">
+              <div>
+                <div className="w-12 h-12 mx-auto rounded-full border border-[var(--primary)]/40 flex items-center justify-center mb-3">
+                  <svg className="w-5 h-5 text-[var(--primary)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M9 9l10.5-3m0 6.553v3.75a2.25 2.25 0 01-1.632 2.163l-1.32.377a1.803 1.803 0 11-.99-3.467l2.31-.66a2.25 2.25 0 001.632-2.163zm0 0V2.25L9 5.25v10.303m0 0v3.75a2.25 2.25 0 01-1.632 2.163l-1.32.377a1.803 1.803 0 01-.99-3.467l2.31-.66A2.25 2.25 0 009 15.553z" /></svg>
+                </div>
+                <p className="text-white text-xs font-medium">Artistes</p>
+              </div>
+              <div>
+                <div className="w-12 h-12 mx-auto rounded-full border border-[var(--primary)]/40 flex items-center justify-center mb-3">
+                  <svg className="w-5 h-5 text-[var(--primary)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" /></svg>
+                </div>
+                <p className="text-white text-xs font-medium">Rencontres</p>
+              </div>
+              <div>
+                <div className="w-12 h-12 mx-auto rounded-full border border-[var(--primary)]/40 flex items-center justify-center mb-3">
+                  <svg className="w-5 h-5 text-[var(--primary)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" /></svg>
+                </div>
+                <p className="text-white text-xs font-medium">&Eacute;v&eacute;nements</p>
+              </div>
+              <div>
+                <div className="w-12 h-12 mx-auto rounded-full border border-[var(--primary)]/40 flex items-center justify-center mb-3">
+                  <svg className="w-5 h-5 text-[var(--primary)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" /></svg>
+                </div>
+                <p className="text-white text-xs font-medium">Public</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════════
+          8. IMPACT
+      ═══════════════════════════════════════════════ */}
+      <section className="py-20 md:py-28 bg-white">
+        <div className="max-w-[1400px] mx-auto px-6 md:px-10">
+          <div className="grid md:grid-cols-2 gap-16 items-center">
+            <div>
+              <p className="text-[var(--primary)] text-sm tracking-[0.15em] uppercase font-semibold mb-4">Impact</p>
+              <h2 className="editorial-heading text-3xl md:text-5xl">
+                Ce qui reste apr&egrave;s la derni&egrave;re note<span className="text-[var(--primary)]">.</span>
+              </h2>
+              <div className="mt-12 space-y-10">
+                {[
+                  { value: '80+', label: 'artistes', sub: 'Des personnes qui ne se connaissaient pas et qui jouent maintenant ensemble.' },
+                  { value: '10K+', label: 'personnes touchées', sub: "Des oreilles, oui. Mais surtout des conversations." },
+                  { value: '5', label: 'universités', sub: 'HEC, McGill, UdeM, Concordia, Polytechnique — une seule scène élargie.' },
+                  { value: '4+', label: 'jam sessions', sub: "Des soirées qui commencent par une chanson et finissent souvent par une amitié." },
+                ].map((s) => (
+                  <div key={s.label} className="flex gap-6 items-start">
+                    <span className="editorial-heading text-4xl md:text-5xl text-[var(--primary)] min-w-[100px]">{s.value}</span>
+                    <div>
+                      <p className="font-semibold text-[var(--dark)]">{s.label}</p>
+                      <p className="text-[var(--text-muted)] text-sm mt-1">{s.sub}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="relative aspect-[3/4] rounded-2xl overflow-hidden">
+              <video autoPlay muted loop playsInline preload="auto" className="w-full h-full object-cover">
+                <source src="/images/impact-video.mp4" type="video/mp4" />
+              </video>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════════
+          9. ORIGINE DU NOM
+      ═══════════════════════════════════════════════ */}
+      <section className="grid md:grid-cols-2">
+        <div className="relative min-h-[450px]">
+          <Image src="/images/event-6.jpg" alt="Communauté Pixels" fill className="object-cover" sizes="50vw" />
+        </div>
+        <div className="bg-[var(--cream)] p-10 md:p-16 lg:p-20 flex flex-col justify-center">
+          <p className="text-[var(--primary)] text-sm tracking-[0.15em] uppercase font-semibold mb-4">Le nom</p>
+          <h2 className="editorial-heading text-3xl md:text-4xl">
+            Pourquoi Pixels<span className="text-[var(--primary)]">.</span>
+          </h2>
+          <p className="text-[var(--text-muted)] mt-6 text-lg leading-relaxed">
+            Nous portons tous une couleur diff&eacute;rente. S&eacute;par&eacute;ment, nous &eacute;clairons un morceau du monde. Ensemble, nous faisons appara&icirc;tre l&rsquo;image.
+          </p>
+          <p className="text-[var(--dark)] mt-4 text-lg leading-relaxed font-medium">
+            Pixels est n&eacute; de cette id&eacute;e simple&nbsp;: personne ne fait l&rsquo;image seul.
+          </p>
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════════
+          NOS HISTOIRES — CLIQUABLES
+      ═══════════════════════════════════════════════ */}
+      <section id="histoires" className="py-20 md:py-28 bg-white">
+        <div className="max-w-[1400px] mx-auto px-6 md:px-10">
+          <div className="text-center mb-16">
+            <p className="text-[var(--primary)] text-sm tracking-[0.15em] uppercase font-semibold mb-4">Nos histoires</p>
+            <h2 className="editorial-heading text-3xl md:text-5xl">
+              Ce qui fait qu&rsquo;on reste<span className="text-[var(--primary)]">.</span>
+            </h2>
+          </div>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {[
+              { id: 'music-mondays', title: 'Music Mondays', desc: 'Un piano, une résidence étudiante, un lundi soir.', tag: 'Origine', full: 'Paloma a vu un piano à queue dans un salon étudiant et a dit : « J\'aimerais tellement qu\'on fasse ça chaque semaine. » On lui a répondu que c\'était possible. Elle l\'a fait. Les Music Mondays sont nés comme ça — sans structure, sans budget, juste l\'envie de jouer ensemble. Aujourd\'hui, des dizaines de musiciens se retrouvent chaque lundi soir. Personne ne demande la permission. Tout le monde est le bienvenu.' },
+              { id: 'centre-sciences', title: 'Le Centre des sciences', desc: 'Notre premier événement d\'envergure.', tag: 'Événement', full: 'On nous a confié une soirée entière au Centre des sciences de Montréal. C\'était la première fois qu\'on jouait dans un lieu aussi grand, devant un public qu\'on ne connaissait pas. Ce soir-là, on a compris que ce qu\'on construisait dépassait notre cercle. Les gens sont venus pour la musique. Ils sont restés pour l\'énergie. Pixels n\'était plus une idée — c\'était un mouvement.' },
+              { id: 'premier-mariage', title: 'Le premier mariage', desc: 'Un couple nous a fait confiance pour le plus beau jour de leur vie.', tag: 'Confiance', full: 'Un couple qu\'on ne connaissait pas nous a contactés. Ils voulaient de la musique live pour leur mariage. Pas un DJ, pas un groupe professionnel — ils voulaient Pixels. Cette confiance nous a marqués. On a compris qu\'on pouvait aller au-delà des jams et des événements étudiants. Que les gens croyaient en ce qu\'on faisait assez pour nous confier leurs moments les plus importants.' },
+              { id: 'forces-avenir', title: 'Forces AVENIR', desc: 'La reconnaissance que l\'impact de Pixels dépasse la musique.', tag: 'Reconnaissance', full: 'Forces AVENIR récompense les initiatives étudiantes qui transforment leur communauté. Quand Pixels a été reconnu, ça a confirmé quelque chose qu\'on sentait depuis longtemps : ce qu\'on construit n\'est pas seulement un projet musical. C\'est un projet de société étudiante. Un espace où des gens d\'horizons différents apprennent à créer ensemble.' },
+              { id: 'artistes-trouvent', title: 'Des artistes qui se trouvent', desc: 'Deux musiciens qui ne se connaissaient pas il y a six mois.', tag: 'Rencontre', full: 'L\'un étudiait à McGill, l\'autre à HEC. Ils jouaient du même instrument sans le savoir. Ils se sont croisés à un Music Monday, ont commencé à jammer, puis à répéter ensemble, puis à composer. Six mois plus tard, ils avaient un projet à eux. C\'est exactement pour ça que Pixels existe : créer les conditions pour que ces rencontres arrivent.' },
+              { id: 'premier-festival', title: 'Le premier festival', desc: 'Quand la communauté crée son propre rendez-vous.', tag: 'Communauté', full: 'On ne l\'avait pas planifié. La communauté avait grandi au point qu\'un simple lundi soir ne suffisait plus. Il fallait un moment plus grand, un rendez-vous fondateur. Le premier festival Pixels est né de cette nécessité. Pas d\'un business plan — d\'une énergie collective qui avait besoin d\'un espace à sa mesure.' },
+            ].map((story) => (
+              <div
+                key={story.id}
+                className={`border rounded-2xl p-8 cursor-pointer transition-all duration-300 ${openStory === story.id ? 'border-[var(--primary)] bg-[var(--cream)]' : 'border-[var(--border)] hover:border-[var(--primary)]/30'}`}
+                onClick={() => setOpenStory(openStory === story.id ? null : story.id)}
+              >
+                <div className="flex items-start justify-between gap-4">
+                  <div>
+                    <span className="text-[var(--primary)] text-xs font-semibold tracking-wider uppercase">{story.tag}</span>
+                    <h3 className="editorial-heading text-xl mt-3 mb-3">{story.title}</h3>
+                    <p className="text-[var(--text-muted)] text-sm leading-relaxed">{story.desc}</p>
+                  </div>
+                  <svg className={`w-5 h-5 text-[var(--primary)] flex-shrink-0 mt-1 transition-transform duration-300 ${openStory === story.id ? 'rotate-45' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                  </svg>
+                </div>
+                <div className={`overflow-hidden transition-all duration-500 ${openStory === story.id ? 'max-h-96 opacity-100 mt-6' : 'max-h-0 opacity-0'}`}>
+                  <div className="border-t border-[var(--primary)]/20 pt-6">
+                    <p className="text-[var(--text)] text-sm leading-relaxed">{story.full}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════════
+          D'OÙ VIENT PIXELS — ORIGINE
+      ═══════════════════════════════════════════════ */}
+      <section className="bg-[var(--cream)] py-20 md:py-28">
         <div className="max-w-3xl mx-auto px-6">
           <p className="text-[var(--primary)] text-sm tracking-[0.15em] uppercase font-semibold mb-6 text-center">L&rsquo;origine</p>
           <h2 className="editorial-heading text-2xl md:text-3xl lg:text-4xl text-[var(--dark)] leading-snug text-center">
@@ -277,269 +514,30 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── CITATION ── */}
-      <section className="py-16 md:py-20">
-        <div className="max-w-3xl mx-auto px-6 text-center">
-          <p className="editorial-heading text-2xl md:text-3xl lg:text-4xl text-[var(--dark)] leading-snug">
-            &laquo;&nbsp;Les plus belles rencontres humaines naissent lorsque l&rsquo;on cr&eacute;e ensemble.&nbsp;&raquo;
-          </p>
-          <p className="text-[var(--primary)] mt-6 text-lg font-medium">
-            Pixels existe pour provoquer ces rencontres.
-          </p>
-        </div>
-      </section>
-
-      {/* ── POURQUOI PIXELS ── */}
-      <section className="grid md:grid-cols-2">
-        <div className="p-10 md:p-16 lg:p-20 flex flex-col justify-center">
-          <h2 className="editorial-heading text-3xl md:text-4xl lg:text-5xl">
-            Un pixel seul est presque invisible<span className="text-[var(--primary)]">.</span>
-          </h2>
-          <p className="text-[var(--text-muted)] mt-6 leading-relaxed text-lg">
-            Le nom vient d&rsquo;une conviction : nous sommes tous des &ecirc;tres remarquablement lumineux, chacun avec une couleur, un ton, une histoire diff&eacute;rente.
-          </p>
-          <p className="text-[var(--text)] mt-4 leading-relaxed text-lg font-medium">
-            Assembl&eacute;s, nous cr&eacute;ons une image plus grande que la somme de nos parties.
-          </p>
-          <p className="text-[var(--text-muted)] mt-6 text-sm italic border-l-2 border-[var(--primary)] pl-4">
-            Pixels n&rsquo;est pas un groupe de musique. C&rsquo;est un &eacute;cosyst&egrave;me. Un lieu o&ugrave; les gens cr&eacute;ent sans performance sociale, sans algorithme, sans masque.
-          </p>
-        </div>
-        <div className="relative min-h-[450px]">
-          <Image src="/images/event-6.jpg" alt="La communauté Pixels" fill className="object-cover" sizes="50vw" />
-        </div>
-      </section>
-
-      {/* ── L'ÉCOSYSTÈME PIXELS™ ── */}
-      <section id="ecosysteme" className="bg-[var(--surface)] py-20 md:py-28">
-        <div className="max-w-[1400px] mx-auto px-6 md:px-10">
-          <div className="text-center mb-16">
-            <p className="text-[var(--primary)] text-sm tracking-[0.15em] uppercase font-semibold mb-4">L&rsquo;&eacute;cosyst&egrave;me Pixels&trade;</p>
-            <h2 className="editorial-heading text-3xl md:text-5xl">
-              Ce que l&rsquo;on construit ensemble<span className="text-[var(--primary)]">.</span>
+      {/* ═══════════════════════════════════════════════
+          10. RAPPORT À LA TECHNOLOGIE
+      ═══════════════════════════════════════════════ */}
+      <section className="py-20 md:py-28 bg-[var(--dark)]">
+        <div className="max-w-[1400px] mx-auto px-6 md:px-10 grid md:grid-cols-2 gap-16 items-center">
+          <div>
+            <p className="text-[var(--primary)] text-sm tracking-[0.15em] uppercase font-semibold mb-4">Technologie</p>
+            <h2 className="editorial-heading text-3xl md:text-4xl text-white">
+              Coder les outils<span className="text-[var(--primary)]">.</span><br />Garder la chaleur.
             </h2>
+            <p className="text-white/50 mt-6 text-lg leading-relaxed">
+              Nous croyons &agrave; la technologie. Nous construisons des outils, des plateformes, des syst&egrave;mes. Mais nous refusons que l&rsquo;efficacit&eacute; remplace ce qui fait battre un c&oelig;ur.
+            </p>
+            <p className="text-white mt-6 text-lg font-medium border-l-2 border-[var(--primary)] pl-4">
+              Un algorithme peut recommander une chanson. Il ne peut pas te pr&eacute;senter ton prochain meilleur ami.
+            </p>
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-10">
-            {[
-              { icon: <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z" /></svg>, title: 'Rencontrer', desc: 'Trouver des artistes et collaborateurs.' },
-              { icon: <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M9 9l10.5-3m0 6.553v3.75a2.25 2.25 0 01-1.632 2.163l-1.32.377a1.803 1.803 0 11-.99-3.467l2.31-.66a2.25 2.25 0 001.632-2.163zm0 0V2.25L9 5.25v10.303m0 0v3.75a2.25 2.25 0 01-1.632 2.163l-1.32.377a1.803 1.803 0 01-.99-3.467l2.31-.66A2.25 2.25 0 009 15.553z" /></svg>, title: 'Créer', desc: 'Partitions, répétitions et accompagnement.' },
-              { icon: <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M12 18.75a6 6 0 006-6v-1.5m-6 7.5a6 6 0 01-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 01-3-3V4.5a3 3 0 116 0v8.25a3 3 0 01-3 3z" /></svg>, title: 'Jouer', desc: 'Concerts, jams et événements.' },
-              { icon: <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941" /></svg>, title: 'Grandir', desc: 'Mentorat, communauté et transmission.' },
-              { icon: <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" /></svg>, title: 'Construire', desc: 'Produits, projets et initiatives.' },
-            ].map((item) => (
-              <div key={item.title} className="text-center group">
-                <div className="w-16 h-16 mx-auto rounded-2xl border-2 border-[var(--primary)] flex items-center justify-center text-[var(--primary)] group-hover:bg-[var(--primary)] group-hover:text-white transition-all duration-300 mb-4">
-                  {item.icon}
-                </div>
-                <p className="font-semibold text-[var(--dark)] mb-1">{item.title}</p>
-                <p className="text-[var(--text-muted)] text-sm">{item.desc}</p>
-              </div>
-            ))}
+          <div className="relative aspect-[4/3] rounded-2xl overflow-hidden">
+            <Image src="/images/hoodie.jpg" alt="Pixels merch" fill className="object-cover" sizes="50vw" />
           </div>
         </div>
       </section>
 
-      {/* ── LE PROBLÈME ── */}
-      <section className="bg-[var(--dark)] text-white py-20 md:py-28">
-        <div className="max-w-[1400px] mx-auto px-6 md:px-10">
-          <p className="text-[var(--primary)] text-sm tracking-[0.15em] uppercase font-semibold mb-4">Le probl&egrave;me</p>
-          <h2 className="editorial-heading text-3xl md:text-4xl lg:text-5xl max-w-3xl">
-            Les gens ne savent pas qu&rsquo;ils se cherchent<span className="text-[var(--primary)]">.</span>
-          </h2>
-          <div className="grid md:grid-cols-3 gap-8 mt-14">
-            {[
-              { icon: <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M9 9l10.5-3m0 6.553v3.75a2.25 2.25 0 01-1.632 2.163l-1.32.377a1.803 1.803 0 11-.99-3.467l2.31-.66a2.25 2.25 0 001.632-2.163zm0 0V2.25L9 5.25v10.303m0 0v3.75a2.25 2.25 0 01-1.632 2.163l-1.32.377a1.803 1.803 0 01-.99-3.467l2.31-.66A2.25 2.25 0 009 15.553z" /></svg>, title: 'Artistes', desc: 'Des musiciens extraordinaires répètent seuls dans leur chambre. Le talent est là. Les connexions manquent.' },
-              { icon: <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" /></svg>, title: 'Organisateurs', desc: "Des événements cherchent une âme sans savoir où la trouver. L'imprévu règne." },
-              { icon: <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z" /></svg>, title: 'Communauté', desc: "Beaucoup cherchent du lien. Peu savent où commencer." },
-            ].map((card) => (
-              <div key={card.title} className="border border-white/10 rounded-2xl p-8">
-                <div className="w-12 h-12 rounded-xl border border-[var(--primary)] flex items-center justify-center mb-5 text-[var(--primary)]">
-                  {card.icon}
-                </div>
-                <h3 className="font-semibold text-lg mb-2">{card.title}</h3>
-                <p className="text-white/50 text-sm leading-relaxed">{card.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── VIDÉO LIVE — CARROUSEL ── */}
-      <section className="bg-[var(--dark)]">
-        <div className="max-w-[1400px] mx-auto px-6 md:px-10 py-16">
-          <p className="text-[var(--primary)] text-sm tracking-[0.15em] uppercase font-semibold mb-8 text-center">En live</p>
-          <div className="relative aspect-video rounded-2xl overflow-hidden bg-[var(--dark-surface)]">
-            {liveVideos.map((src, i) => (
-              <video
-                key={src}
-                autoPlay
-                muted
-                loop
-                playsInline
-                preload={i <= 1 ? 'auto' : 'none'}
-                className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${i === liveIndex ? 'opacity-100' : 'opacity-0'}`}
-              >
-                <source src={src} type="video/mp4" />
-              </video>
-            ))}
-            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2 z-10">
-              {liveVideos.map((_, i) => (
-                <button
-                  key={i}
-                  onClick={() => setLiveIndex(i)}
-                  className={`w-2 h-2 rounded-full transition-all ${i === liveIndex ? 'bg-white w-6' : 'bg-white/40'}`}
-                />
-              ))}
-            </div>
-            <button onClick={() => setLiveIndex((prev) => (prev - 1 + liveVideos.length) % liveVideos.length)} className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/30 backdrop-blur-sm flex items-center justify-center text-white/70 hover:text-white hover:bg-black/50 transition z-10">
-              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" /></svg>
-            </button>
-            <button onClick={() => setLiveIndex((prev) => (prev + 1) % liveVideos.length)} className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/30 backdrop-blur-sm flex items-center justify-center text-white/70 hover:text-white hover:bg-black/50 transition z-10">
-              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" /></svg>
-            </button>
-          </div>
-        </div>
-      </section>
-
-      {/* ── NOS HISTOIRES ── */}
-      <section id="histoires" className="py-20 md:py-28">
-        <div className="max-w-[1400px] mx-auto px-6 md:px-10">
-          <div className="text-center mb-16">
-            <p className="text-[var(--primary)] text-sm tracking-[0.15em] uppercase font-semibold mb-4">Nos histoires</p>
-            <h2 className="editorial-heading text-3xl md:text-5xl">
-              Ce qui fait qu&rsquo;on reste<span className="text-[var(--primary)]">.</span>
-            </h2>
-          </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {[
-              { id: 'music-mondays', title: 'Music Mondays', desc: 'Un piano, une résidence étudiante, un lundi soir. C\'est là que tout a commencé.', tag: 'Origine', full: 'Paloma a vu un piano à queue dans un salon étudiant et a dit : « J\'aimerais tellement qu\'on fasse ça chaque semaine. » On lui a répondu que c\'était possible. Elle l\'a fait. Les Music Mondays sont nés comme ça — sans structure, sans budget, juste l\'envie de jouer ensemble. Aujourd\'hui, des dizaines de musiciens se retrouvent chaque lundi soir. Personne ne demande la permission. Tout le monde est le bienvenu.' },
-              { id: 'centre-sciences', title: 'Le Centre des sciences', desc: 'Notre premier événement d\'envergure. Le moment où Pixels est passé d\'une idée à un mouvement.', tag: 'Événement', full: 'On nous a confié une soirée entière au Centre des sciences de Montréal. C\'était la première fois qu\'on jouait dans un lieu aussi grand, devant un public qu\'on ne connaissait pas. Ce soir-là, on a compris que ce qu\'on construisait dépassait notre cercle. Les gens sont venus pour la musique. Ils sont restés pour l\'énergie. Pixels n\'était plus une idée — c\'était un mouvement.' },
-              { id: 'premier-mariage', title: 'Le premier mariage', desc: 'Un couple nous a fait confiance pour le plus beau jour de leur vie.', tag: 'Confiance', full: 'Un couple qu\'on ne connaissait pas nous a contactés. Ils voulaient de la musique live pour leur mariage. Pas un DJ, pas un groupe professionnel — ils voulaient Pixels. Cette confiance nous a marqués. On a compris qu\'on pouvait aller au-delà des jams et des événements étudiants. Que les gens croyaient en ce qu\'on faisait assez pour nous confier leurs moments les plus importants.' },
-              { id: 'forces-avenir', title: 'Forces AVENIR', desc: 'La reconnaissance que l\'impact de Pixels dépasse la musique.', tag: 'Reconnaissance', full: 'Forces AVENIR récompense les initiatives étudiantes qui transforment leur communauté. Quand Pixels a été reconnu, ça a confirmé quelque chose qu\'on sentait depuis longtemps : ce qu\'on construit n\'est pas seulement un projet musical. C\'est un projet de société étudiante. Un espace où des gens d\'horizons différents apprennent à créer ensemble.' },
-              { id: 'artistes-trouvent', title: 'Des artistes qui se trouvent', desc: 'Deux musiciens qui ne se connaissaient pas il y a six mois. Aujourd\'hui, ils composent ensemble.', tag: 'Rencontre', full: 'L\'un étudiait à McGill, l\'autre à HEC. Ils jouaient du même instrument sans le savoir. Ils se sont croisés à un Music Monday, ont commencé à jammer, puis à répéter ensemble, puis à composer. Six mois plus tard, ils avaient un projet à eux. C\'est exactement pour ça que Pixels existe : créer les conditions pour que ces rencontres arrivent.' },
-              { id: 'premier-festival', title: 'Le premier festival', desc: 'Quand la communauté grandit au point de créer son propre rendez-vous.', tag: 'Communauté', full: 'On ne l\'avait pas planifié. La communauté avait grandi au point qu\'un simple lundi soir ne suffisait plus. Il fallait un moment plus grand, un rendez-vous fondateur. Le premier festival Pixels est né de cette nécessité. Pas d\'un business plan — d\'une énergie collective qui avait besoin d\'un espace à sa mesure.' },
-            ].map((story) => (
-              <div
-                key={story.id}
-                className={`border rounded-2xl p-8 cursor-pointer transition-all duration-300 ${openStory === story.id ? 'border-[var(--primary)] bg-[var(--cream)]' : 'border-[var(--border)] hover:border-[var(--primary)]/30'}`}
-                onClick={() => setOpenStory(openStory === story.id ? null : story.id)}
-              >
-                <div className="flex items-start justify-between gap-4">
-                  <div>
-                    <span className="text-[var(--primary)] text-xs font-semibold tracking-wider uppercase">{story.tag}</span>
-                    <h3 className="editorial-heading text-xl mt-3 mb-3">{story.title}</h3>
-                    <p className="text-[var(--text-muted)] text-sm leading-relaxed">{story.desc}</p>
-                  </div>
-                  <svg className={`w-5 h-5 text-[var(--primary)] flex-shrink-0 mt-1 transition-transform duration-300 ${openStory === story.id ? 'rotate-45' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-                  </svg>
-                </div>
-                <div className={`overflow-hidden transition-all duration-500 ${openStory === story.id ? 'max-h-96 opacity-100 mt-6' : 'max-h-0 opacity-0'}`}>
-                  <div className="border-t border-[var(--primary)]/20 pt-6">
-                    <p className="text-[var(--text)] text-sm leading-relaxed">{story.full}</p>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── PARCOURS ── */}
-      <section id="rejoindre" className="py-20 md:py-28 bg-[var(--surface)]">
-        <div className="max-w-[1400px] mx-auto px-6 md:px-10">
-          <div className="text-center mb-16">
-            <p className="text-[var(--primary)] text-sm tracking-[0.15em] uppercase font-semibold mb-4">Rejoindre Pixels</p>
-            <h2 className="editorial-heading text-3xl md:text-5xl">
-              Ce qui t&rsquo;attend<span className="text-[var(--primary)]">.</span>
-            </h2>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-8 mb-16 items-center">
-            <div className="relative aspect-video rounded-2xl overflow-hidden">
-              <video autoPlay muted loop playsInline preload="auto" className="w-full h-full object-cover">
-                <source src="/images/rejoindre-preview.mp4" type="video/mp4" />
-              </video>
-            </div>
-            <div>
-              <span className="text-[var(--primary)] font-semibold text-sm tracking-wider uppercase">Tu es musicien&middot;ne</span>
-              <h3 className="editorial-heading text-2xl md:text-3xl mt-3 mb-8">
-                Premi&egrave;res sc&egrave;nes, r&eacute;seau, collaborations<span className="text-[var(--primary)]">.</span>
-              </h3>
-              <div className="space-y-5">
-                {[
-                  'Tu rencontres des gens.',
-                  'Tu trouves ton prochain projet.',
-                  'Tu montes sur scène.',
-                  'Tu fais grandir les autres.',
-                  'Tu grandis toi aussi.',
-                ].map((step, i) => (
-                  <div key={i} className="flex gap-4 items-center">
-                    <span className="text-[var(--primary)] font-bold text-sm min-w-[28px]">0{i + 1}</span>
-                    <p className="font-medium text-[15px]">{step}</p>
-                  </div>
-                ))}
-              </div>
-              <Link href="/register?role=artist" className="inline-flex items-center gap-2 mt-8 bg-[var(--dark)] text-white px-6 py-3 rounded-full text-sm font-medium hover:brightness-150 transition">
-                Devenir artiste Pixels
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
-              </Link>
-            </div>
-          </div>
-
-          {/* Music Mondays */}
-          <div className="grid md:grid-cols-2 gap-8 mb-16 items-center">
-            <div className="order-2 md:order-1">
-              <span className="text-[var(--primary)] font-semibold text-sm tracking-wider uppercase">Tu veux simplement vibrer</span>
-              <h3 className="editorial-heading text-2xl md:text-3xl mt-3 mb-6">
-                Rejoins les Music Mondays<span className="text-[var(--primary)]">.</span>
-              </h3>
-              <p className="text-[var(--text-muted)] leading-relaxed mb-4">
-                Paloma a vu un piano &agrave; queue dans un salon &eacute;tudiant et a dit&nbsp;: &laquo;&nbsp;J&rsquo;aimerais tellement qu&rsquo;on fasse &ccedil;a chaque semaine.&nbsp;&raquo; On lui a r&eacute;pondu que c&rsquo;&eacute;tait possible. Elle l&rsquo;a fait.
-              </p>
-              <p className="text-[var(--text)] font-medium">
-                Jam sessions ouvertes, cr&eacute;ation collective, z&eacute;ro jugement. Viens comme tu es.
-              </p>
-              <Link href="/register" className="inline-flex items-center gap-2 mt-8 border-2 border-[var(--dark)] text-[var(--dark)] px-6 py-3 rounded-full text-sm font-medium hover:bg-[var(--dark)] hover:text-white transition">
-                Rejoindre la communaut&eacute;
-              </Link>
-            </div>
-            <div className="relative aspect-[4/3] rounded-2xl overflow-hidden order-1 md:order-2">
-              <Image src="/images/event-7.jpg" alt="Music Monday Pixels" fill className="object-cover" sizes="50vw" />
-            </div>
-          </div>
-
-          {/* Organisateur — descendu, moins proéminent */}
-          <div className="border border-[var(--border)] rounded-2xl p-8 md:p-12">
-            <div className="grid md:grid-cols-2 gap-8 items-center">
-              <div className="relative aspect-[4/3] rounded-xl overflow-hidden">
-                <Image src="/images/event-3.jpg" alt="Événement Pixels" fill className="object-cover" sizes="50vw" />
-              </div>
-              <div>
-                <span className="text-[var(--primary)] font-semibold text-sm tracking-wider uppercase">Tu organises un &eacute;v&eacute;nement</span>
-                <h3 className="editorial-heading text-2xl md:text-3xl mt-3 mb-4">
-                  Vous cherchez des artistes&nbsp;?
-                </h3>
-                <p className="text-[var(--text-muted)] leading-relaxed mb-2">
-                  Vous voulez rejoindre la communaut&eacute;&nbsp;?
-                </p>
-                <p className="text-[var(--text-muted)] leading-relaxed mb-2">
-                  Vous avez une id&eacute;e &agrave; construire&nbsp;?
-                </p>
-                <p className="text-[var(--dark)] font-medium mt-4">
-                  Parlons-en.
-                </p>
-                <Link href="/register?role=organizer" className="inline-flex items-center gap-2 mt-6 bg-[var(--primary)] text-white px-6 py-3 rounded-full text-sm font-medium hover:brightness-110 transition">
-                  Nous contacter
-                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── PHOTOS GRID ── */}
+      {/* ── Mosaïque photos ── */}
       <section className="grid grid-cols-2 md:grid-cols-4 gap-1">
         {[2, 4, 5, 7, 1, 3, 6, 2].map((n, i) => (
           <div key={i} className="relative aspect-square overflow-hidden">
@@ -548,83 +546,8 @@ export default function LandingPage() {
         ))}
       </section>
 
-      {/* ── NOS VALEURS ── */}
-      <section id="valeurs" className="py-20 md:py-28">
-        <div className="max-w-[1400px] mx-auto px-6 md:px-10">
-          <div className="text-center mb-16">
-            <p className="text-[var(--primary)] text-sm tracking-[0.15em] uppercase font-semibold mb-4">Nos valeurs</p>
-            <h2 className="editorial-heading text-3xl md:text-5xl">
-              Ce qui nous guide<span className="text-[var(--primary)]">.</span>
-            </h2>
-          </div>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8">
-            {[
-              { icon: <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.332A48.36 48.36 0 0012 9.75c-2.551 0-5.056.2-7.5.582V21M3 21h18M12 6.75h.008v.008H12V6.75z" /></svg>, title: 'Accueillir', desc: 'Tout le monde commence quelque part.' },
-              { icon: <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M9 9l10.5-3m0 6.553v3.75a2.25 2.25 0 01-1.632 2.163l-1.32.377a1.803 1.803 0 11-.99-3.467l2.31-.66a2.25 2.25 0 001.632-2.163zm0 0V2.25L9 5.25v10.303m0 0v3.75a2.25 2.25 0 01-1.632 2.163l-1.32.377a1.803 1.803 0 01-.99-3.467l2.31-.66A2.25 2.25 0 009 15.553z" /></svg>, title: 'Jouer', desc: "Parce que l'art est vivant." },
-              { icon: <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244" /></svg>, title: 'Relier', desc: 'Créer des ponts entre les personnes.' },
-              { icon: <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-5.314m-9.566 7.5l9.566 5.314m0 0a2.25 2.25 0 103.935 2.186 2.25 2.25 0 00-3.935-2.186zm0-12.814a2.25 2.25 0 103.933-2.185 2.25 2.25 0 00-3.933 2.185z" /></svg>, title: 'Transmettre', desc: "Partager ce que l'on apprend." },
-              { icon: <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" /></svg>, title: 'Construire', desc: "Créer quelque chose qui dure." },
-              { icon: <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" /></svg>, title: 'Célébrer', desc: 'Les gens avant les performances.' },
-            ].map((v) => (
-              <div key={v.title} className="text-center">
-                <div className="w-14 h-14 mx-auto rounded-full border-2 border-[var(--primary)] flex items-center justify-center text-[var(--primary)] mb-4">
-                  {v.icon}
-                </div>
-                <h4 className="font-semibold text-sm mb-1">{v.title}</h4>
-                <p className="text-[var(--text-muted)] text-xs leading-relaxed">{v.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── IMPACT ── */}
-      <section className="py-20 md:py-28 bg-[var(--surface)]">
-        <div className="max-w-[1400px] mx-auto px-6 md:px-10">
-          <div className="grid md:grid-cols-2 gap-16 items-center">
-            <div>
-              <p className="text-[var(--primary)] text-sm tracking-[0.15em] uppercase font-semibold mb-4">Notre impact</p>
-              <h2 className="editorial-heading text-3xl md:text-5xl">
-                Des rencontres qui durent bien apr&egrave;s l&rsquo;&eacute;v&eacute;nement<span className="text-[var(--primary)]">.</span>
-              </h2>
-              <p className="text-[var(--text-muted)] mt-6 leading-relaxed text-lg">
-                Des personnes qui ne se seraient jamais rencontr&eacute;es apprennent &agrave; collaborer, &agrave; cr&eacute;er et &agrave; tisser des liens.
-              </p>
-              <p className="text-[var(--dark)] mt-3 leading-relaxed text-lg font-medium">
-                Souvent, elles repartent avec bien plus que pr&eacute;vu.
-              </p>
-              <div className="grid grid-cols-2 gap-8 mt-10">
-                {[
-                  { value: '80+', label: 'artistes ayant joué ensemble' },
-                  { value: '10K+', label: 'personnes touchées' },
-                  { value: '5', label: 'universités reliées' },
-                  { value: 'Des dizaines', label: "d'amitiés, projets et collaborations nés dans la communauté" },
-                ].map((s) => (
-                  <div key={s.label}>
-                    <span className="editorial-heading text-3xl md:text-4xl text-[var(--dark)]">{s.value}</span>
-                    <p className="text-[var(--text-muted)] text-sm mt-1">{s.label}</p>
-                  </div>
-                ))}
-              </div>
-              <div className="flex flex-wrap gap-2 mt-8">
-                {['HEC Montréal', 'McGill', 'Polytechnique', 'UdeM', 'Concordia'].map((uni) => (
-                  <span key={uni} className="px-3 py-1.5 rounded-full bg-white text-xs text-[var(--text-muted)] font-medium border border-[var(--border)]">
-                    {uni}
-                  </span>
-                ))}
-              </div>
-            </div>
-            <div className="relative aspect-[3/4] rounded-2xl overflow-hidden">
-              <video autoPlay muted loop playsInline preload="auto" className="w-full h-full object-cover">
-                <source src="/images/impact-video.mp4" type="video/mp4" />
-              </video>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── TÉMOIGNAGES ── */}
-      <section className="bg-[var(--cream)] py-16">
+      {/* ── Témoignages ── */}
+      <section className="bg-[var(--surface)] py-16">
         <div className="max-w-[1400px] mx-auto px-6 md:px-10">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {[
@@ -642,58 +565,56 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── LA FAMILLE ── */}
-      <section className="grid md:grid-cols-2">
-        <div className="relative min-h-[500px] overflow-hidden">
-          <video autoPlay muted loop playsInline preload="auto" className="absolute inset-0 w-full h-full object-cover">
-            <source src="/images/community-video.mp4" type="video/mp4" />
-          </video>
-        </div>
-        <div className="bg-[var(--surface)] p-10 md:p-16 lg:p-20 flex flex-col justify-center">
+      {/* ── La famille ── */}
+      <section className="py-16 bg-white">
+        <div className="max-w-3xl mx-auto px-6 text-center">
           <p className="text-[var(--primary)] text-sm tracking-[0.15em] uppercase font-semibold mb-4">La famille</p>
           <h2 className="editorial-heading text-3xl md:text-4xl">
-            Personne ne poss&egrave;de Pixels<span className="text-[var(--primary)]">.</span><br />
-            Tout le monde le construit.
+            Personne ne poss&egrave;de Pixels<span className="text-[var(--primary)]">.</span> Tout le monde le construit.
           </h2>
-          <p className="text-[var(--text-muted)] mt-6 leading-relaxed">
-            De 6 musiciens en septembre 2025 &agrave; plus de 80 en mai 2026. Une croissance organique port&eacute;e par la conviction que les gens continuent de venir le lundi soir.
+          <p className="text-[var(--text-muted)] mt-6">
+            De 6 musiciens en septembre 2025 &agrave; plus de 80 en mai 2026.
           </p>
-          <p className="text-[var(--text)] mt-4 leading-relaxed font-medium">
-            Les g&eacute;n&eacute;rations passent. La communaut&eacute; grandit.
-          </p>
-          <div className="mt-8 flex flex-wrap gap-2 text-xs">
-            {['Franck Afane', 'Jean-Paul Romero', 'Paloma Hesry', 'Mai Linh Pham Dac', 'Louise Wang', 'Mira Charabati', 'Naomi Slama', 'Ivan Gaspart'].map(name => (
-              <span key={name} className="px-3 py-1.5 bg-white rounded-full text-[var(--text-muted)] border border-[var(--border)]">{name}</span>
+          <div className="mt-8 flex flex-wrap justify-center gap-2 text-xs">
+            {['Franck Afane', 'Méline', 'Jean-Paul Romero', 'Paloma Hesry', 'Mai Linh Pham Dac', 'Louise Wang', 'Mira Charabati', 'Naomi Slama', 'Ivan Gaspart'].map(name => (
+              <span key={name} className="px-3 py-1.5 bg-[var(--surface)] rounded-full text-[var(--text-muted)] border border-[var(--border)]">{name}</span>
             ))}
             <span className="px-3 py-1.5 bg-[var(--primary)] rounded-full text-white font-medium">+ 80 artistes</span>
           </div>
         </div>
       </section>
 
-      {/* ── CONSTRUIRE DES ÉCHELLES ── */}
-      <section className="py-20 md:py-28 bg-white">
-        <div className="max-w-3xl mx-auto px-6 text-center">
-          <h2 className="editorial-heading text-3xl md:text-5xl lg:text-6xl">
-            Construire des &eacute;chelles<span className="text-[var(--primary)]">.</span>
-          </h2>
-          <p className="text-[var(--text-muted)] mt-6 leading-relaxed max-w-xl mx-auto text-lg">
-            Pour que des artistes puissent monter, que des organisateurs cr&eacute;ent autrement, que des &eacute;tudiants se rencontrent, et que des talents isol&eacute;s forment une image ensemble.
+      {/* ═══════════════════════════════════════════════
+          11. SECTION FINALE
+      ═══════════════════════════════════════════════ */}
+      <section className="relative py-28 md:py-36 overflow-hidden">
+        <div className="absolute inset-0">
+          <video autoPlay muted loop playsInline className="w-full h-full object-cover">
+            <source src="/images/hero-video.mp4" type="video/mp4" />
+          </video>
+          <div className="absolute inset-0 bg-[#0B1D3D]/80" />
+        </div>
+        <div className="relative z-10 max-w-3xl mx-auto px-6 text-center">
+          <p className="editorial-heading text-3xl md:text-4xl lg:text-5xl text-white leading-snug">
+            Chaque concert se termine. Chaque r&eacute;p&eacute;tition aussi. Ce qui reste, ce sont les personnes qui se sont rencontr&eacute;es<span className="text-[var(--primary)]">.</span>
           </p>
-          <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link href="/register" className="bg-[var(--primary)] text-white px-10 py-4 rounded-full text-[15px] font-medium hover:brightness-110 transition inline-flex items-center gap-2">
-              Rejoindre Pixels
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+          <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-4">
+            <Link href="/register?role=artist" className="bg-[var(--primary)] text-white px-8 py-4 rounded-full text-[15px] font-medium hover:brightness-110 transition">
+              Je fais de la musique
             </Link>
-            <Link href="/login" className="text-[var(--text-muted)] text-sm hover:text-[var(--dark)] transition font-medium">
-              D&eacute;j&agrave; membre ? Connexion
+            <a href="#contact" className="bg-white text-[var(--dark)] px-8 py-4 rounded-full text-[15px] font-medium hover:bg-white/90 transition">
+              J&rsquo;organise un &eacute;v&eacute;nement
+            </a>
+            <Link href="/register" className="border border-white/30 text-white px-8 py-4 rounded-full text-[15px] font-medium hover:bg-white/10 transition">
+              Je veux vivre quelque chose
             </Link>
           </div>
         </div>
       </section>
 
-      {/* ── CONTACT ── */}
+      {/* ── Contact ── */}
       <section id="contact" className="grid md:grid-cols-2 border-t border-[var(--border)]">
-        <div className="p-10 md:p-16 lg:p-20">
+        <div className="p-10 md:p-16 lg:p-20 bg-white">
           <p className="text-[var(--primary)] text-sm tracking-[0.15em] uppercase font-semibold mb-4">Contact</p>
           <h2 className="editorial-heading text-3xl md:text-4xl">
             Parlons-en<span className="text-[var(--primary)]">.</span>
@@ -728,32 +649,31 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── FOOTER ── */}
+      {/* ── Footer ── */}
       <footer className="bg-[var(--dark)] text-white py-16">
         <div className="max-w-[1400px] mx-auto px-6 md:px-10">
           <div className="flex flex-col md:flex-row justify-between items-start gap-12 mb-12">
             <div className="max-w-sm">
               <Image src="/images/pixels-logo.png" alt="pixels™" width={140} height={40} className="brightness-0 invert mb-4" />
               <p className="text-white/40 text-sm leading-relaxed">
-                Montr&eacute;al, Canada<br />
-                Musique &bull; Communaut&eacute; &bull; Cr&eacute;ation &bull; &Eacute;l&eacute;vation
+                &Agrave; bient&ocirc;t quelque part entre deux accords.
               </p>
             </div>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-8 text-[13px]">
               <div>
-                <h4 className="font-semibold mb-4 text-white/80">Exp&eacute;riences</h4>
+                <h4 className="font-semibold mb-4 text-white/80">Artistes</h4>
                 <ul className="space-y-2 text-white/40">
-                  <li>Festivals &amp; galas</li>
-                  <li>&Eacute;v&eacute;nements universitaires</li>
-                  <li>Mariages &amp; lancements</li>
+                  <li><a href="#artistes" className="hover:text-white transition">Rejoindre</a></li>
+                  <li>Studio Musical</li>
+                  <li>Music Mondays</li>
                 </ul>
               </div>
               <div>
-                <h4 className="font-semibold mb-4 text-white/80">Artistes</h4>
+                <h4 className="font-semibold mb-4 text-white/80">Organisateurs</h4>
                 <ul className="space-y-2 text-white/40">
-                  <li>Rejoindre le r&eacute;seau</li>
-                  <li>Studio Musical</li>
-                  <li>Music Mondays</li>
+                  <li><a href="#organisateurs" className="hover:text-white transition">Inviter Pixels</a></li>
+                  <li>Formats</li>
+                  <li>&Eacute;v&eacute;nements</li>
                 </ul>
               </div>
               <div>
